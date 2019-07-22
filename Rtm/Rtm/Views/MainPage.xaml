@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:views="clr-namespace:Rtm.Views"
+             xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
+             x:Class="Rtm.Views.MainPage"
+             Title="Bus Stop">
+
+
+    <ContentPage.BindingContext>
+        <viewmodels:MainPageVM/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout Padding="0 8">
+            <StackLayout Orientation="Horizontal">
+                <Label Text="{Binding BusStop.Name}"
+                       FontSize="Large"/>
+            </StackLayout>
+
+            <ListView ItemsSource="{Binding BusStop.Departures}"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsBusy}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                    <ColumnDefinition Width="2*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Number}"
+                                       TextColor="Black"
+                                       FontSize="Large"
+                                       Grid.Column="0"/>
+                                <Label Text="{Binding Direction}"
+                                       Grid.Column="1"/>
+                                <Label Text="{Binding Time}"
+                                       TextColor="Black"
+                                       FontSize="Large"
+                                       Grid.Column="2"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label Text="{Binding BusStop.Description}"
+                   VerticalOptions="EndAndExpand"/>
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
