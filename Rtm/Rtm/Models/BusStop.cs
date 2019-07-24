@@ -13,6 +13,12 @@ namespace Rtm.Models
 
         public string Description { get; set; }
 
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
+
+        public string LatLng { get; set; }
+
 
         public List<Departure> Departures { get; set; }
 
@@ -21,6 +27,9 @@ namespace Rtm.Models
         {
             Departures = new List<Departure>();
         }
+
+        public void SetLatLng() => LatLng = $"{Latitude},{Longitude}";
+
     }
 
 }

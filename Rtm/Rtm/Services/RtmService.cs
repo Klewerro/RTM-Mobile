@@ -1,4 +1,6 @@
-﻿using Rtm.Models;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Rtm.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +46,31 @@ namespace Rtm.Services
             }
 
             return busStop;
+        }
+
+        public async Task<List<BusStop>> GetAllBusStops()
+        {
+            var response = await _httpClient.GetAsync("http://einfo.erzeszow.pl/Home/GetMapBusStopList?ttId=0");
+            var responseString = await response.Content.ReadAsStringAsync();
+            
+            var json = JsonConvert.DeserializeObject(responseString).ToString();
+            var jArray = JArray.Parse(json);
+
+            var busStops = new List<BusStop>();
+            foreach (var item in jArray)
+            {
+                var busStop = new BusStop
+                {
+                    Id = (int)item[0],
+                    Name = (string)item[1],
+                    Latitude = (double)item[4],
+                    Longitude = (double)item[5]
+                };
+                busStop.SetLatLng();
+                busStops.Add(busStop);
+            }
+
+            return busStops;
         }
     }
 }

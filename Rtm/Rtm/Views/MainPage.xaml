@@ -15,7 +15,7 @@
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <StackLayout Padding="0 8">
+        <StackLayout Padding="8,0">
             <StackLayout Orientation="Horizontal">
                 <Label Text="{Binding BusStop.Name}"
                        FontSize="Large"/>
