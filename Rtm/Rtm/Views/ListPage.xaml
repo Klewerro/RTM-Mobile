@@ -20,7 +20,8 @@
             <ListView ItemsSource="{Binding BusStops}"
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshCommand}"
-                      IsRefreshing="{Binding IsBusy}">
+                      IsRefreshing="{Binding IsBusy}" 
+                      ItemTapped="ListView_ItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Name}"

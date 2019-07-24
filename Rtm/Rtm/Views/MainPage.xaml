@@ -9,14 +9,20 @@
              x:Class="Rtm.Views.MainPage"
              Title="Bus Stop">
 
-
     <ContentPage.BindingContext>
         <viewmodels:MainPageVM/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
         <StackLayout Padding="8,0">
-            <StackLayout Orientation="Horizontal">
+            <StackLayout>
+                <StackLayout Orientation="Horizontal"
+                             HorizontalOptions="Center">
+                    <Entry Text="{Binding BusStopEntryId}" 
+                           Placeholder="Wprowadź id przystanku" />
+                    <Button Text="Pobierz"
+                            Command="{Binding DownloadCommand}"/>
+                </StackLayout>
                 <Label Text="{Binding BusStop.Name}"
                        FontSize="Large"/>
             </StackLayout>

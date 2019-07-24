@@ -48,6 +48,34 @@ namespace Rtm.Services
             return busStop;
         }
 
+        public async Task<BusStop> GetBusStop(int id)
+        {
+            var response = await _httpClient.GetAsync($"http://einfo.erzeszow.pl/Home/GetTimetableReal?busStopId={id}");
+
+            var doc = XDocument.Load(await response.Content.ReadAsStreamAsync());
+
+            var stop = doc.Element("Schedules").Element("Stop");
+            var busStop = new BusStop
+            {
+                Id = int.Parse(stop.Attribute("id").Value),
+                Name = stop.Attribute("name").Value,
+                Description = stop.Attribute("ds").Value
+            };
+
+            var rList = stop.Element("Day").Elements("R").ToList();
+            foreach (var r in rList)
+            {
+                busStop.Departures.Add(new Departure
+                {
+                    Number = r.Attribute("nr").Value,
+                    Direction = r.Attribute("dir").Value,
+                    Time = r.Element("S").Attribute("t").Value
+                });
+            }
+
+            return busStop;
+        }
+
         public async Task<List<BusStop>> GetAllBusStops()
         {
             var response = await _httpClient.GetAsync("http://einfo.erzeszow.pl/Home/GetMapBusStopList?ttId=0");
@@ -72,5 +100,6 @@ namespace Rtm.Services
 
             return busStops;
         }
+
     }
 }

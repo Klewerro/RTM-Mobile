@@ -21,7 +21,7 @@ namespace Rtm.ViewModels
     {
         
         private BusStop busStop;
-        private string _test = "Initial Text";
+        private int _busStopEntryId;
         private RtmService _rtmService;
 
         public BusStop BusStop
@@ -34,13 +34,13 @@ namespace Rtm.ViewModels
             }
         }
 
-        public string Test
+        public int BusStopEntryId
         {
-            get => _test;
+            get => _busStopEntryId;
             set
             {
-                _test = value;
-                OnPropertyChanged("Test");
+                _busStopEntryId = value;
+                OnPropertyChanged("BusStopEntryId");
             }
         }
 
@@ -57,6 +57,11 @@ namespace Rtm.ViewModels
             IsBusy = false;
         });
 
-
+        public ICommand DownloadCommand => new Command(async () =>
+        {
+            IsBusy = true;
+            BusStop = await _rtmService.GetBusStop(BusStopEntryId);
+            IsBusy = false;
+        });
     }
 }
