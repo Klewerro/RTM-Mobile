@@ -6,7 +6,7 @@
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
              mc:Ignorable="d"
              x:Class="Rtm.Views.ListPage"
-             Title="Bus stop list">
+             Title="Lista przystanków">
 
     <ContentPage.BindingContext>
         <viewmodels:ListPageVM />

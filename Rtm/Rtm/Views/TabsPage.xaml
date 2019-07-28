@@ -9,7 +9,7 @@
             Title="RTM prototype">
 
 
-    <views:MainPage />
+    <views:BusStopPage />
     <views:ListPage />
 
 </TabbedPage>

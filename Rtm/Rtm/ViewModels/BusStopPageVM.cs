@@ -17,11 +17,10 @@ using Xamarin.Forms;
 
 namespace Rtm.ViewModels
 {
-    public class MainPageVM : ViewModelBase
+    public class BusStopPageVM : ViewModelBase
     {
         
         private BusStop busStop;
-        private int _busStopEntryId;
         private RtmService _rtmService;
 
         public BusStop BusStop
@@ -34,33 +33,15 @@ namespace Rtm.ViewModels
             }
         }
 
-        public int BusStopEntryId
-        {
-            get => _busStopEntryId;
-            set
-            {
-                _busStopEntryId = value;
-                OnPropertyChanged("BusStopEntryId");
-            }
-        }
-
-        public MainPageVM()
+        public BusStopPageVM()
         {
             _rtmService = new RtmService();
-            RefreshCommand?.Execute(null);
         }
-
-        public ICommand RefreshCommand => new Command(async () =>
-        {
-            IsBusy = true;
-            BusStop = await _rtmService.GetBusStop();
-            IsBusy = false;
-        });
 
         public ICommand DownloadCommand => new Command(async () =>
         {
             IsBusy = true;
-            BusStop = await _rtmService.GetBusStop(BusStopEntryId);
+            BusStop = await _rtmService.GetBusStop(BusStop.Id);
             IsBusy = false;
         });
     }

@@ -6,35 +6,23 @@
              mc:Ignorable="d"
              xmlns:views="clr-namespace:Rtm.Views"
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
-             x:Class="Rtm.Views.MainPage"
-             Title="Bus Stop">
+             x:Class="Rtm.Views.BusStopPage"
+             Title="{Binding BusStop.Name}">
 
     <ContentPage.BindingContext>
-        <viewmodels:MainPageVM/>
+        <viewmodels:BusStopPageVM/>
     </ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <StackLayout Padding="8,0">
-            <StackLayout>
-                <StackLayout Orientation="Horizontal"
-                             HorizontalOptions="Center">
-                    <Entry Text="{Binding BusStopEntryId}" 
-                           Placeholder="Wprowadź id przystanku" />
-                    <Button Text="Pobierz"
-                            Command="{Binding DownloadCommand}"/>
-                </StackLayout>
-                <Label Text="{Binding BusStop.Name}"
-                       FontSize="Large"/>
-            </StackLayout>
-
+        <StackLayout Padding="8">
             <ListView ItemsSource="{Binding BusStop.Departures}"
                       IsPullToRefreshEnabled="True"
-                      RefreshCommand="{Binding RefreshCommand}"
+                      RefreshCommand="{Binding DownloadCommand}"
                       IsRefreshing="{Binding IsBusy}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Grid>
+                            <Grid VerticalOptions="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="6*"/>

@@ -21,8 +21,7 @@ namespace Rtm.Views
         private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
         {
             var busStop = e.Item as BusStop;
-            var masterPage = this.Parent as TabbedPage;
-            masterPage.CurrentPage = masterPage.Children[0];
+            await Navigation.PushAsync(new BusStopPage(busStop));
         }
     }
 }
