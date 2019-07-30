@@ -13,6 +13,10 @@
         <viewmodels:BusStopPageVM/>
     </ContentPage.BindingContext>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Dodaj do ulubionych" Command="{Binding AddToFavoritesCommand}" Order="Secondary" />
+    </ContentPage.ToolbarItems>
+
     <ContentPage.Content>
         <StackLayout Padding="8">
             <ListView ItemsSource="{Binding BusStop.Departures}"

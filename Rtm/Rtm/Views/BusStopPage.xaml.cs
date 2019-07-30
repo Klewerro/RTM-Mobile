@@ -29,7 +29,7 @@ namespace Rtm.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            viewModel.DownloadCommand?.Execute(null);
+            viewModel.OnAppearing();
         }
     }
 }

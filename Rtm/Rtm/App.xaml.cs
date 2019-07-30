@@ -15,7 +15,7 @@ namespace Rtm
             HotReloader.Current.Run(this);
 #endif
 
-            MainPage = new NavigationPage(new ListPage());
+            MainPage = new NavigationPage(new TabsPage());
         }
 
         protected override void OnStart()

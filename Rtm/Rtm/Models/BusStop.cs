@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using SQLite;
 
 namespace Rtm.Models
 {
     public class BusStop
     {
-        public string Name { get; set; }
-
+        [PrimaryKey]
         public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public string Description { get; set; }
 
@@ -19,7 +21,7 @@ namespace Rtm.Models
 
         public string LatLng { get; set; }
 
-
+        [Ignore]
         public List<Departure> Departures { get; set; }
 
 

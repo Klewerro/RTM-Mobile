@@ -6,10 +6,9 @@
             xmlns:views="clr-namespace:Rtm.Views"
             mc:Ignorable="d"
             x:Class="Rtm.Views.TabsPage"
-            Title="RTM prototype">
+            Title="Przystanki">
 
-
-    <views:BusStopPage />
+    <views:FavoritesPage />
     <views:ListPage />
 
 </TabbedPage>
