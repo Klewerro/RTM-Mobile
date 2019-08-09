@@ -18,8 +18,6 @@
                        Text="{Binding SearchText}"
                        Placeholder="Wprowadź nazwę przystanku..." />
             <ListView ItemsSource="{Binding BusStops}"
-                      IsPullToRefreshEnabled="True"
-                      RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsBusy}" 
                       ItemTapped="ListView_ItemTapped">
                 <ListView.ItemTemplate>

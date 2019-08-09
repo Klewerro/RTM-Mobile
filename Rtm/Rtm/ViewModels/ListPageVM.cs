@@ -1,10 +1,13 @@
 ﻿using Rtm.Models;
+using Rtm.Repositories;
 using Rtm.Services;
+using Rtm.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 
@@ -13,6 +16,8 @@ namespace Rtm.ViewModels
     public class ListPageVM : ViewModelBase
     {
         private RtmService _rtmService;
+        private IBusStopRepository _busStopRepository;
+
         private List<BusStop> _busStops;
         private string _searchText;
 
@@ -42,7 +47,9 @@ namespace Rtm.ViewModels
         public ListPageVM()
         {
             _rtmService = new RtmService();
-            RefreshCommand?.Execute(null);
+            _busStopRepository = new BusStopRepository();
+
+            DownloadBusStopsIfEmpty();
         }
 
 
@@ -59,6 +66,35 @@ namespace Rtm.ViewModels
         {
             BusStops = BusStopsAll.Where(b => b.Name.ToLower().Contains(SearchText.ToLower())).ToList();
         });
+
+        public ICommand DownloadBusStopsCommand => new Command(async () =>
+        {
+            IsBusy = true;
+            var result = await _rtmService.GetAllBusStops();
+            BusStopsAll = result.AsReadOnly();
+            BusStops = result;
+            
+            IsBusy = false;
+        });
+
+        private async Task DownloadBusStopsIfEmpty()
+        {
+            var repositoryStops = _busStopRepository.GetAll();
+            if (!_busStopRepository.GetAll().Any())
+            {
+                var result = await _rtmService.GetAllBusStops();
+                var test2 = _busStopRepository.GetAll();
+                _busStopRepository.AddRange(result);
+                var test3 = _busStopRepository.GetAll();
+                BusStopsAll = result.AsReadOnly();
+                BusStops = result;
+            }
+            else
+            {
+                BusStopsAll = repositoryStops.AsReadOnly();
+                BusStops = repositoryStops;
+            }
+        }
 
     }
 }

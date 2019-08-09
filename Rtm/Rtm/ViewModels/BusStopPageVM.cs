@@ -21,7 +21,7 @@ namespace Rtm.ViewModels
 {
     public class BusStopPageVM : ViewModelBase
     {
-        private readonly IFavoritesRepository _favoritesRepository;
+        private readonly IBusStopRepository _busStopRepository;
 
         private BusStop busStop;
         private RtmService _rtmService;
@@ -39,12 +39,12 @@ namespace Rtm.ViewModels
         public BusStopPageVM()
         {
             _rtmService = new RtmService();
-            _favoritesRepository = new FavoritesRepository();
+            _busStopRepository = new BusStopRepository();
         }
 
         public void OnAppearing()
         {
-            var isInFavorites = _favoritesRepository.IsInFavorites(BusStop.Id);
+            var isInFavorites = _busStopRepository.IsInFavorites(BusStop.Id);
             if (isInFavorites)
                 Console.WriteLine("Is in favorites");
             else
@@ -61,7 +61,7 @@ namespace Rtm.ViewModels
 
         public ICommand AddToFavoritesCommand => new Command(() => 
         {
-            _favoritesRepository.Add(BusStop);
+            _busStopRepository.Add(BusStop);
         });
     }
 }

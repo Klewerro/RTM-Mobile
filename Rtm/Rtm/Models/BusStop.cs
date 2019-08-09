@@ -21,6 +21,8 @@ namespace Rtm.Models
 
         public string LatLng { get; set; }
 
+        public bool IsFavorite { get; set; }
+
         [Ignore]
         public List<Departure> Departures { get; set; }
 
