@@ -15,8 +15,8 @@
     <ContentPage.Content>
         <StackLayout>
             <Label Text="Welcome to Favorites Page!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

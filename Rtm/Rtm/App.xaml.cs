@@ -1,36 +1,42 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Prism.Unity;
+using Prism;
+using Prism.Ioc;
 using Rtm.Views;
+using Rtm.ViewModels;
 
 namespace Rtm
 {
-    public partial class App : Application
+    public partial class App
     {
 
-        public App()
+        public App() : this(null) { }
+
+        public App(IPlatformInitializer initializer) : base(initializer)
         {
-            InitializeComponent();
 #if DEBUG
             HotReloader.Current.Run(this);
 #endif
-
-            MainPage = new NavigationPage(new TabsPage());
         }
 
-        protected override void OnStart()
+
+        protected override async void OnInitialized()
         {
-            // Handle when your app starts
+            InitializeComponent();
+
+            await NavigationService.NavigateAsync($"NavigationPage/{nameof(TabsPage)}");
         }
 
-        protected override void OnSleep()
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            // Handle when your app sleeps
+            containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterForNavigation<TabsPage>();
+            containerRegistry.RegisterForNavigation<BusStopPage, BusStopPageVM>();
+            containerRegistry.RegisterForNavigation<ListPage, ListPageVM>();
+            containerRegistry.RegisterForNavigation<FavoritesPage, ListPageVM>();
         }
 
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
-        }
     }
 }
