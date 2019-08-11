@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Prism.Commands;
+using Prism.Navigation;
 using Rtm.Models;
 using Rtm.Repositories;
 using Rtm.Services;
@@ -22,46 +24,55 @@ namespace Rtm.ViewModels
     public class BusStopPageVM : ViewModelBase
     {
         private readonly IBusStopRepository _busStopRepository;
-
-        private BusStop busStop;
-        private RtmService _rtmService;
+        private readonly IRtmService _rtmService;
+        private BusStop _busStop;       
 
         public BusStop BusStop
         {
-            get => busStop;
-            set
-            {
-                busStop = value;
-                OnPropertyChanged("BusStop");
-            }
+            get => _busStop;
+            set => SetProperty(ref _busStop, value);
         }
 
-        public BusStopPageVM()
+        public BusStop BusStopFromRepository { get; set; }
+
+        public BusStopPageVM(INavigationService navigationService, 
+            IBusStopRepository busStopRepository, 
+            IRtmService rtmService) : base (navigationService)
         {
-            _rtmService = new RtmService();
-            _busStopRepository = new BusStopRepository();
+            _busStopRepository = busStopRepository;
+            _rtmService = rtmService;
+            BusStop = new BusStop();
         }
 
-        public void OnAppearing()
-        {
-            var isInFavorites = _busStopRepository.IsInFavorites(BusStop.Id);
-            if (isInFavorites)
-                Console.WriteLine("Is in favorites");
-            else
-                Console.WriteLine("Not in favorites");
-            DownloadCommand?.Execute(null);
-        }
-
-        public ICommand DownloadCommand => new Command(async () =>
+        public ICommand DownloadCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
             BusStop = await _rtmService.GetBusStop(BusStop.Id);
             IsBusy = false;
         });
 
-        public ICommand AddToFavoritesCommand => new Command(() => 
+        public ICommand AddToFavoritesCommand => new DelegateCommand(() => 
+            _busStopRepository.AddToFavorites(BusStop));
+
+        public override async void OnNavigatedTo(INavigationParameters parameters)
         {
-            _busStopRepository.Add(BusStop);
-        });
+            IsBusy = true;
+            var busStopId = (int) parameters["busStopIp"];
+            BusStop = await _rtmService.GetBusStop(busStopId);
+            BusStopFromRepository = _busStopRepository.Get(busStopId);
+            
+            CheckIfIsInFavorites();
+            IsBusy = false;
+        }
+
+
+        private void CheckIfIsInFavorites()
+        {
+            if (BusStopFromRepository.IsFavorite)
+                Console.WriteLine("Is in favorites");
+            else
+                Console.WriteLine("Not in favorites");
+            DownloadCommand?.Execute(null);
+        }
     }
 }

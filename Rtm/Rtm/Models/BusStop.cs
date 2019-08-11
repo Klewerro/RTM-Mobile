@@ -13,6 +13,7 @@ namespace Rtm.Models
 
         public string Name { get; set; }
 
+        [Ignore]
         public string Description { get; set; }
 
         public double Latitude { get; set; }

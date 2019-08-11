@@ -17,11 +17,5 @@ namespace Rtm.Views
         {
             InitializeComponent();
         }
-
-        private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
-        {
-            var busStop = e.Item as BusStop;
-            await Navigation.PushAsync(new BusStopPage(busStop));
-        }
     }
 }

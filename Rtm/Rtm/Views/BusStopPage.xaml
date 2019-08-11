@@ -9,9 +9,9 @@
              x:Class="Rtm.Views.BusStopPage"
              Title="{Binding BusStop.Name}">
 
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <viewmodels:BusStopPageVM/>
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Dodaj do ulubionych" Command="{Binding AddToFavoritesCommand}" Order="Secondary" />

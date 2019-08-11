@@ -39,9 +39,11 @@ namespace Rtm.Repositories
 
         public void AddRange(IEnumerable<BusStop> busStops)
         {
-            //_connection.Table<BusStop>().Delete();
             _connection.InsertAll(busStops);
         }
+
+        public BusStop Get(int id)
+            => _connection.Get<BusStop>(id);
 
         public List<BusStop> GetAll()
             => _connection.Table<BusStop>().ToList();
@@ -52,7 +54,10 @@ namespace Rtm.Repositories
         public void Remove(int id)
             => _connection.Table<BusStop>().Delete(b => b.Id == id);
 
-        public bool IsInFavorites(int id)
-            => _connection.Table<BusStop>().Any(b => b.Id == id);
+        public void AddToFavorites(BusStop busStop)
+        {
+            busStop.IsFavorite = true;
+            _connection.Update(busStop);
+        }
     }
 }

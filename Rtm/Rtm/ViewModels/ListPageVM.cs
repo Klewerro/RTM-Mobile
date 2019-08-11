@@ -1,4 +1,6 @@
-﻿using Rtm.Models;
+﻿using Prism.Commands;
+using Prism.Navigation;
+using Rtm.Models;
 using Rtm.Repositories;
 using Rtm.Services;
 using Rtm.Views;
@@ -24,11 +26,7 @@ namespace Rtm.ViewModels
         public List<BusStop> BusStops
         {
             get => _busStops;
-            set
-            {
-                _busStops = value;
-                OnPropertyChanged("BusStops");
-            }
+            set => SetProperty(ref _busStops, value);
         }
 
         public ReadOnlyCollection<BusStop> BusStopsAll { get; set; }
@@ -36,15 +34,11 @@ namespace Rtm.ViewModels
         public string SearchText
         {
             get => _searchText;
-            set
-            {
-                _searchText = value;
-                OnPropertyChanged("SearchText");
-            }
+            set => SetProperty(ref _searchText, value);
         }
 
 
-        public ListPageVM()
+        public ListPageVM(INavigationService navigationService) : base(navigationService)
         {
             _rtmService = new RtmService();
             _busStopRepository = new BusStopRepository();
@@ -53,7 +47,7 @@ namespace Rtm.ViewModels
         }
 
 
-        public ICommand RefreshCommand => new Command(async () =>
+        public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
             var result = await _rtmService.GetAllBusStops();
@@ -62,12 +56,12 @@ namespace Rtm.ViewModels
             IsBusy = false;
         });
 
-        public ICommand SearchCommand => new Command(async () =>
+        public ICommand SearchCommand => new DelegateCommand(async () =>
         {
             BusStops = BusStopsAll.Where(b => b.Name.ToLower().Contains(SearchText.ToLower())).ToList();
         });
 
-        public ICommand DownloadBusStopsCommand => new Command(async () =>
+        public ICommand DownloadBusStopsCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
             var result = await _rtmService.GetAllBusStops();
@@ -77,15 +71,20 @@ namespace Rtm.ViewModels
             IsBusy = false;
         });
 
+        public ICommand ItemTappedCommand => new DelegateCommand<BusStop>(async busStop =>
+        {
+            var parameters = new NavigationParameters();
+            parameters.Add("busStopIp", busStop.Id);
+            await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
+        });
+
         private async Task DownloadBusStopsIfEmpty()
         {
             var repositoryStops = _busStopRepository.GetAll();
-            if (!_busStopRepository.GetAll().Any())
+            if (!repositoryStops.Any())
             {
                 var result = await _rtmService.GetAllBusStops();
-                var test2 = _busStopRepository.GetAll();
                 _busStopRepository.AddRange(result);
-                var test3 = _busStopRepository.GetAll();
                 BusStopsAll = result.AsReadOnly();
                 BusStops = result;
             }

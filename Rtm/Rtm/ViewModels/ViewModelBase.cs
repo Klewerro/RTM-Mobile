@@ -1,33 +1,56 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using Prism.Navigation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
 
 namespace Rtm.ViewModels
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public class ViewModelBase : BindableBase, INavigationAware, IDestructible
     {
         private bool _isBusy;
+        private string _title;
+
+        protected INavigationService NavigationService { get; private set; }
 
         public bool IsBusy
         {
             get => _isBusy;
-            set
-            {
-                _isBusy = value;
-                OnPropertyChanged("IsBusy");
-            }
+            set => SetProperty(ref _isBusy, value);
         }
 
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+        public string Title
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
+
+
+        public ViewModelBase(INavigationService navigationService)
+        {
+            NavigationService = navigationService;
+        }
+
+        public virtual void OnNavigatedFrom(INavigationParameters parameters)
+        {
+
+        }
+
+        public virtual void OnNavigatedTo(INavigationParameters parameters)
+        {
+
+        }
+
+        public virtual void OnNavigatingTo(INavigationParameters parameters)
+        {
+
+        }
+
+        public virtual void Destroy()
+        {
+
+        }
+
     }
 }

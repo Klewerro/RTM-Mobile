@@ -8,9 +8,9 @@
              x:Class="Rtm.Views.FavoritesPage"
              Title="Ulubione">
 
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <viewmodels:ListPageVM />
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     
     <ContentPage.Content>
         <StackLayout>

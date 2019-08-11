@@ -6,6 +6,8 @@ using Prism;
 using Prism.Ioc;
 using Rtm.Views;
 using Rtm.ViewModels;
+using Rtm.Services;
+using Rtm.Repositories;
 
 namespace Rtm
 {
@@ -36,6 +38,9 @@ namespace Rtm
             containerRegistry.RegisterForNavigation<BusStopPage, BusStopPageVM>();
             containerRegistry.RegisterForNavigation<ListPage, ListPageVM>();
             containerRegistry.RegisterForNavigation<FavoritesPage, ListPageVM>();
+
+            containerRegistry.Register<IRtmService, RtmService>();
+            containerRegistry.Register<IBusStopRepository, BusStopRepository>();
         }
 
     }
