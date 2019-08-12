@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Navigation;
+using Prism.Services;
 using Rtm.Models;
 using Rtm.Repositories;
 using Rtm.Services;
@@ -23,6 +24,7 @@ namespace Rtm.ViewModels
 {
     public class BusStopPageVM : ViewModelBase
     {
+        private readonly IPageDialogService _pageDialogService;
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
         private BusStop _busStop;       
@@ -36,18 +38,20 @@ namespace Rtm.ViewModels
         public BusStop BusStopFromRepository { get; set; }
 
         public BusStopPageVM(INavigationService navigationService, 
+            IPageDialogService pageDialogService,
             IBusStopRepository busStopRepository, 
             IRtmService rtmService) : base (navigationService)
         {
+            _pageDialogService = pageDialogService;
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
             BusStop = new BusStop();
         }
 
-        public ICommand DownloadCommand => new DelegateCommand(async () =>
+        public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
-            BusStop = await _rtmService.GetBusStop(BusStop.Id);
+            BusStop = await DownloadBusStop();
             IsBusy = false;
         });
 
@@ -56,15 +60,36 @@ namespace Rtm.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
-            IsBusy = true;
-            var busStopId = (int) parameters["busStopIp"];
-            BusStop = await _rtmService.GetBusStop(busStopId);
-            BusStopFromRepository = _busStopRepository.Get(busStopId);
-            
+            BusStop.Id = (int)parameters["busStopIp"];
+            BusStop = await DownloadBusStop();
+            if (BusStop.Id == 0)
+                return;
+
+            BusStopFromRepository = _busStopRepository.Get(BusStop.Id);
             CheckIfIsInFavorites();
-            IsBusy = false;
         }
 
+
+        private async Task<BusStop> DownloadBusStop()
+        {
+            IsBusy = true;
+            try
+            {
+                BusStop = await ApiCall(_rtmService.GetBusStop(BusStop.Id));
+                return BusStop;
+            }
+            catch (Exceptions.ConnectionException ex)
+            {
+                await _pageDialogService.DisplayAlertAsync("No internet connection", "Please check your connection", "Ok");
+                await NavigationService.GoBackAsync();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+            return new BusStop();
+        }
 
         private void CheckIfIsInFavorites()
         {
@@ -72,7 +97,6 @@ namespace Rtm.ViewModels
                 Console.WriteLine("Is in favorites");
             else
                 Console.WriteLine("Not in favorites");
-            DownloadCommand?.Execute(null);
         }
     }
 }

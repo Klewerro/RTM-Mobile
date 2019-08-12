@@ -1,5 +1,6 @@
 ﻿using Prism.Commands;
 using Prism.Navigation;
+using Prism.Services;
 using Rtm.Models;
 using Rtm.Repositories;
 using Rtm.Services;
@@ -17,8 +18,9 @@ namespace Rtm.ViewModels
 {
     public class ListPageVM : ViewModelBase
     {
-        private RtmService _rtmService;
-        private IBusStopRepository _busStopRepository;
+        private readonly IPageDialogService _pageDialogService;
+        private readonly IRtmService _rtmService;
+        private readonly IBusStopRepository _busStopRepository;
 
         private List<BusStop> _busStops;
         private string _searchText;
@@ -38,37 +40,19 @@ namespace Rtm.ViewModels
         }
 
 
-        public ListPageVM(INavigationService navigationService) : base(navigationService)
+        public ListPageVM(INavigationService navigationService, 
+            IPageDialogService pageDialogService,
+            IBusStopRepository busStopRepository,
+            IRtmService rtmService) : base(navigationService)
         {
-            _rtmService = new RtmService();
-            _busStopRepository = new BusStopRepository();
-
-            DownloadBusStopsIfEmpty();
+            _pageDialogService = pageDialogService;
+            _busStopRepository = busStopRepository;
+            _rtmService = rtmService;
         }
-
-
-        public ICommand RefreshCommand => new DelegateCommand(async () =>
-        {
-            IsBusy = true;
-            var result = await _rtmService.GetAllBusStops();
-            BusStopsAll = result.AsReadOnly();
-            BusStops = result;
-            IsBusy = false;
-        });
 
         public ICommand SearchCommand => new DelegateCommand(async () =>
         {
             BusStops = BusStopsAll.Where(b => b.Name.ToLower().Contains(SearchText.ToLower())).ToList();
-        });
-
-        public ICommand DownloadBusStopsCommand => new DelegateCommand(async () =>
-        {
-            IsBusy = true;
-            var result = await _rtmService.GetAllBusStops();
-            BusStopsAll = result.AsReadOnly();
-            BusStops = result;
-            
-            IsBusy = false;
         });
 
         public ICommand ItemTappedCommand => new DelegateCommand<BusStop>(async busStop =>
@@ -78,15 +62,42 @@ namespace Rtm.ViewModels
             await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
         });
 
+        public override async void OnNavigatedTo(INavigationParameters parameters)
+        {
+            await DownloadBusStopsIfEmpty();
+        }
+
+
         private async Task DownloadBusStopsIfEmpty()
         {
+            await Task.Delay(500);
+
+
             var repositoryStops = _busStopRepository.GetAll();
             if (!repositoryStops.Any())
             {
-                var result = await _rtmService.GetAllBusStops();
-                _busStopRepository.AddRange(result);
-                BusStopsAll = result.AsReadOnly();
-                BusStops = result;
+                var dialogResponse = await _pageDialogService.DisplayAlertAsync("Missing bus stop database",
+                    "Local database containing bus stops missing. Do you want download it now?",
+                    "Yes", "No");
+                if (dialogResponse)
+                {
+                    IsBusy = true;
+                    try
+                    {
+                        var result = await ApiCall(_rtmService.GetAllBusStops());
+                        _busStopRepository.AddRange(result);
+                        BusStopsAll = result.AsReadOnly();
+                        BusStops = result;
+                    }
+                    catch (Exceptions.ConnectionException ex)
+                    {
+                        await _pageDialogService.DisplayAlertAsync("No internet connection", "Please check your connection", "Ok");
+                    } 
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                }
             }
             else
             {

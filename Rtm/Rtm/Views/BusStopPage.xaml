@@ -21,7 +21,7 @@
         <StackLayout Padding="8">
             <ListView ItemsSource="{Binding BusStop.Departures}"
                       IsPullToRefreshEnabled="True"
-                      RefreshCommand="{Binding DownloadCommand}"
+                      RefreshCommand="{Binding RefreshCommand}"
                       IsRefreshing="{Binding IsBusy}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

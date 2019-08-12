@@ -1,9 +1,13 @@
 ﻿using Prism.Mvvm;
 using Prism.Navigation;
+using Prism.Services;
+using Rtm.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace Rtm.ViewModels
 {
@@ -30,6 +34,26 @@ namespace Rtm.ViewModels
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
+            Connectivity.ConnectivityChanged += Connectivity_ConnectionChanged;
+        }
+
+        public async Task<T> ApiCall<T>(Task<T> method) 
+        {
+            var currentConnection = Connectivity.NetworkAccess;
+            if (currentConnection != NetworkAccess.Internet)
+            {
+                //Todo: Toast
+                throw new ConnectionException("No internet connection");    
+            }
+
+            try
+            {
+                return await method;
+            }
+            catch (Exception otherEx)
+            {
+                throw new ApiException(otherEx.Message);
+            }
         }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
@@ -50,6 +74,12 @@ namespace Rtm.ViewModels
         public virtual void Destroy()
         {
 
+        }
+
+        private async void Connectivity_ConnectionChanged(object sender, ConnectivityChangedEventArgs e)
+        {
+            //await PageDialogService.DisplayAlertAsync("Warning", "Internet connection missing", "Ok");
+            //Todo: Toast
         }
 
     }
