@@ -59,5 +59,11 @@ namespace Rtm.Repositories
             busStop.IsFavorite = true;
             _connection.Update(busStop);
         }
+
+        public void RemoveFromFavorites(BusStop busStop)
+        {
+            busStop.IsFavorite = false;
+            _connection.Update(busStop);
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace Rtm.Repositories
         void AddRange(IEnumerable<BusStop> busStops);
         void Remove(int id);
         void AddToFavorites(BusStop busStop);
+        void RemoveFromFavorites(BusStop busStop);
     }
 }

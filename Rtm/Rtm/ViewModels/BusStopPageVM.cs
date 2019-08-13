@@ -58,6 +58,14 @@ namespace Rtm.ViewModels
         public ICommand AddToFavoritesCommand => new DelegateCommand(() => 
             _busStopRepository.AddToFavorites(BusStop));
 
+        public ICommand RemoveFromFavoritesCommand => new DelegateCommand(() => 
+            _busStopRepository.RemoveFromFavorites(BusStop));
+
+        public ICommand ChangeCommand => new DelegateCommand(() =>
+        {
+            BusStop.IsFavorite = !BusStop.IsFavorite;
+        });
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             BusStop.Id = (int)parameters["busStopIp"];

@@ -6,6 +6,7 @@
              mc:Ignorable="d"
              xmlns:views="clr-namespace:Rtm.Views"
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
+             xmlns:customcontrols="clr-namespace:Rtm.CustomControls"
              x:Class="Rtm.Views.BusStopPage"
              Title="{Binding BusStop.Name}">
 
@@ -14,7 +15,11 @@
     </ContentPage.BindingContext>-->
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Dodaj do ulubionych" Command="{Binding AddToFavoritesCommand}" Order="Secondary" />
+        <customcontrols:ToggleableToolbarItem IconImageSource="Yellow_Star.png"
+                                            IconImageSourceToggled="Gray_Star.png"
+                                            Order="Primary"
+                                            IsToggled="{Binding BusStop.IsFavorite}"
+                                            Command="{Binding ChangeCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

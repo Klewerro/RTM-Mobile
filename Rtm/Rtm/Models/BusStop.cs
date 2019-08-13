@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using Prism.Mvvm;
 using SQLite;
 
 namespace Rtm.Models
 {
-    public class BusStop
+    public class BusStop : BindableBase
     {
+        private bool _isFavorite;
+
         [PrimaryKey]
         public int Id { get; set; }
 
@@ -22,7 +25,7 @@ namespace Rtm.Models
 
         public string LatLng { get; set; }
 
-        public bool IsFavorite { get; set; }
+        public bool IsFavorite { get => _isFavorite; set => SetProperty(ref _isFavorite, value); }
 
         [Ignore]
         public List<Departure> Departures { get; set; }
