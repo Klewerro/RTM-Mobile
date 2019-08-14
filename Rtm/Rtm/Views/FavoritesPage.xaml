@@ -4,19 +4,32 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:Rtm.Helpers"
              mc:Ignorable="d"
              x:Class="Rtm.Views.FavoritesPage"
              Title="Ulubione">
 
     <!--<ContentPage.BindingContext>
-        <viewmodels:ListPageVM />
+        <viewmodels:FavoritesPageVM />
     </ContentPage.BindingContext>-->
+
+    <ContentPage.Behaviors>
+        <b:EventToCommandBehavior EventName="Appearing"
+                                  Command="{Binding AppearingCommand}" />
+    </ContentPage.Behaviors>
     
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Favorites Page!"
-                   VerticalOptions="CenterAndExpand" 
-                   HorizontalOptions="CenterAndExpand" />
+            <ListView ItemsSource="{Binding FavoritesBusStops}"
+                      IsRefreshing="{Binding IsBusy}"
+                      ItemTemplate="{StaticResource bussStopListTemplate}">
+                <ListView.Behaviors>
+                    <b:EventToCommandBehavior EventName="ItemTapped"
+                                              Command="{Binding ItemTappedCommand}"
+                                              EventArgsConverter="{converters:ItemTappedEventArgsConverter}" />
+                </ListView.Behaviors>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
