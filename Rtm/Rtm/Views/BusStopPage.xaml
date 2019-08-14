@@ -19,7 +19,7 @@
                                             IconImageSourceToggled="Gray_Star.png"
                                             Order="Primary"
                                             IsToggled="{Binding BusStop.IsFavorite}"
-                                            Command="{Binding ChangeCommand}" />
+                                            Command="{Binding FavoritesToggleCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

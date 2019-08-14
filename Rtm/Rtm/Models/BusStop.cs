@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using Newtonsoft.Json;
 using Prism.Mvvm;
@@ -9,7 +10,9 @@ namespace Rtm.Models
 {
     public class BusStop : BindableBase
     {
+        private string _description;
         private bool _isFavorite;
+        private List<Departure> _departures;
 
         [PrimaryKey]
         public int Id { get; set; }
@@ -17,7 +20,7 @@ namespace Rtm.Models
         public string Name { get; set; }
 
         [Ignore]
-        public string Description { get; set; }
+        public string Description { get => _description; set => SetProperty(ref _description, value); }
 
         public double Latitude { get; set; }
 
@@ -28,7 +31,7 @@ namespace Rtm.Models
         public bool IsFavorite { get => _isFavorite; set => SetProperty(ref _isFavorite, value); }
 
         [Ignore]
-        public List<Departure> Departures { get; set; }
+        public List<Departure> Departures { get => _departures; set => SetProperty(ref _departures, value); }
 
 
         public BusStop()

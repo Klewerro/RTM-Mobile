@@ -28,8 +28,34 @@
                 </ListView.Behaviors>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Name}"
-                                  Detail="{Binding LatLng}" />
+                        <ViewCell>
+                            <Grid Margin="8,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <BoxView Color="ForestGreen"
+                                         WidthRequest="5"
+                                         Grid.RowSpan="2"
+                                         Margin="0,2">
+                                    <BoxView.Triggers>
+                                        <DataTrigger TargetType="BoxView" Binding="{Binding IsFavorite}" Value="True">
+                                            <Setter Property="Color" Value="Gold" />
+                                        </DataTrigger>
+                                    </BoxView.Triggers>
+                                </BoxView>
+                                <Label Text="{Binding Name}"
+                                       TextColor="DodgerBlue"
+                                       Grid.Column="1" />
+                                <Label Text="{Binding LatLng}"
+                                       Grid.Row="1" Grid.Column="1" />
+                            </Grid>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

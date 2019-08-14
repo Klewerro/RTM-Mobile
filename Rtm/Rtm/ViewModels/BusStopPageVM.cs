@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
+using Rtm.Helpers;
 using Rtm.Models;
 using Rtm.Repositories;
 using Rtm.Services;
@@ -35,7 +36,6 @@ namespace Rtm.ViewModels
             set => SetProperty(ref _busStop, value);
         }
 
-        public BusStop BusStopFromRepository { get; set; }
 
         public BusStopPageVM(INavigationService navigationService, 
             IPageDialogService pageDialogService,
@@ -66,15 +66,27 @@ namespace Rtm.ViewModels
             BusStop.IsFavorite = !BusStop.IsFavorite;
         });
 
+        public ICommand FavoritesToggleCommand => new DelegateCommand(() => 
+        {
+            if (BusStop.IsFavorite)
+            {
+                _busStopRepository.RemoveFromFavorites(BusStop);
+            }
+            else
+            {
+                _busStopRepository.AddToFavorites(BusStop);
+            }
+        });
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             BusStop.Id = (int)parameters["busStopIp"];
-            BusStop = await DownloadBusStop();
             if (BusStop.Id == 0)
                 return;
 
-            BusStopFromRepository = _busStopRepository.Get(BusStop.Id);
-            CheckIfIsInFavorites();
+            BusStop = _busStopRepository.Get(BusStop.Id);
+            var busStopFromApi = await DownloadBusStop();
+            BusStop.AddDownloadedData(busStopFromApi);                              
         }
 
 
@@ -83,8 +95,8 @@ namespace Rtm.ViewModels
             IsBusy = true;
             try
             {
-                BusStop = await ApiCall(_rtmService.GetBusStop(BusStop.Id));
-                return BusStop;
+                var responseBusStop = await ApiCall(_rtmService.GetBusStop(BusStop.Id));
+                return responseBusStop;
             }
             catch (Exceptions.ConnectionException ex)
             {
@@ -97,14 +109,6 @@ namespace Rtm.ViewModels
             }
 
             return new BusStop();
-        }
-
-        private void CheckIfIsInFavorites()
-        {
-            if (BusStopFromRepository.IsFavorite)
-                Console.WriteLine("Is in favorites");
-            else
-                Console.WriteLine("Not in favorites");
         }
     }
 }
