@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
+using Rtm.Helpers;
 using Rtm.Models;
 using Rtm.Repositories;
 using Rtm.Services;
@@ -48,6 +49,7 @@ namespace Rtm.ViewModels
             _pageDialogService = pageDialogService;
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
+            BusStops = new List<BusStop>();
         }
 
         public ICommand SearchCommand => new DelegateCommand(async () =>
@@ -67,15 +69,19 @@ namespace Rtm.ViewModels
             BusStops = SearchForBusStops(SearchText);
         });
 
+        public ICommand DownloadBusStopsCommand => new DelegateCommand(async () => 
+            await DownloadBusStops());
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
-            await DownloadBusStopsIfEmpty();
+            await DownloadBusStopsAutomaticallyIfEmpty();
         }
 
 
-        private async Task DownloadBusStopsIfEmpty()
+        private async Task DownloadBusStopsAutomaticallyIfEmpty()
         {
             await Task.Delay(500);
+            var connection = CheckConnection(async () => await DownloadBusStops());
 
             var repositoryStops = _busStopRepository.GetAll();
             if (!repositoryStops.Any())
@@ -85,22 +91,7 @@ namespace Rtm.ViewModels
                     "Yes", "No");
                 if (dialogResponse)
                 {
-                    IsBusy = true;
-                    try
-                    {
-                        var result = await ApiCall(_rtmService.GetAllBusStops());
-                        _busStopRepository.AddRange(result);
-                        BusStopsAll = result.AsReadOnly();
-                        BusStops = result;
-                    }
-                    catch (Exceptions.ConnectionException ex)
-                    {
-                        await _pageDialogService.DisplayAlertAsync("No internet connection", "Please check your connection", "Ok");
-                    } 
-                    finally
-                    {
-                        IsBusy = false;
-                    }
+                    await DownloadBusStops();
                 }
             }
             else
@@ -108,6 +99,34 @@ namespace Rtm.ViewModels
                 BusStopsAll = repositoryStops.AsReadOnly();
                 BusStops = string.IsNullOrEmpty(SearchText) ? repositoryStops : SearchForBusStops(SearchText);
             }
+        }
+
+        private async Task DownloadBusStops()
+        {
+            var connection = CheckConnection(async () => await DownloadBusStops());
+            if (!connection)
+                return;
+            IsBusy = true;
+            try
+            {
+                var result = await ApiCall(_rtmService.GetAllBusStops());
+                _busStopRepository.AddRange(result);
+                BusStopsAll = result.AsReadOnly();
+                BusStops = result;
+            }
+            catch (Exceptions.ConnectionException ex)
+            {
+                CheckConnection(async () => await DownloadBusStops());
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private Action TestAction (IDisposable toastToDispose)
+        {
+           return () => toastToDispose.Dispose();
         }
 
         private List<BusStop> SearchForBusStops(string searchText)

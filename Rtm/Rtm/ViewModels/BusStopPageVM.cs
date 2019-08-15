@@ -55,26 +55,19 @@ namespace Rtm.ViewModels
             IsBusy = false;
         });
 
-        public ICommand AddToFavoritesCommand => new DelegateCommand(() => 
-            _busStopRepository.AddToFavorites(BusStop));
-
-        public ICommand RemoveFromFavoritesCommand => new DelegateCommand(() => 
-            _busStopRepository.RemoveFromFavorites(BusStop));
-
-        public ICommand ChangeCommand => new DelegateCommand(() =>
-        {
-            BusStop.IsFavorite = !BusStop.IsFavorite;
-        });
-
         public ICommand FavoritesToggleCommand => new DelegateCommand(() => 
         {
             if (BusStop.IsFavorite)
             {
                 _busStopRepository.RemoveFromFavorites(BusStop);
+                DialogHelper.DisplayToast("Usunięto z ulubionych", ToastTime.Short, 
+                    "Cofnij", () => _busStopRepository.AddToFavorites(BusStop));
             }
             else
             {
                 _busStopRepository.AddToFavorites(BusStop);
+                DialogHelper.DisplayToast("Dodano do ulubionych", ToastTime.Short, 
+                    "Cofnij", () => _busStopRepository.RemoveFromFavorites(BusStop));
             }
         });
 
@@ -85,10 +78,18 @@ namespace Rtm.ViewModels
                 return;
 
             BusStop = _busStopRepository.Get(BusStop.Id);
-            var busStopFromApi = await DownloadBusStop();
-            BusStop.AddDownloadedData(busStopFromApi);                              
+            var connection = CheckConnection(async () => await PrepareBusStopUsingApiData());
+            if (!connection)
+                return;
+
+            await PrepareBusStopUsingApiData();                         
         }
 
+        private async Task PrepareBusStopUsingApiData()
+        {
+            var busStopFromApi = await DownloadBusStop();
+            BusStop.AddDownloadedData(busStopFromApi);
+        }
 
         private async Task<BusStop> DownloadBusStop()
         {
@@ -98,10 +99,9 @@ namespace Rtm.ViewModels
                 var responseBusStop = await ApiCall(_rtmService.GetBusStop(BusStop.Id));
                 return responseBusStop;
             }
-            catch (Exceptions.ConnectionException ex)
+            catch (Exceptions.ConnectionException)
             {
-                await _pageDialogService.DisplayAlertAsync("No internet connection", "Please check your connection", "Ok");
-                await NavigationService.GoBackAsync();
+                CheckConnection(async () => await PrepareBusStopUsingApiData());
             }
             finally
             {

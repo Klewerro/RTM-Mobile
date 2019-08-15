@@ -2,6 +2,7 @@
 using Prism.Navigation;
 using Prism.Services;
 using Rtm.Exceptions;
+using Rtm.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,6 +31,8 @@ namespace Rtm.ViewModels
             set => SetProperty(ref _title, value);
         }
 
+        public IDisposable ConnectionDialog { get; private set; }
+
 
         public ViewModelBase(INavigationService navigationService)
         {
@@ -54,6 +57,23 @@ namespace Rtm.ViewModels
             {
                 throw new ApiException(otherEx.Message);
             }
+        }
+
+        public bool CheckConnection(Action action)
+        {
+            var currentConnection = Connectivity.NetworkAccess;
+            if (currentConnection != NetworkAccess.Internet)
+            {
+                ConnectionDialog = DialogHelper.DisplayToast("Brak połączenia z internetem", ToastTime.OneHour, "Odśwież", async () =>
+                {
+                    ConnectionDialog.Dispose();
+                    action.Invoke();
+                });
+
+                return false;
+            }
+
+            return true;
         }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
