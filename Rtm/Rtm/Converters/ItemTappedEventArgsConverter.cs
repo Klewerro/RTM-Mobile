@@ -5,7 +5,7 @@ using System.Text;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Rtm.Helpers
+namespace Rtm.Converters
 {
     public class ItemTappedEventArgsConverter : IValueConverter, IMarkupExtension
     {

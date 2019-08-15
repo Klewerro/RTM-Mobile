@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
-             xmlns:converters="clr-namespace:Rtm.Helpers"
+             xmlns:converters="clr-namespace:Rtm.Converters"
              mc:Ignorable="d"
              x:Class="Rtm.Views.FavoritesPage"
              Title="Ulubione">
