@@ -18,7 +18,12 @@
         <StackLayout>
             <SearchBar SearchCommand="{Binding SearchCommand}"
                        Text="{Binding SearchText}"
-                       Placeholder="Wprowadź nazwę przystanku..." />
+                       Placeholder="Wprowadź nazwę przystanku...">
+                <SearchBar.Behaviors>
+                    <b:EventToCommandBehavior EventName="TextChanged"
+                                              Command="{Binding SearchTextChangedCommand}" />
+                </SearchBar.Behaviors>
+            </SearchBar>
             <ListView ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"
                       ItemTemplate="{StaticResource bussStopListTemplate}">

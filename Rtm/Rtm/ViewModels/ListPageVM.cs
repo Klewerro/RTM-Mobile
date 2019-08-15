@@ -62,6 +62,11 @@ namespace Rtm.ViewModels
             await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
         });
 
+        public ICommand SearchTextChangedCommand => new DelegateCommand(() =>
+        {
+            BusStops = SearchForBusStops(SearchText);
+        });
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             await DownloadBusStopsIfEmpty();
@@ -71,7 +76,6 @@ namespace Rtm.ViewModels
         private async Task DownloadBusStopsIfEmpty()
         {
             await Task.Delay(500);
-
 
             var repositoryStops = _busStopRepository.GetAll();
             if (!repositoryStops.Any())
@@ -102,9 +106,12 @@ namespace Rtm.ViewModels
             else
             {
                 BusStopsAll = repositoryStops.AsReadOnly();
-                BusStops = repositoryStops;
+                BusStops = string.IsNullOrEmpty(SearchText) ? repositoryStops : SearchForBusStops(SearchText);
             }
         }
+
+        private List<BusStop> SearchForBusStops(string searchText)
+            => BusStopsAll.Where(b => b.Name.ToLower().Contains(searchText.ToLower())).ToList();
 
     }
 }
