@@ -50,6 +50,7 @@ namespace Rtm.ViewModels
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
             BusStops = new List<BusStop>();
+            _busStopRepository.BusStopsDeletedEvent += (s, e) => BusStops = new List<BusStop>();
         }
 
         public ICommand SearchCommand => new DelegateCommand(async () =>

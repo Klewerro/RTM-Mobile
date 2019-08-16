@@ -13,9 +13,10 @@ namespace Rtm.Repositories
     {
         private readonly SQLiteConnection _connection;
 
-        public BusStopRepository()
+        public event EventHandler BusStopsDeletedEvent;
+
+        public BusStopRepository(ILocalDatabase localDatabase)
         {
-            ILocalDatabase localDatabase = new LocalDatabase();
             _connection = localDatabase.GetConnection();
         }
 
@@ -51,8 +52,14 @@ namespace Rtm.Repositories
         public List<BusStop> GetAllFavorites()
             => _connection.Table<BusStop>().Where(b => b.IsFavorite).ToList();
 
-        public void Remove(int id)
+        public void Delete(int id)
             => _connection.Table<BusStop>().Delete(b => b.Id == id);
+
+        public void DeleteAll()
+        {
+            _connection.DeleteAll<BusStop>();
+            BusStopsDeletedEvent?.Invoke(this, EventArgs.Empty);
+        }
 
         public void AddToFavorites(BusStop busStop)
         {

@@ -8,6 +8,7 @@ using Rtm.Views;
 using Rtm.ViewModels;
 using Rtm.Services;
 using Rtm.Repositories;
+using Rtm.Database;
 
 namespace Rtm
 {
@@ -34,13 +35,14 @@ namespace Rtm
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
-            containerRegistry.RegisterForNavigation<TabsPage>();
+            containerRegistry.RegisterForNavigation<TabsPage, TabsPageVM>();
             containerRegistry.RegisterForNavigation<BusStopPage, BusStopPageVM>();
             containerRegistry.RegisterForNavigation<ListPage, ListPageVM>();
             containerRegistry.RegisterForNavigation<FavoritesPage, FavoritesPageVM>();
 
             containerRegistry.Register<IRtmService, RtmService>();
-            containerRegistry.Register<IBusStopRepository, BusStopRepository>();
+            containerRegistry.RegisterSingleton<IBusStopRepository, BusStopRepository>();
+            containerRegistry.Register<ILocalDatabase, LocalDatabase>();
         }
 
     }

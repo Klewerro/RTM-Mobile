@@ -8,6 +8,12 @@
             x:Class="Rtm.Views.TabsPage"
             Title="RTM przystanki">
 
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem Text="Usuń wszystkie przystanki"
+                     Order="Secondary"
+                     Command="{Binding DeleteBusStopsCommand}" />
+    </TabbedPage.ToolbarItems>
+    
     <views:ListPage />
     <views:FavoritesPage />
 

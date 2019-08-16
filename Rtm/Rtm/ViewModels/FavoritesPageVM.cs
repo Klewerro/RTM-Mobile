@@ -26,6 +26,7 @@ namespace Rtm.ViewModels
         {
             _busStopRepository = busStopRepository;
             FavoritesBusStops = new List<BusStop>();
+            _busStopRepository.BusStopsDeletedEvent += (s, e) => FavoritesBusStops = new List<BusStop>();
         }
 
 
