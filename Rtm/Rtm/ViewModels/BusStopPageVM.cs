@@ -51,7 +51,7 @@ namespace Rtm.ViewModels
         public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
-            BusStop = await DownloadBusStop();
+            BusStop.AddDownloadedData(await DownloadBusStop());
             IsBusy = false;
         });
 
