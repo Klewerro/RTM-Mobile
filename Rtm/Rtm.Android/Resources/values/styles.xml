@@ -22,9 +22,21 @@
     <item name="windowActionModeOverlay">true</item>
 
     <item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>
+
+    <!--List view item clicked colors-->
+    <item name="android:colorPressedHighlight">@color/ListViewSelectedWhite</item>
+    <item name="android:colorLongPressedHighlight">@color/ListViewHighlighted</item>
+    <item name="android:colorFocusedHighlight">@color/ListViewSelected</item>
+    <item name="android:colorActivatedHighlight">@color/ListViewSelected</item>
+    <item name="android:activatedBackgroundIndicator">@color/ListViewSelected</item>
   </style>
 
   <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
     <item name="colorAccent">#FF4081</item>
   </style>
+
+  <!--List view item clicked color names-->
+  <color name="ListViewSelectedWhite">#FFFF</color>
+  <color name="ListViewSelected">#96BCE3</color>
+  <color name="ListViewHighlighted">#E39696</color>
 </resources>
