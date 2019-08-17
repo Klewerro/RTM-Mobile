@@ -60,6 +60,9 @@ namespace Rtm.ViewModels
 
         public ICommand ItemTappedCommand => new DelegateCommand<BusStop>(async busStop =>
         {
+            if (!IsInternetAccess)
+                return;
+
             var parameters = new NavigationParameters();
             parameters.Add("busStopIp", busStop.Id);
             await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
@@ -75,6 +78,7 @@ namespace Rtm.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
             await DownloadBusStopsAutomaticallyIfEmpty();
         }
 
@@ -82,10 +86,10 @@ namespace Rtm.ViewModels
         private async Task DownloadBusStopsAutomaticallyIfEmpty()
         {
             await Task.Delay(500);
-            var connection = CheckConnection(async () => await DownloadBusStops());
 
             var repositoryStops = _busStopRepository.GetAll();
-            if (!repositoryStops.Any())
+
+            if (!repositoryStops.Any() && IsInternetAccess)
             {
                 var dialogResponse = await _pageDialogService.DisplayAlertAsync("Missing bus stop database",
                     "Local database containing bus stops missing. Do you want download it now?",
@@ -104,8 +108,7 @@ namespace Rtm.ViewModels
 
         private async Task DownloadBusStops()
         {
-            var connection = CheckConnection(async () => await DownloadBusStops());
-            if (!connection)
+            if (!IsInternetAccess)
                 return;
             IsBusy = true;
             try
@@ -117,17 +120,12 @@ namespace Rtm.ViewModels
             }
             catch (Exceptions.ConnectionException ex)
             {
-                CheckConnection(async () => await DownloadBusStops());
+                ConnectionErrorRetry(async () => await DownloadBusStops());
             }
             finally
             {
                 IsBusy = false;
             }
-        }
-
-        private Action TestAction (IDisposable toastToDispose)
-        {
-           return () => toastToDispose.Dispose();
         }
 
         private List<BusStop> SearchForBusStops(string searchText)

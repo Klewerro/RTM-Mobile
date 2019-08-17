@@ -73,13 +73,14 @@ namespace Rtm.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            base.OnNavigatedTo(parameters);
             BusStop.Id = (int)parameters["busStopIp"];
             if (BusStop.Id == 0)
                 return;
 
             BusStop = _busStopRepository.Get(BusStop.Id);
-            var connection = CheckConnection(async () => await PrepareBusStopUsingApiData());
-            if (!connection)
+            
+            if (!IsInternetAccess)
                 return;
 
             await PrepareBusStopUsingApiData();                         
@@ -93,6 +94,9 @@ namespace Rtm.ViewModels
 
         private async Task<BusStop> DownloadBusStop()
         {
+            if (!IsInternetAccess)
+                return BusStop;
+
             IsBusy = true;
             try
             {
@@ -101,7 +105,7 @@ namespace Rtm.ViewModels
             }
             catch (Exceptions.ConnectionException)
             {
-                CheckConnection(async () => await PrepareBusStopUsingApiData());
+                ConnectionErrorRetry(async () => await PrepareBusStopUsingApiData());
             }
             finally
             {

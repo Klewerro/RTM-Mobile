@@ -16,6 +16,7 @@ namespace Rtm.ViewModels
     {
         private bool _isBusy;
         private string _title;
+        private bool _isInternetAccess;
 
         protected INavigationService NavigationService { get; private set; }
 
@@ -31,6 +32,12 @@ namespace Rtm.ViewModels
             set => SetProperty(ref _title, value);
         }
 
+        public bool IsInternetAccess
+        {
+            get => _isInternetAccess;
+            set => SetProperty(ref _isInternetAccess, value);
+        }
+
         public IDisposable ConnectionDialog { get; private set; }
 
 
@@ -40,13 +47,18 @@ namespace Rtm.ViewModels
             Connectivity.ConnectivityChanged += Connectivity_ConnectionChanged;
         }
 
-        public async Task<T> ApiCall<T>(Task<T> method) 
+        ~ViewModelBase()
+        {
+            Connectivity.ConnectivityChanged -= Connectivity_ConnectionChanged;
+        }
+
+        public async Task<T> ApiCall<T>(Task<T> method)
         {
             var currentConnection = Connectivity.NetworkAccess;
             if (currentConnection != NetworkAccess.Internet)
             {
                 //Todo: Toast
-                throw new ConnectionException("No internet connection");    
+                throw new ConnectionException("No internet connection");
             }
 
             try
@@ -59,12 +71,12 @@ namespace Rtm.ViewModels
             }
         }
 
-        public bool CheckConnection(Action action)
+        public bool ConnectionErrorRetry(Action action)
         {
             var currentConnection = Connectivity.NetworkAccess;
             if (currentConnection != NetworkAccess.Internet)
             {
-                ConnectionDialog = DialogHelper.DisplayToast("Brak połączenia z internetem", ToastTime.OneHour, "Odśwież", async () =>
+                ConnectionDialog = DialogHelper.DisplayToast("Błąd z połączeniem", ToastTime.OneHour, "Spróbuj ponownie", async () =>
                 {
                     ConnectionDialog.Dispose();
                     action.Invoke();
@@ -83,7 +95,9 @@ namespace Rtm.ViewModels
 
         public virtual void OnNavigatedTo(INavigationParameters parameters)
         {
-
+            IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
+            if (!IsInternetAccess)
+                DialogHelper.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
         }
 
         public virtual void OnNavigatingTo(INavigationParameters parameters)
@@ -96,10 +110,13 @@ namespace Rtm.ViewModels
 
         }
 
-        private async void Connectivity_ConnectionChanged(object sender, ConnectivityChangedEventArgs e)
+        private void Connectivity_ConnectionChanged(object sender, ConnectivityChangedEventArgs e)
         {
-            //await PageDialogService.DisplayAlertAsync("Warning", "Internet connection missing", "Ok");
-            //Todo: Toast
+            IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
+            if (IsInternetAccess)
+                DialogHelper.DisplayToast("Połączono z internetem.", ToastTime.Short);
+            else
+                DialogHelper.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
         }
 
     }
