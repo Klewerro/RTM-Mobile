@@ -88,6 +88,13 @@ namespace Rtm.ViewModels
             return true;
         }
 
+        public virtual void CheckInternetConnection()
+        {
+            IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
+            if (!IsInternetAccess)
+                DialogHelper.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
+        }
+
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
         {
 
@@ -95,9 +102,7 @@ namespace Rtm.ViewModels
 
         public virtual void OnNavigatedTo(INavigationParameters parameters)
         {
-            IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
-            if (!IsInternetAccess)
-                DialogHelper.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
+            CheckInternetConnection();
         }
 
         public virtual void OnNavigatingTo(INavigationParameters parameters)

@@ -1,6 +1,7 @@
 ﻿using Rtm.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace Rtm.Helpers
@@ -16,6 +17,14 @@ namespace Rtm.Helpers
         {
             busStop.Description = downloadedBusStop.Description;
             busStop.Departures = downloadedBusStop.Departures;
+        }
+
+        public static void AddRange<T>(this ObservableCollection<T> observableCollection, IEnumerable<T> collection)
+        {
+            foreach (var item in collection)
+            {
+                observableCollection.Add(item);
+            }
         }
     }
 }

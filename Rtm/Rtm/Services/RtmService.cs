@@ -63,8 +63,8 @@ namespace Rtm.Services
                 {
                     Id = (int)item[0],
                     Name = (string)item[1],
-                    Latitude = (double)item[4],
-                    Longitude = (double)item[5]
+                    Latitude = (double)item[5],
+                    Longitude = (double)item[4]
                 };
                 busStop.SetLatLng();
                 busStops.Add(busStop);

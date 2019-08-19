@@ -143,7 +143,7 @@ namespace Rtm.ViewModels
             IsBusy = true;
             foreach (var stop in BusStopsAll)
             {
-                var busStopPosition = new Position(stop.Longitude, stop.Latitude);  //Todo: swap
+                var busStopPosition = new Position(stop.Latitude, stop.Longitude);
                 stop.Distance = Position.CalculateDistance(busStopPosition, GeolocatorUtils.DistanceUnits.Kilometers);
             }
 
