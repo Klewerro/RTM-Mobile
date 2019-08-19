@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:Rtm.Converters"
+             mc:Ignorable="d"
+             x:Class="Rtm.Views.NearbyPage"
+             Title="Najbliższe">
+
+    <!--<ContentPage.BindingContext>
+        <viewmodels:NearbyPageVM />
+    </ContentPage.BindingContext>-->
+
+    <ContentPage.Resources>
+        <converters:DistanceConverter x:Key="distanceConverter"/>
+    </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <b:EventToCommandBehavior EventName="Appearing"
+                                  Command="{Binding AppearingCommand}" />
+        <b:EventToCommandBehavior EventName="Disappearing"
+                                  Command="{Binding DisappearingCommand}" />
+    </ContentPage.Behaviors>
+    
+    <ContentPage.Content>
+        <StackLayout>
+
+            <Grid HorizontalOptions="Center"
+                  BackgroundColor="#51a9ff">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="3*"/> <!--Spacer-->
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Text="Filtry" FontAttributes="Bold"
+                       Grid.Column="0"
+                       FontSize="Large"
+                       TextColor="White"
+                       VerticalOptions="Center"
+                       Margin="8,0,0,0"/>
+                <Picker SelectedIndex="{Binding RangePickerIndex}" 
+                        Title="Wybierz zakres"
+                        TitleColor="White" 
+                        TextColor="White"
+                        Grid.Column="1">
+                    <Picker.Items>
+                        <x:String>250m</x:String>
+                        <x:String>500m</x:String>
+                        <x:String>750m</x:String>
+                        <x:String>1km</x:String>
+                        <x:String>2km</x:String>
+                        <x:String>3km</x:String>
+                        <x:String>5km</x:String>
+                    </Picker.Items>
+                </Picker>
+                <Entry Keyboard="Numeric"
+                       Placeholder="Wartość"
+                       TextColor="White"
+                       Grid.Column="3"/>
+                <Picker SelectedIndex="{Binding UnitPickerIndex}" 
+                        Grid.Column="4"
+                        Margin="0,0,8,0"
+                        TextColor="White">
+                    <Picker.Items>
+                        <x:String>m</x:String>
+                        <x:String>km</x:String>
+                    </Picker.Items>
+                </Picker>
+            </Grid>
+            
+            <ListView ItemsSource="{Binding BusStops}"
+                      IsRefreshing="{Binding IsBusy}"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding RefreshCommand}">
+                <ListView.Behaviors>
+                    <b:EventToCommandBehavior EventName="ItemTapped"
+                                              Command="{Binding ItemTappedCommand}"
+                                              EventArgsConverter="{converters:ItemTappedEventArgsConverter}" />
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Margin="8,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <BoxView Color="ForestGreen"
+                                         WidthRequest="5"
+                                         Grid.RowSpan="2"
+                                         Margin="0,2">
+                                    <BoxView.Triggers>
+                                        <DataTrigger TargetType="BoxView" Binding="{Binding IsFavorite}" Value="True">
+                                            <Setter Property="Color" Value="Gold" />
+                                        </DataTrigger>
+                                    </BoxView.Triggers>
+                                </BoxView>
+                                <Label Text="{Binding Name}"
+                                       TextColor="DodgerBlue"
+                                       Grid.Column="1" />
+                                <Label Text="{Binding Distance, Converter={StaticResource distanceConverter}}"
+                                       Grid.Row="1" Grid.Column="1" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -16,5 +16,6 @@
     
     <views:ListPage />
     <views:FavoritesPage />
+    <views:NearbyPage />
 
 </TabbedPage>

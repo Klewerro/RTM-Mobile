@@ -22,6 +22,7 @@ namespace Rtm.Droid
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             Acr.UserDialogs.UserDialogs.Init(this);
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState); //for geolocator plugin
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());

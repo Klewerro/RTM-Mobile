@@ -13,6 +13,7 @@ namespace Rtm.Models
         private string _description;
         private bool _isFavorite;
         private List<Departure> _departures;
+        private double _distance;
 
         [PrimaryKey]
         public int Id { get; set; }
@@ -32,6 +33,9 @@ namespace Rtm.Models
 
         [Ignore]
         public List<Departure> Departures { get => _departures; set => SetProperty(ref _departures, value); }
+
+        [Ignore]
+        public double Distance { get => _distance; set => SetProperty(ref _distance, value); }
 
 
         public BusStop()

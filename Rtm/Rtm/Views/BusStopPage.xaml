@@ -7,6 +7,7 @@
              xmlns:views="clr-namespace:Rtm.Views"
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
              xmlns:customcontrols="clr-namespace:Rtm.CustomControls"
+             xmlns:converters="clr-namespace:Rtm.Converters"
              x:Class="Rtm.Views.BusStopPage"
              Title="{Binding BusStop.Name}">
 
@@ -14,6 +15,10 @@
         <viewmodels:BusStopPageVM/>
     </ContentPage.BindingContext>-->
 
+    <ContentPage.Resources>
+        <converters:DistanceConverter x:Key="distanceConverter"/>
+    </ContentPage.Resources>
+    
     <ContentPage.ToolbarItems>
         <customcontrols:ToggleableToolbarItem IconImageSource="Yellow_Star.png"
                                             IconImageSourceToggled="Gray_Star.png"
@@ -23,11 +28,13 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <StackLayout Padding="8">
+        <StackLayout Padding="8,8,8,0">
             <ListView ItemsSource="{Binding BusStop.Departures}"
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshCommand}"
-                      IsRefreshing="{Binding IsBusy}">
+                      IsRefreshing="{Binding IsBusy}"
+                      VerticalOptions="Start"
+                      SeparatorColor="DodgerBlue">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -52,9 +59,17 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            
+            <Label Text="{Binding BusStop.Distance, Converter={StaticResource distanceConverter}, StringFormat='Dystans: {0}'}"
+                   IsVisible="{Binding BusStop.Distance}"
+                   TextColor="Black"
+                   FontSize="Medium"
+                   VerticalOptions="EndAndExpand" HorizontalOptions="End"/>
 
             <Label Text="{Binding BusStop.Description}"
-                   VerticalOptions="EndAndExpand"/>
+                   VerticalOptions="EndAndExpand"
+                   BackgroundColor="#51a9ff"
+                   TextColor="White"/>
         </StackLayout>
     </ContentPage.Content>
 

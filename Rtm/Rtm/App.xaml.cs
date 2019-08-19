@@ -39,6 +39,7 @@ namespace Rtm
             containerRegistry.RegisterForNavigation<BusStopPage, BusStopPageVM>();
             containerRegistry.RegisterForNavigation<ListPage, ListPageVM>();
             containerRegistry.RegisterForNavigation<FavoritesPage, FavoritesPageVM>();
+            containerRegistry.RegisterForNavigation<NearbyPage, NearbyPageVM>();
 
             containerRegistry.Register<IRtmService, RtmService>();
             containerRegistry.RegisterSingleton<IBusStopRepository, BusStopRepository>();

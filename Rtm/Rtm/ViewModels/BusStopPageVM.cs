@@ -25,10 +25,10 @@ namespace Rtm.ViewModels
 {
     public class BusStopPageVM : ViewModelBase
     {
-        private readonly IPageDialogService _pageDialogService;
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
-        private BusStop _busStop;       
+        private BusStop _busStop;
+
 
         public BusStop BusStop
         {
@@ -37,12 +37,10 @@ namespace Rtm.ViewModels
         }
 
 
-        public BusStopPageVM(INavigationService navigationService, 
-            IPageDialogService pageDialogService,
-            IBusStopRepository busStopRepository, 
-            IRtmService rtmService) : base (navigationService)
+        public BusStopPageVM(INavigationService navigationService,
+            IBusStopRepository busStopRepository,
+            IRtmService rtmService) : base(navigationService)
         {
-            _pageDialogService = pageDialogService;
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
             BusStop = new BusStop();
@@ -55,18 +53,18 @@ namespace Rtm.ViewModels
             IsBusy = false;
         });
 
-        public ICommand FavoritesToggleCommand => new DelegateCommand(() => 
+        public ICommand FavoritesToggleCommand => new DelegateCommand(() =>
         {
             if (BusStop.IsFavorite)
             {
                 _busStopRepository.RemoveFromFavorites(BusStop);
-                DialogHelper.DisplayToast("Usunięto z ulubionych", ToastTime.Short, 
+                DialogHelper.DisplayToast("Usunięto z ulubionych", ToastTime.Short,
                     "Cofnij", () => _busStopRepository.AddToFavorites(BusStop));
             }
             else
             {
                 _busStopRepository.AddToFavorites(BusStop);
-                DialogHelper.DisplayToast("Dodano do ulubionych", ToastTime.Short, 
+                DialogHelper.DisplayToast("Dodano do ulubionych", ToastTime.Short,
                     "Cofnij", () => _busStopRepository.RemoveFromFavorites(BusStop));
             }
         });
@@ -74,16 +72,19 @@ namespace Rtm.ViewModels
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
+            if (!IsInternetAccess)
+                return;
+
             BusStop.Id = (int)parameters["busStopIp"];
             if (BusStop.Id == 0)
                 return;
 
             BusStop = _busStopRepository.Get(BusStop.Id);
-            
-            if (!IsInternetAccess)
-                return;
 
-            await PrepareBusStopUsingApiData();                         
+            if (parameters.ContainsKey("distance"))
+                BusStop.Distance = (double)parameters["distance"];
+
+            await PrepareBusStopUsingApiData();
         }
 
         private async Task PrepareBusStopUsingApiData()
