@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
@@ -27,8 +29,8 @@ namespace Rtm.ViewModels
     {
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
+        private readonly IGeolocator _locator;
         private BusStop _busStop;
-
 
         public BusStop BusStop
         {
@@ -43,8 +45,32 @@ namespace Rtm.ViewModels
         {
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
+            _locator = CrossGeolocator.Current;
             BusStop = new BusStop();
+
+            _locator.PositionChanged += GeolocatorOnPositionChanged;
+            _locator.PositionError += GeolocatorOnPositionError;
         }
+
+        public ICommand AppearingCommand => new DelegateCommand(async () => 
+        {
+            await _locator.StartListeningAsync(
+                TimeSpan.FromSeconds(10),
+                50.0,
+                true,
+                new ListenerSettings
+                {
+                    ActivityType = ActivityType.Fitness,
+                    AllowBackgroundUpdates = true,
+                    PauseLocationUpdatesAutomatically = false
+                }
+            );
+        });
+
+        public ICommand DisappearingCommand => new DelegateCommand(async () =>
+        {
+            await _locator.StopListeningAsync();
+        });
 
         public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
@@ -68,6 +94,27 @@ namespace Rtm.ViewModels
                     "Cofnij", () => _busStopRepository.RemoveFromFavorites(BusStop));
             }
         });
+
+        public ICommand OpenInMapsCommand => new DelegateCommand(async () =>
+        {
+            var mapOptions = new Xamarin.Essentials.MapLaunchOptions
+            {
+                NavigationMode = Xamarin.Essentials.NavigationMode.Walking,
+                Name = BusStop.Name
+            };
+
+            await Xamarin.Essentials.Map.OpenAsync(BusStop.Latitude, BusStop.Longitude, mapOptions);
+        });
+
+
+        private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
+            => DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
+
+        private void GeolocatorOnPositionChanged(object sender, PositionEventArgs e)
+        {
+            var position = e.Position;
+            BusStop.Distance = position.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
+        }
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {

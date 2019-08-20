@@ -1,4 +1,5 @@
-﻿using Rtm.Models;
+﻿using Plugin.Geolocator.Abstractions;
+using Rtm.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,5 +27,8 @@ namespace Rtm.Helpers
                 observableCollection.Add(item);
             }
         }
+
+        public static Position ConvertBusStopToPositon(this BusStop busStop)
+            => new Position(busStop.Latitude, busStop.Longitude);
     }
 }

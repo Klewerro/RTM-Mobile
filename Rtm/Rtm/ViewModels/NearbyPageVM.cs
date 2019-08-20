@@ -143,8 +143,7 @@ namespace Rtm.ViewModels
             IsBusy = true;
             foreach (var stop in BusStopsAll)
             {
-                var busStopPosition = new Position(stop.Latitude, stop.Longitude);
-                stop.Distance = Position.CalculateDistance(busStopPosition, GeolocatorUtils.DistanceUnits.Kilometers);
+                stop.Distance = Position.CalculateDistance(stop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers); 
             }
 
             var result = BusStopsAll.Where(b => b.Distance < range)

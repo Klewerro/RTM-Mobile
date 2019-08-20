@@ -8,6 +8,7 @@
              xmlns:viewmodels="clr-namespace:Rtm.ViewModels"
              xmlns:customcontrols="clr-namespace:Rtm.CustomControls"
              xmlns:converters="clr-namespace:Rtm.Converters"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              x:Class="Rtm.Views.BusStopPage"
              Title="{Binding BusStop.Name}">
 
@@ -18,6 +19,13 @@
     <ContentPage.Resources>
         <converters:DistanceConverter x:Key="distanceConverter"/>
     </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <b:EventToCommandBehavior EventName="Appearing"
+                                  Command="{Binding AppearingCommand}" />
+        <b:EventToCommandBehavior EventName="Disappearing"
+                                  Command="{Binding DisappearingCommand}" />
+    </ContentPage.Behaviors>
     
     <ContentPage.ToolbarItems>
         <customcontrols:ToggleableToolbarItem IconImageSource="Yellow_Star.png"
@@ -25,6 +33,9 @@
                                             Order="Primary"
                                             IsToggled="{Binding BusStop.IsFavorite}"
                                             Command="{Binding FavoritesToggleCommand}" />
+        <ToolbarItem IconImageSource="map_icon.png"
+                     Order="Primary"
+                     Command="{Binding OpenInMapsCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
