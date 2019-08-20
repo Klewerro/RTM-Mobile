@@ -106,16 +106,6 @@ namespace Rtm.ViewModels
             await Xamarin.Essentials.Map.OpenAsync(BusStop.Latitude, BusStop.Longitude, mapOptions);
         });
 
-
-        private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
-            => DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
-
-        private void GeolocatorOnPositionChanged(object sender, PositionEventArgs e)
-        {
-            var position = e.Position;
-            BusStop.Distance = position.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
-        }
-
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
@@ -132,6 +122,15 @@ namespace Rtm.ViewModels
                 BusStop.Distance = (double)parameters["distance"];
 
             await PrepareBusStopUsingApiData();
+        }
+
+        private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
+            => DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
+
+        private void GeolocatorOnPositionChanged(object sender, PositionEventArgs e)
+        {
+            var position = e.Position;
+            BusStop.Distance = position.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
         }
 
         private async Task PrepareBusStopUsingApiData()

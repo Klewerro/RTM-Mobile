@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Input;
 using Prism.Commands;
@@ -8,6 +9,7 @@ using Prism.Services;
 using Rtm.Database;
 using Rtm.Helpers;
 using Rtm.Repositories;
+using Xamarin.Essentials;
 
 namespace Rtm.ViewModels
 {
@@ -34,5 +36,11 @@ namespace Rtm.ViewModels
             _busStopRepository.DeleteAll();
             DialogHelper.DisplayToast("Usunięto wszystkie przystanki", ToastTime.Short);
         });
+
+        public ICommand OpenWebsiteCommand => new DelegateCommand(async () =>
+            await Browser.OpenAsync("http://rtm.erzeszow.pl/", new BrowserLaunchOptions
+            {
+                PreferredToolbarColor = Color.IndianRed
+            }));
     }
 }
