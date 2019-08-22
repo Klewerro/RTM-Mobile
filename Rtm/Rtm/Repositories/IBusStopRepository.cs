@@ -18,5 +18,6 @@ namespace Rtm.Repositories
         void DeleteAll();
         void AddToFavorites(BusStop busStop);
         void RemoveFromFavorites(BusStop busStop);
+        void Rename(BusStop busStop, string newName);
     }
 }

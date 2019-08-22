@@ -10,7 +10,7 @@
              xmlns:converters="clr-namespace:Rtm.Converters"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              x:Class="Rtm.Views.BusStopPage"
-             Title="{Binding BusStop.Name}">
+             Title="{Binding BusStop.NameToDisplay}">
 
     <!--<ContentPage.BindingContext>
         <viewmodels:BusStopPageVM/>
@@ -26,20 +26,51 @@
         <b:EventToCommandBehavior EventName="Disappearing"
                                   Command="{Binding DisappearingCommand}" />
     </ContentPage.Behaviors>
-    
+
     <ContentPage.ToolbarItems>
         <customcontrols:ToggleableToolbarItem IconImageSource="Yellow_Star.png"
                                             IconImageSourceToggled="Gray_Star.png"
                                             Order="Primary"
                                             IsToggled="{Binding BusStop.IsFavorite}"
                                             Command="{Binding FavoritesToggleCommand}" />
-        <ToolbarItem IconImageSource="map_icon.png"
-                     Order="Primary"
+        <ToolbarItem Text="Otwórz w aplikacji mapy"
+                     Order="Secondary"
                      Command="{Binding OpenInMapsCommand}" />
+        <ToolbarItem Text="Zmień nazwę"
+                     Order="Secondary"
+                     Clicked="RenameToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout Padding="8,8,8,0">
+            <Grid x:Name="customNameGrid"
+                  IsVisible="False"
+                  VerticalOptions="Start" HeightRequest="150">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Entry Text="{Binding ChangeNameText}" 
+                       Grid.ColumnSpan="3"/>
+                <Button Command="{Binding SaveNameCommand}" 
+                        Clicked="Button_Clicked"
+                        Text="Save"
+                        Grid.Row="1"/>
+                <Button Command="{Binding DiscardCustomNameCommand}"  
+                        Text="Discard"
+                        Clicked="Button_Clicked"
+                        Grid.Row="1" Grid.Column="1"/>
+                <Button Command="{Binding RemoveCustomNameCommand}" 
+                        Clicked="Button_Clicked"
+                        Text="Remove"
+                        Grid.Row="1" Grid.Column="2"/>
+            </Grid>
+            
             <ListView ItemsSource="{Binding BusStop.Departures}"
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshCommand}"

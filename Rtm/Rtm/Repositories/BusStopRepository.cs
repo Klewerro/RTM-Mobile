@@ -31,13 +31,6 @@ namespace Rtm.Repositories
             _connection.Insert(busStop);
         }
 
-        public void AddToFavorites(int busStopId)
-        {
-            var busStop = _connection.Get<BusStop>(busStopId);
-            busStop.IsFavorite = true;
-            _connection.Update(busStop);
-        }
-
         public void AddRange(IEnumerable<BusStop> busStops)
         {
             _connection.InsertAll(busStops);
@@ -70,6 +63,12 @@ namespace Rtm.Repositories
         public void RemoveFromFavorites(BusStop busStop)
         {
             busStop.IsFavorite = false;
+            _connection.Update(busStop);
+        }
+
+        public void Rename(BusStop busStop, string newName)
+        {
+            busStop.CustomName = newName;
             _connection.Update(busStop);
         }
     }

@@ -109,7 +109,7 @@
                                         </DataTrigger>
                                     </BoxView.Triggers>
                                 </BoxView>
-                                <Label Text="{Binding Name}"
+                                <Label Text="{Binding NameToDisplay}"
                                        TextColor="DodgerBlue"
                                        Grid.Column="1" />
                                 <Label Text="{Binding Distance, Converter={StaticResource distanceConverter}}"

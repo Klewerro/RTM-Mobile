@@ -16,5 +16,15 @@ namespace Rtm.Views
         {
             InitializeComponent();
         }
+
+        private void RenameToolbarItem_Clicked(object sender, EventArgs e)
+        {
+            customNameGrid.IsVisible = true;
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            customNameGrid.IsVisible = false;
+        }
     }
 }

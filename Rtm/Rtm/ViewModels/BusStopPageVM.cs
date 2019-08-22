@@ -31,11 +31,22 @@ namespace Rtm.ViewModels
         private readonly IRtmService _rtmService;
         private IGeolocator _locator;
         private BusStop _busStop;
+        private string _changeNameText;
 
         public BusStop BusStop
         {
             get => _busStop;
-            set => SetProperty(ref _busStop, value);
+            set
+            {
+                SetProperty(ref _busStop, value);
+                ChangeNameText = BusStop.CustomName;
+            }
+        }
+
+        public string ChangeNameText
+        {
+            get => _changeNameText;
+            set =>  SetProperty(ref _changeNameText, value);
         }
 
 
@@ -49,7 +60,7 @@ namespace Rtm.ViewModels
             BusStop = new BusStop();
         }
 
-        public ICommand AppearingCommand => new DelegateCommand(() => 
+        public ICommand AppearingCommand => new DelegateCommand(() =>
         {
         });
 
@@ -91,6 +102,22 @@ namespace Rtm.ViewModels
             };
 
             await Xamarin.Essentials.Map.OpenAsync(BusStop.Latitude, BusStop.Longitude, mapOptions);
+        });
+
+        public ICommand SaveNameCommand => new DelegateCommand(() =>
+        {
+            BusStop.CustomName = ChangeNameText;
+            _busStopRepository.Rename(BusStop, ChangeNameText);
+        });
+
+        public ICommand DiscardCustomNameCommand => new DelegateCommand(() =>
+            ChangeNameText = BusStop.CustomName);
+
+        public ICommand RemoveCustomNameCommand => new DelegateCommand(() =>
+        {
+            ChangeNameText = null;
+            BusStop.CustomName = ChangeNameText;
+            _busStopRepository.Rename(BusStop, ChangeNameText);
         });
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
