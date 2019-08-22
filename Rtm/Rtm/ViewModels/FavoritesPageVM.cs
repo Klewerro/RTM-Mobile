@@ -13,34 +13,24 @@ using Rtm.Views;
 
 namespace Rtm.ViewModels
 {
-    public class FavoritesPageVM : ViewModelBase
+    public class FavoritesPageVM : ListPageViewModelBase
     {
         private readonly IBusStopRepository _busStopRepository;
-        private List<BusStop> _favoritesBusStops;
-
-        public List<BusStop> FavoritesBusStops { get => _favoritesBusStops; set => SetProperty(ref _favoritesBusStops, value); }
 
 
         public FavoritesPageVM(INavigationService navigationService, IBusStopRepository busStopRepository) 
             : base(navigationService)
         {
             _busStopRepository = busStopRepository;
-            FavoritesBusStops = new List<BusStop>();
-            _busStopRepository.BusStopsDeletedEvent += (s, e) => FavoritesBusStops = new List<BusStop>();
+            _busStopRepository.BusStopsDeletedEvent += (s, e) => BusStops = new List<BusStop>();
         }
 
-
-        public ICommand ItemTappedCommand => new DelegateCommand<BusStop>(async busStop =>
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("busStopIp", busStop.Id);
-            await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
-        });
 
         public ICommand AppearingCommand => new DelegateCommand(() =>
         {
             IsBusy = true;
-            FavoritesBusStops = _busStopRepository.GetAllFavorites();
+            BusStops = _busStopRepository.GetAllFavorites();
+            BusStopsAll = BusStops.AsReadOnly();
             IsBusy = false;
         });
 

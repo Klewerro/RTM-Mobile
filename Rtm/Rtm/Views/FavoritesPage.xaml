@@ -21,7 +21,18 @@
     
     <ContentPage.Content>
         <StackLayout>
-            <ListView ItemsSource="{Binding FavoritesBusStops}"
+            <SearchBar SearchCommand="{Binding SearchCommand}"
+                       Text="{Binding SearchText}"
+                       Placeholder="Wprowadź nazwę przystanku..."
+                       BackgroundColor="#51a9ff"
+                       TextColor="White">
+                <SearchBar.Behaviors>
+                    <b:EventToCommandBehavior EventName="TextChanged"
+                                              Command="{Binding SearchTextChangedCommand}" />
+                </SearchBar.Behaviors>
+            </SearchBar>
+
+            <ListView ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"
                       ItemTemplate="{StaticResource bussStopListTemplate}">
                 <ListView.Behaviors>

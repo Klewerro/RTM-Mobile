@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using Plugin.Geolocator;
+using Plugin.Geolocator.Abstractions;
+using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using Rtm.Helpers;
@@ -13,32 +15,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Rtm.ViewModels
 {
-    public class ListPageVM : ViewModelBase
+    public class ListPageVM : ListPageViewModelBase
     {
         private readonly IPageDialogService _pageDialogService;
         private readonly IRtmService _rtmService;
         private readonly IBusStopRepository _busStopRepository;
-
-        private List<BusStop> _busStops;
-        private string _searchText;
-
-        public List<BusStop> BusStops
-        {
-            get => _busStops;
-            set => SetProperty(ref _busStops, value);
-        }
-
-        public ReadOnlyCollection<BusStop> BusStopsAll { get; set; }
-
-        public string SearchText
-        {
-            get => _searchText;
-            set => SetProperty(ref _searchText, value);
-        }
 
 
         public ListPageVM(INavigationService navigationService, 
@@ -53,26 +39,7 @@ namespace Rtm.ViewModels
             _busStopRepository.BusStopsDeletedEvent += (s, e) => BusStops = new List<BusStop>();
         }
 
-        public ICommand SearchCommand => new DelegateCommand(async () =>
-        {
-            BusStops = BusStopsAll.Where(b => b.Name.ToLower().Contains(SearchText.ToLower())).ToList();
-        });
-
-        public ICommand ItemTappedCommand => new DelegateCommand<BusStop>(async busStop =>
-        {
-            if (!IsInternetAccess)
-                return;
-
-            var parameters = new NavigationParameters();
-            parameters.Add("busStopIp", busStop.Id);
-            await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
-        });
-
-        public ICommand SearchTextChangedCommand => new DelegateCommand(() =>
-        {
-            BusStops = SearchForBusStops(SearchText);
-        });
-
+        
         public ICommand DownloadBusStopsCommand => new DelegateCommand(async () => 
             await DownloadBusStops());
 
@@ -127,9 +94,6 @@ namespace Rtm.ViewModels
                 IsBusy = false;
             }
         }
-
-        private List<BusStop> SearchForBusStops(string searchText)
-            => BusStopsAll.Where(b => b.Name.ToLower().Contains(searchText.ToLower())).ToList();
 
     }
 }
