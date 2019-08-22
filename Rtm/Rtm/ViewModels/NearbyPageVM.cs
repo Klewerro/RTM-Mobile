@@ -16,23 +16,14 @@ using Rtm.Views;
 
 namespace Rtm.ViewModels
 {
-    public class NearbyPageVM : ViewModelBase
+    public class NearbyPageVM : ListPageViewModelBase
     {
         private readonly IBusStopRepository _busStopRepository;
         private readonly IGeolocator _locator;
-        private List<BusStop> _busStops;
         private Position _position;
         private int _rangePickerIndex;
         private int _unitPickerIndex;
         private readonly double[] _ranges;
-
-        public List<BusStop> BusStops
-        {
-            get => _busStops;
-            set => SetProperty(ref _busStops, value);
-        }
-
-        public ReadOnlyCollection<BusStop> BusStopsAll { get; set; }
 
         public Position Position
         {
@@ -57,16 +48,15 @@ namespace Rtm.ViewModels
         public NearbyPageVM(INavigationService navigationService, IBusStopRepository busStopRepository) : base(navigationService)
         {
             _busStopRepository = busStopRepository;
-            BusStops = new List<BusStop>();
             Position = new Position();
             RangePickerIndex = 1;
             UnitPickerIndex = 0;
             _locator = CrossGeolocator.Current;
             _ranges = new double[7] { 0.25, 0.5, 0.75, 1, 2, 3, 5 };
 
+            _busStopRepository.BusStopsDeletedEvent += (s, e) => BusStops = new List<BusStop>();
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
-            _busStopRepository.BusStopsDeletedEvent += (s, e) => BusStops = new List<BusStop>();
         }
 
         ~NearbyPageVM()
@@ -77,44 +67,29 @@ namespace Rtm.ViewModels
 
         public ICommand AppearingCommand => new DelegateCommand(async () =>
         {
-            await _locator.StartListeningAsync(
-                TimeSpan.FromSeconds(10),
-                50.0,
-                true,
-                new ListenerSettings
-                {
-                    ActivityType = ActivityType.Fitness,
-                    AllowBackgroundUpdates = true,
-                    PauseLocationUpdatesAutomatically = false
-                }
-            );
+            await Task.Delay(200);
+            Position = await GetCurrentPosition();
             BusStopsAll = _busStopRepository.GetAll().AsReadOnly();
+            BusStops = GetNearbyBusStops(_ranges[RangePickerIndex]);
         });
 
-        public ICommand DisappearingCommand => new DelegateCommand(async () =>
+        public ICommand DisappearingCommand => new DelegateCommand(() =>
         {
-            await _locator.StopListeningAsync();
         });
 
         public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
-            await SetCurrentLocation();
+            Position = await GetCurrentPosition();
             BusStops = GetNearbyBusStops(_ranges[RangePickerIndex]);
             IsBusy = false;
-        });
-
-        public ICommand ItemTappedCommand => new DelegateCommand<BusStop>(async busStop =>
-        {
-            var parameters = new NavigationParameters();
-            parameters.Add("busStopIp", busStop.Id);
-            parameters.Add("distance", busStop.Distance);
-            await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
         });
 
 
         private void GeolocatorOnPositionChanged(object sender, PositionEventArgs e)
         {
+            if (BusStopsAll == null)
+                return;
             Position = e.Position;
             BusStops = GetNearbyBusStops(_ranges[RangePickerIndex]);
         }
@@ -124,18 +99,19 @@ namespace Rtm.ViewModels
             DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
         }
 
-        private async Task SetCurrentLocation()
+        private async Task<Position> GetCurrentPosition()
         {
             IsBusy = true;
-            Position = await _locator.GetLastKnownLocationAsync();
+            var result = await _locator.GetLastKnownLocationAsync();
 
             var currentPosition = await _locator.GetPositionAsync(timeout: TimeSpan.FromSeconds(10));
             if (currentPosition != null)
-                Position = currentPosition;
+                result = currentPosition;
             else
                 DialogHelper.DisplayToast("Nie można określić lokalizacji", ToastTime.Long);
 
             IsBusy = false;
+            return result;
         }
 
         private List<BusStop> GetNearbyBusStops(double range)

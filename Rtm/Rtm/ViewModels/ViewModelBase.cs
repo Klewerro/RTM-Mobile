@@ -44,14 +44,11 @@ namespace Rtm.ViewModels
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
+            CheckInternetConnection();
             Connectivity.ConnectivityChanged += Connectivity_ConnectionChanged;
         }
 
-        ~ViewModelBase()
-        {
-            Connectivity.ConnectivityChanged -= Connectivity_ConnectionChanged;
-        }
-
+        
         public async Task<T> ApiCall<T>(Task<T> method)
         {
             var currentConnection = Connectivity.NetworkAccess;

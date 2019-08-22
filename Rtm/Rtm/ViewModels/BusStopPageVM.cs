@@ -29,7 +29,7 @@ namespace Rtm.ViewModels
     {
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
-        private readonly IGeolocator _locator;
+        private IGeolocator _locator;
         private BusStop _busStop;
 
         public BusStop BusStop
@@ -47,29 +47,16 @@ namespace Rtm.ViewModels
             _rtmService = rtmService;
             _locator = CrossGeolocator.Current;
             BusStop = new BusStop();
-
-            _locator.PositionChanged += GeolocatorOnPositionChanged;
-            _locator.PositionError += GeolocatorOnPositionError;
         }
 
-        public ICommand AppearingCommand => new DelegateCommand(async () => 
+        public ICommand AppearingCommand => new DelegateCommand(() => 
         {
-            await _locator.StartListeningAsync(
-                TimeSpan.FromSeconds(10),
-                50.0,
-                true,
-                new ListenerSettings
-                {
-                    ActivityType = ActivityType.Fitness,
-                    AllowBackgroundUpdates = true,
-                    PauseLocationUpdatesAutomatically = false
-                }
-            );
         });
 
-        public ICommand DisappearingCommand => new DelegateCommand(async () =>
+        public ICommand DisappearingCommand => new DelegateCommand(() =>
         {
-            await _locator.StopListeningAsync();
+            _locator.PositionChanged -= GeolocatorOnPositionChanged;
+            _locator.PositionError -= GeolocatorOnPositionError;
         });
 
         public ICommand RefreshCommand => new DelegateCommand(async () =>
@@ -108,6 +95,7 @@ namespace Rtm.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            IsBusy = true;
             base.OnNavigatedTo(parameters);
             if (!IsInternetAccess)
                 return;
@@ -122,6 +110,12 @@ namespace Rtm.ViewModels
                 BusStop.Distance = (double)parameters["distance"];
 
             await PrepareBusStopUsingApiData();
+            _locator.PositionChanged += GeolocatorOnPositionChanged;
+            _locator.PositionError += GeolocatorOnPositionError;
+
+            var currentPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10));
+            BusStop.Distance = currentPosition.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
+            IsBusy = false;
         }
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
