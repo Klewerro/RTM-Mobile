@@ -38,7 +38,8 @@
                     Command="{Binding DownloadBusStopsCommand}"/>
             <ListView ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"
-                      ItemTemplate="{StaticResource bussStopListTemplate}">
+                      ItemTemplate="{StaticResource busStopDataTemplateSelector}"
+                      HasUnevenRows="True">
                 <ListView.Behaviors>
                     <b:EventToCommandBehavior EventName="ItemTapped"
                                               Command="{Binding ItemTappedCommand}"
