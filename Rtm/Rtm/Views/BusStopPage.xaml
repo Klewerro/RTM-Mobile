@@ -9,8 +9,14 @@
              xmlns:customcontrols="clr-namespace:Rtm.CustomControls"
              xmlns:converters="clr-namespace:Rtm.Converters"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
-             x:Class="Rtm.Views.BusStopPage"
-             Title="{Binding BusStop.NameToDisplay}">
+             x:Class="Rtm.Views.BusStopPage">
+    
+    <NavigationPage.TitleView>
+        <Label Text="{Binding BusStop.NameToDisplay}"
+               TextColor="White"
+               FontSize="20"
+               FontAttributes="Bold"/>
+    </NavigationPage.TitleView>
 
     <!--<ContentPage.BindingContext>
         <viewmodels:BusStopPageVM/>
