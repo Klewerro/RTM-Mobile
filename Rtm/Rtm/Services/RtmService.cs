@@ -70,7 +70,7 @@ namespace Rtm.Services
                 busStops.Add(busStop);
             }
 
-            return busStops;
+            return busStops.OrderBy(b => b.Name).ToList();
         }
 
     }

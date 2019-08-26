@@ -59,7 +59,14 @@ namespace Rtm.ViewModels
 
 
         protected List<BusStop> SearchForBusStops(string searchText)
-            => BusStopsAll.Where(b => b.Name.ToLower().Contains(searchText.ToLower())).ToList();
+        {
+            var query = from busStop in BusStopsAll
+                        where busStop.Name.ToLower().StartsWith(searchText.ToLower())
+                            || (!string.IsNullOrEmpty(busStop.CustomName) && busStop.CustomName.ToLower().StartsWith(searchText.ToLower()))
+                        orderby busStop.Name, busStop.CustomName
+                        select busStop;
+            return query.ToList();
+        }
 
     }
 }
