@@ -114,8 +114,8 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="3*"/> <!--Spacer-->
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/> <!--Spacer-->
+                    <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
@@ -140,19 +140,14 @@
                         <x:String>5km</x:String>
                     </Picker.Items>
                 </Picker>
-                <Entry Keyboard="Numeric"
-                       Placeholder="Wartość"
+
+                <Label Text="Szukaj w lini prostej"
                        TextColor="White"
+                       VerticalOptions="Center" HorizontalOptions="End"
                        Grid.Column="3"/>
-                <Picker SelectedIndex="{Binding UnitPickerIndex}" 
-                        Grid.Column="4"
-                        Margin="0,0,8,0"
-                        TextColor="White">
-                    <Picker.Items>
-                        <x:String>m</x:String>
-                        <x:String>km</x:String>
-                    </Picker.Items>
-                </Picker>
+                <Switch IsToggled="{Binding IsSearchInLineEnabled}"
+                        HorizontalOptions="Start" VerticalOptions="Center"
+                        Grid.Column="4"/>
             </Grid>
             
             <ListView ItemsSource="{Binding BusStops}"

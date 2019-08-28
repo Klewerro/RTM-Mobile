@@ -22,7 +22,7 @@ namespace Rtm.ViewModels
         private readonly IGeolocator _locator;
         private Position _position;
         private int _rangePickerIndex;
-        private int _unitPickerIndex;
+        private bool _isSearchInLineEnabled;
         private readonly double[] _ranges;
 
         public Position Position
@@ -37,11 +37,10 @@ namespace Rtm.ViewModels
             set => SetProperty(ref _rangePickerIndex, value);
         }
 
-        
-        public int UnitPickerIndex  //Todo: Move to section advanced
+        public bool IsSearchInLineEnabled
         {
-            get => _unitPickerIndex;
-            set => SetProperty(ref _unitPickerIndex, value);
+            get => _isSearchInLineEnabled;
+            set => _isSearchInLineEnabled = value;
         }
 
 
@@ -50,7 +49,6 @@ namespace Rtm.ViewModels
             _busStopRepository = busStopRepository;
             Position = new Position();
             RangePickerIndex = 1;
-            UnitPickerIndex = 0;
             _locator = CrossGeolocator.Current;
             _ranges = new double[7] { 0.25, 0.5, 0.75, 1, 2, 3, 5 };
 
@@ -119,7 +117,7 @@ namespace Rtm.ViewModels
             IsBusy = true;
             foreach (var stop in BusStopsAll)
             {
-                stop.Distance = Position.CalculateDistance(stop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers); 
+                stop.Distance = Position.CalculateDistance(stop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
             }
 
             var result = BusStopsAll.Where(b => b.Distance < range)
@@ -129,6 +127,18 @@ namespace Rtm.ViewModels
             IsBusy = false;
             return result;
         }
+
+        //private List<BusStop> GetNearbyBusStopsInLine(double errorMargin)
+        //{
+        //    var result = new List<BusStop>();
+        //    var positionDiff = Position.Latitude / Position.Longitude;
+
+        //    foreach (var stop in BusStopsAll)
+        //    {
+        //        var stopDiff = stop.Latitude / stop.Longitude;
+        //        if (stopDiff < )
+        //    }
+        //}
 
 
     }
