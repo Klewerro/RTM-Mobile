@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:views="clr-namespace:Rztm.Views"
+             xmlns:viewmodels="clr-namespace:Rztm.ViewModels"
+             xmlns:customcontrols="clr-namespace:Rztm.CustomControls"
+             xmlns:converters="clr-namespace:Rztm.Converters"
+             xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             x:Class="Rztm.Views.BusStopPage">
+    
+    <NavigationPage.TitleView>
+        <Label Text="{Binding BusStop.NameToDisplay}"
+               TextColor="White"
+               FontSize="20"
+               FontAttributes="Bold"/>
+    </NavigationPage.TitleView>
+
+    <!--<ContentPage.BindingContext>
+        <viewmodels:BusStopPageVM/>
+    </ContentPage.BindingContext>-->
+
+    <ContentPage.Resources>
+        <converters:DistanceConverter x:Key="distanceConverter"/>
+        <converters:IsTextNotEmptyConverter x:Key="isTextNotEmptyConverter"/>
+    </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <b:EventToCommandBehavior EventName="Appearing"
+                                  Command="{Binding AppearingCommand}" />
+        <b:EventToCommandBehavior EventName="Disappearing"
+                                  Command="{Binding DisappearingCommand}" />
+    </ContentPage.Behaviors>
+
+    <ContentPage.ToolbarItems>
+        <customcontrols:ToggleableToolbarItem IconImageSource="Yellow_Star.png"
+                                            IconImageSourceToggled="Gray_Star.png"
+                                            Order="Primary"
+                                            IsToggled="{Binding BusStop.IsFavorite}"
+                                            Command="{Binding FavoritesToggleCommand}" />
+        <ToolbarItem Text="Otwórz w aplikacji mapy"
+                     Order="Secondary"
+                     Command="{Binding OpenInMapsCommand}" />
+        <ToolbarItem Text="Zmień nazwę"
+                     Order="Secondary"
+                     Clicked="RenameToolbarItem_Clicked"/>
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="#51a9ff">
+            <Label Text="{Binding BusStop.Name}"
+                   IsVisible="{Binding BusStop.CustomName, Converter={StaticResource isTextNotEmptyConverter}}"
+                   TextColor="White"
+                   Margin="70,0,0,0"/>
+            
+            <StackLayout Padding="8,8,8,8"
+                         BackgroundColor="White">
+                <Grid x:Name="customNameGrid"
+                      IsVisible="False"
+                      VerticalOptions="Start" HeightRequest="150"
+                      BackgroundColor="#f1f1f1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Entry Text="{Binding ChangeNameText}" 
+                           Grid.ColumnSpan="3"/>
+                    <Button Command="{Binding SaveNameCommand}" 
+                            Clicked="Button_Clicked"
+                            Text="Save"
+                            Grid.Row="1"/>
+                    <Button Command="{Binding DiscardCustomNameCommand}"  
+                            Text="Discard"
+                            Clicked="Button_Clicked"
+                            Grid.Row="1" Grid.Column="1"/>
+                    <Button Command="{Binding RemoveCustomNameCommand}" 
+                            Clicked="Button_Clicked"
+                            Text="Remove"
+                            Grid.Row="1" Grid.Column="2"/>
+                </Grid>
+                
+                <ListView ItemsSource="{Binding BusStop.Departures}"
+                          IsPullToRefreshEnabled="True"
+                          RefreshCommand="{Binding RefreshCommand}"
+                          IsRefreshing="{Binding IsBusy}"
+                          VerticalOptions="Start"
+                          SeparatorColor="DodgerBlue">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid VerticalOptions="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="6*"/>
+                                        <ColumnDefinition Width="2*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Number}"
+                                           TextColor="Black"
+                                           FontSize="Large"
+                                           Grid.Column="0"/>
+                                    <Label Text="{Binding Direction}"
+                                           Grid.Column="1"/>
+                                    <Label Text="{Binding Time}"
+                                           TextColor="Black"
+                                           FontSize="Large"
+                                           Grid.Column="2"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <Label Text="{Binding BusStop.Distance, Converter={StaticResource distanceConverter}, StringFormat='Dystans: {0}'}"
+                       IsVisible="{Binding BusStop.Distance}"
+                       TextColor="Black"
+                       FontSize="Medium"
+                       VerticalOptions="EndAndExpand" HorizontalOptions="End"/>
+            </StackLayout>
+
+            <Label Text="{Binding BusStop.Description}"
+                   VerticalOptions="EndAndExpand"
+                   TextColor="White"
+                   Margin="8,0,0,0"/>
+        </StackLayout>
+    </ContentPage.Content>
+
+</ContentPage>
