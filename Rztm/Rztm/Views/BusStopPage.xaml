@@ -25,6 +25,13 @@
     <ContentPage.Resources>
         <converters:DistanceConverter x:Key="distanceConverter"/>
         <converters:IsTextNotEmptyConverter x:Key="isTextNotEmptyConverter"/>
+
+        <ResourceDictionary>
+            <Style x:Key="ChangeNameButton" TargetType="Button">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+            </Style>
+        </ResourceDictionary>
     </ContentPage.Resources>
 
     <ContentPage.Behaviors>
@@ -49,13 +56,13 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <StackLayout BackgroundColor="#51a9ff">
+        <StackLayout BackgroundColor="{StaticResource UnderNavigationColor}">
             <Label Text="{Binding BusStop.Name}"
                    IsVisible="{Binding BusStop.CustomName, Converter={StaticResource isTextNotEmptyConverter}}"
                    TextColor="White"
                    Margin="70,0,0,0"/>
-            
-            <StackLayout Padding="8,8,8,8"
+
+            <StackLayout Padding="8,8,8,0"
                          BackgroundColor="White">
                 <Grid x:Name="customNameGrid"
                       IsVisible="False"
@@ -75,23 +82,28 @@
                     <Button Command="{Binding SaveNameCommand}" 
                             Clicked="Button_Clicked"
                             Text="Save"
-                            Grid.Row="1"/>
+                            Grid.Row="1"
+                            BackgroundColor="{StaticResource AccentColor}"
+                            Style="{StaticResource ChangeNameButton}"/>
                     <Button Command="{Binding DiscardCustomNameCommand}"  
                             Text="Discard"
                             Clicked="Button_Clicked"
+                            BackgroundColor="DodgerBlue"
+                            Style="{StaticResource ChangeNameButton}"
                             Grid.Row="1" Grid.Column="1"/>
                     <Button Command="{Binding RemoveCustomNameCommand}" 
                             Clicked="Button_Clicked"
                             Text="Remove"
+                            BackgroundColor="{StaticResource PrimaryColor}"
+                            Style="{StaticResource ChangeNameButton}"
                             Grid.Row="1" Grid.Column="2"/>
                 </Grid>
-                
+
                 <ListView ItemsSource="{Binding BusStop.Departures}"
                           IsPullToRefreshEnabled="True"
                           RefreshCommand="{Binding RefreshCommand}"
                           IsRefreshing="{Binding IsBusy}"
-                          VerticalOptions="Start"
-                          SeparatorColor="DodgerBlue">
+                          VerticalOptions="Start">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -102,10 +114,13 @@
                                         <ColumnDefinition Width="2*"/>
                                     </Grid.ColumnDefinitions>
                                     <Label Text="{Binding Number}"
-                                           TextColor="Black"
+                                           TextColor="{StaticResource AccentColor}"
                                            FontSize="Large"
                                            Grid.Column="0"/>
                                     <Label Text="{Binding Direction}"
+                                           VerticalTextAlignment="Center"
+                                           FontSize="Medium"
+                                           TextColor="Black"
                                            Grid.Column="1"/>
                                     <Label Text="{Binding Time}"
                                            TextColor="Black"

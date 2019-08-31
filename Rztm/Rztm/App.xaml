@@ -10,12 +10,16 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            <!--Global Styles-->
-            <Color x:Key="NavigationPrimary">#2196F3</Color>
+            <!--#region GlobalStyles-->
+            <Color x:Key="PrimaryColor">#DD371A</Color>
+            <Color x:Key="AccentColor">#388E3C</Color>
+            <Color x:Key="UnderNavigationColor">#E04B30</Color>
+
             <Style TargetType="NavigationPage">
-                <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
+                <Setter Property="BarBackgroundColor" Value="{StaticResource PrimaryColor}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
+            <!--#endregion-->
 
             <!--#region ListViewTemplates-->
             <DataTemplate x:Key="busStopNameTemplate">
@@ -39,7 +43,7 @@
                             </BoxView.Triggers>
                         </BoxView>
                         <Label Text="{Binding NameToDisplay}"
-                               TextColor="DodgerBlue"
+                               TextColor="Black"
                                FontSize="Medium"
                                Grid.Column="1"
                                VerticalTextAlignment="Center"/>
@@ -70,7 +74,7 @@
                             </BoxView.Triggers>
                         </BoxView>
                         <Label Text="{Binding CustomName}"
-                               TextColor="DodgerBlue"
+                               TextColor="Black"
                                FontSize="Medium"
                                Grid.Column="1" />
                         <Label Text="{Binding Name}"

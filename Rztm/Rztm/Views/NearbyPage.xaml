@@ -41,7 +41,7 @@
                             </BoxView.Triggers>
                         </BoxView>
                         <Label Text="{Binding NameToDisplay}"
-                               TextColor="DodgerBlue"
+                               TextColor="Black"
                                FontSize="Medium"
                                Grid.Column="1"
                                VerticalTextAlignment="Center"/>
@@ -77,7 +77,7 @@
                             </BoxView.Triggers>
                         </BoxView>
                         <Label Text="{Binding CustomName}"
-                               TextColor="DodgerBlue"
+                               TextColor="Black"
                                FontSize="Medium"
                                Grid.Column="1" />
                         <Label Text="{Binding Name}"
@@ -107,7 +107,7 @@
         <StackLayout>
 
             <Grid HorizontalOptions="Center"
-                  BackgroundColor="#51a9ff">
+                  BackgroundColor="{StaticResource UnderNavigationColor}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
