@@ -28,5 +28,10 @@ In addition, the user from the application level has the option of open the offi
 * Newtonsoft.Json
 * Acr.UserDialogs
 
+## Installation guide:
+1) Download .APK file from releases tab and copy to your phone.
+2) If you dont have allow installation of non-official apps in settings enabled - enable it.
+3) Find .APK file using phone files explorer and run it.
+
 <br><br>
 *The application I made only downloads data from the RTM website and displays it in a different way. In case of any conditions regarding my use of this data, please submit an issue for further contact.*
