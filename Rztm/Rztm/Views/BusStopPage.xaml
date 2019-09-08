@@ -64,7 +64,7 @@
 
             <StackLayout Padding="8,8,8,0"
                          BackgroundColor="White">
-                <Grid x:Name="customNameGrid"
+                <Grid x:Name="CustomNameGrid"
                       IsVisible="False"
                       VerticalOptions="Start" HeightRequest="150"
                       BackgroundColor="#f1f1f1">
@@ -80,19 +80,19 @@
                     <Entry Text="{Binding ChangeNameText}" 
                            Grid.ColumnSpan="3"/>
                     <Button Command="{Binding SaveNameCommand}" 
-                            Clicked="Button_Clicked"
+                            Clicked="NameButton_Clicked"
                             Text="Save"
                             Grid.Row="1"
                             BackgroundColor="{StaticResource AccentColor}"
                             Style="{StaticResource ChangeNameButton}"/>
                     <Button Command="{Binding DiscardCustomNameCommand}"  
                             Text="Discard"
-                            Clicked="Button_Clicked"
+                            Clicked="NameButton_Clicked"
                             BackgroundColor="DodgerBlue"
                             Style="{StaticResource ChangeNameButton}"
                             Grid.Row="1" Grid.Column="1"/>
                     <Button Command="{Binding RemoveCustomNameCommand}" 
-                            Clicked="Button_Clicked"
+                            Clicked="NameButton_Clicked"
                             Text="Remove"
                             BackgroundColor="{StaticResource PrimaryColor}"
                             Style="{StaticResource ChangeNameButton}"
@@ -137,11 +137,26 @@
                        TextColor="Black"
                        FontSize="Medium"
                        VerticalOptions="EndAndExpand" HorizontalOptions="End"/>
+
+
+                <Button x:Name="ArrowButton" 
+                        Text="▲"
+                        TextColor="{StaticResource PrimaryColor}"
+                        FontSize="30"
+                        WidthRequest="40" HeightRequest="40"
+                        CornerRadius="20"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        IsVisible="{Binding BusStop.Description, Converter={StaticResource isTextNotEmptyConverter}}"
+                        HorizontalOptions="End" VerticalOptions="End"
+                        Clicked="ArrowButton_Clicked"/>
             </StackLayout>
 
-            <Label Text="{Binding BusStop.Description}"
+            <Label x:Name="DescriptionLabel" Text="{Binding BusStop.Description}"
+                   BackgroundColor="{StaticResource UnderNavigationColor}"
                    VerticalOptions="EndAndExpand"
                    TextColor="White"
+                   IsVisible="False"
                    Margin="8,0,0,0"/>
         </StackLayout>
     </ContentPage.Content>

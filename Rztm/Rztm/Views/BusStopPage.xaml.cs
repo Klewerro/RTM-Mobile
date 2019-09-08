@@ -19,12 +19,25 @@ namespace Rztm.Views
 
         private void RenameToolbarItem_Clicked(object sender, EventArgs e)
         {
-            customNameGrid.IsVisible = true;
+            CustomNameGrid.IsVisible = true;
         }
 
-        private void Button_Clicked(object sender, EventArgs e)
+        private void NameButton_Clicked(object sender, EventArgs e)
         {
-            customNameGrid.IsVisible = false;
+            CustomNameGrid.IsVisible = false;
+        }
+
+        private async void ArrowButton_Clicked(object sender, EventArgs e)
+        {
+            DescriptionLabel.IsVisible = !DescriptionLabel.IsVisible;
+            if (ArrowButton.Rotation == 0)
+            {
+                await ArrowButton.RotateTo(180, easing: Easing.SinInOut);
+            }
+            else
+            {
+                await ArrowButton.RotateTo(0, easing: Easing.SinInOut);
+            }
         }
     }
 }
