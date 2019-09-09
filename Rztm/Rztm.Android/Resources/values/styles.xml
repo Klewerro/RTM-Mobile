@@ -40,10 +40,6 @@
     <item name="colorAccent">#388e3c</item>
   </style>
   <style name="AppToolbarTheme" parent="Theme.AppCompat.NoActionBar">
-    <item name="android:colorBackground">#DD371A</item>
-    <item name="android:textColor">#FFFFFF</item>
-  </style>
-  <style name="AppToolbarTheme" parent="Theme.AppCompat.NoActionBar">
     <item name="android:colorBackground">#388e3c</item>
     <item name="android:textColor">#FFFFFF</item>
   </style>

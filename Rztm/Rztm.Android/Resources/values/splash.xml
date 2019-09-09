@@ -6,6 +6,6 @@
     <item name="android:windowIsTranslucent">false</item>
     <item name="android:windowIsFloating">false</item>
     <item name="android:backgroundDimEnabled">true</item>
-    <item name="colorPrimaryDark">#1976D2</item>
+    <item name="colorPrimaryDark">#BD0E00</item>
   </style>
 </resources>
