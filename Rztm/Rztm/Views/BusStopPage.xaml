@@ -15,7 +15,8 @@
         <Label Text="{Binding BusStop.NameToDisplay}"
                TextColor="White"
                FontSize="20"
-               FontAttributes="Bold"/>
+               FontAttributes="Bold"
+               VerticalTextAlignment="Center"/>
     </NavigationPage.TitleView>
 
     <!--<ContentPage.BindingContext>
@@ -56,10 +57,10 @@
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
-        <StackLayout BackgroundColor="{StaticResource UnderNavigationColor}">
+        <StackLayout BackgroundColor="{StaticResource UnderNavigationBackgroundColor}">
             <Label Text="{Binding BusStop.Name}"
                    IsVisible="{Binding BusStop.CustomName, Converter={StaticResource isTextNotEmptyConverter}}"
-                   TextColor="White"
+                   TextColor="{StaticResource UnderNavigationTextColor}"
                    Margin="70,0,0,0"/>
 
             <StackLayout Padding="8,8,8,0"
@@ -153,9 +154,9 @@
             </StackLayout>
 
             <Label x:Name="DescriptionLabel" Text="{Binding BusStop.Description}"
-                   BackgroundColor="{StaticResource UnderNavigationColor}"
+                   BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
                    VerticalOptions="EndAndExpand"
-                   TextColor="White"
+                   TextColor="{StaticResource UnderNavigationTextColor}"
                    IsVisible="False"
                    Margin="8,0,0,0"/>
         </StackLayout>

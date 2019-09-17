@@ -62,6 +62,15 @@
     <Compile Include="DependencyImplementations\SQLiteDatabase_iOS.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <BundleResource Include="Resources\bus-stop%403.png" />
+    <BundleResource Include="Resources\bus-stop%402.png" />
+    <BundleResource Include="Resources\bus-stop.png" />
+    <BundleResource Include="Resources\heart%403.png" />
+    <BundleResource Include="Resources\heart%402.png" />
+    <BundleResource Include="Resources\heart.png" />
+    <BundleResource Include="Resources\near-me%403.png" />
+    <BundleResource Include="Resources\near-me%402.png" />
+    <BundleResource Include="Resources\near-me.png" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />
@@ -139,7 +148,7 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon60.png">
       <Visible>false</Visible>
     </ImageAsset>
-	<ImageAsset Include="Assets.xcassets\AppIconRztm.appiconset\1024.png">
+    <ImageAsset Include="Assets.xcassets\AppIconRztm.appiconset\1024.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIconRztm.appiconset\120.png">
@@ -197,9 +206,7 @@
       <Visible>false</Visible>
     </ImageAsset>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Rztm\Rztm.csproj">
       <Project>{07333f6d-b3de-4b37-85d1-301cafc4e46d}</Project>
