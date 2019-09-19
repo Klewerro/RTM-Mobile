@@ -25,6 +25,7 @@
     <ContentPage.Resources>
         <converters:DistanceConverter x:Key="distanceConverter"/>
         <converters:IsTextNotEmptyConverter x:Key="isTextNotEmptyConverter"/>
+        <converters:IsTimeInMinutesConverter x:Key="isTimeInMinutesConverter"/>
 
         <ResourceDictionary>
             <Style x:Key="ChangeNameButton" TargetType="Button">
@@ -123,9 +124,15 @@
                                            TextColor="Black"
                                            Grid.Column="1"/>
                                     <Label Text="{Binding Time}"
-                                           TextColor="Black"
+                                           TextColor="Gray"
                                            FontSize="Large"
-                                           Grid.Column="2"/>
+                                           Grid.Column="2">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Time, Converter={StaticResource isTimeInMinutesConverter}}" Value="True">
+                                                <Setter Property="TextColor" Value="Black"/>
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
