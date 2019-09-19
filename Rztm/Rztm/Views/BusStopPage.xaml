@@ -44,14 +44,21 @@
 
     <ContentPage.ToolbarItems>
         <customcontrols:ToggleableToolbarItem IconImageSource="Yellow_Star.png"
-                                            IconImageSourceToggled="Gray_Star.png"
-                                            Order="Primary"
-                                            IsToggled="{Binding BusStop.IsFavorite}"
-                                            Command="{Binding FavoritesToggleCommand}" />
-        <ToolbarItem Text="Otwórz w aplikacji mapy"
-                     Order="Secondary"
-                     Command="{Binding OpenInMapsCommand}" />
-        <ToolbarItem Text="Zmień nazwę"
+                                              IconImageSourceToggled="Gray_Star.png"
+                                              IsToggled="{Binding BusStop.IsFavorite}"
+                                              Command="{Binding FavoritesToggleCommand}"
+                                              Text="Usuń z ulubionych"
+                                              TextToggled="Dodaj do ulubionych"/>
+        <ToolbarItem Order="Secondary"
+                     Command="{Binding OpenInMapsCommand}">
+            <ToolbarItem.Text>
+                <OnPlatform x:TypeArguments="x:String">
+                    <On Platform="Android">Otwórz w aplikacji mapy</On>
+                    <On Platform="iOS">Mapa</On>
+                </OnPlatform>
+            </ToolbarItem.Text>
+        </ToolbarItem>
+            <ToolbarItem Text="Zmień nazwę"
                      Order="Secondary"
                      Clicked="RenameToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
