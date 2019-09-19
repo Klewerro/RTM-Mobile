@@ -107,7 +107,7 @@
         <StackLayout>
 
             <Grid HorizontalOptions="Center"
-                  BackgroundColor="{StaticResource UnderNavigationColor}">
+                  BackgroundColor="{StaticResource UnderNavigationBackgroundColor}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
@@ -122,13 +122,12 @@
                 <Label Text="Filtry" FontAttributes="Bold"
                        Grid.Column="0"
                        FontSize="Large"
-                       TextColor="White"
+                       TextColor="{StaticResource UnderNavigationTextColor}"
                        VerticalOptions="Center"
                        Margin="8,0,0,0"/>
                 <Picker SelectedIndex="{Binding RangePickerIndex}" 
                         Title="Wybierz zakres"
-                        TitleColor="White" 
-                        TextColor="White"
+                        TextColor="{StaticResource UnderNavigationTextColor}"
                         Grid.Column="1">
                     <Picker.Items>
                         <x:String>250m</x:String>
@@ -142,7 +141,7 @@
                 </Picker>
 
                 <Label Text="Szukaj w lini prostej"
-                       TextColor="White"
+                       TextColor="{StaticResource UnderNavigationTextColor}"
                        VerticalOptions="Center" HorizontalOptions="End"
                        Grid.Column="3"/>
                 <Switch IsToggled="{Binding IsSearchInLineEnabled}"

@@ -16,9 +16,30 @@
                      Order="Secondary"
                      Command="{Binding OpenWebsiteCommand}" />
     </TabbedPage.ToolbarItems>
+
+    <!--Make icon image source onPlatform iOS only-->
+    <views:ListPage>
+        <views:ListPage.IconImageSource>
+            <OnPlatform x:TypeArguments="FileImageSource">
+                <On Platform="iOS">bus-stop.png</On>
+            </OnPlatform>
+        </views:ListPage.IconImageSource>
+    </views:ListPage>
+
+    <views:FavoritesPage>
+        <views:FavoritesPage.IconImageSource>
+            <OnPlatform x:TypeArguments="FileImageSource">
+                <On Platform="iOS">heart.png</On>
+            </OnPlatform>
+        </views:FavoritesPage.IconImageSource>
+    </views:FavoritesPage>
     
-    <views:ListPage />
-    <views:FavoritesPage />
-    <views:NearbyPage />
+    <views:NearbyPage>
+        <views:NearbyPage.IconImageSource>
+            <OnPlatform x:TypeArguments="FileImageSource">
+                <On Platform="iOS">near-me.png</On>
+            </OnPlatform>
+        </views:NearbyPage.IconImageSource>
+    </views:NearbyPage>
 
 </TabbedPage>

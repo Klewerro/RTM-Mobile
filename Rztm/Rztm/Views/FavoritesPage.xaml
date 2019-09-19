@@ -24,8 +24,8 @@
             <SearchBar SearchCommand="{Binding SearchCommand}"
                        Text="{Binding SearchText}"
                        Placeholder="Wprowadź nazwę przystanku..."
-                       BackgroundColor="{StaticResource UnderNavigationColor}"
-                       TextColor="White">
+                       BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
+                       TextColor="{StaticResource UnderNavigationTextColor}">
                 <SearchBar.Behaviors>
                     <b:EventToCommandBehavior EventName="TextChanged"
                                               Command="{Binding SearchTextChangedCommand}" />
