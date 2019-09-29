@@ -139,6 +139,9 @@
                                             <DataTrigger TargetType="Label" Binding="{Binding Time, Converter={StaticResource isTimeInMinutesConverter}}" Value="True">
                                                 <Setter Property="TextColor" Value="Black"/>
                                             </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Time}" Value="&lt;1min">
+                                                <Setter Property="TextColor" Value="ForestGreen"/>
+                                            </DataTrigger>
                                         </Label.Triggers>
                                     </Label>
                                 </Grid>
