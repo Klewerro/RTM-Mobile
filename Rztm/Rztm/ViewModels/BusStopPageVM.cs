@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml;
@@ -30,6 +31,7 @@ namespace Rztm.ViewModels
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
         private IGeolocator _locator;
+        private CancellationTokenSource _ctsCurrentPosition;
         private BusStop _busStop;
         private string _changeNameText;
 
@@ -58,6 +60,7 @@ namespace Rztm.ViewModels
             _rtmService = rtmService;
             _locator = CrossGeolocator.Current;
             BusStop = new BusStop();
+            _ctsCurrentPosition = new CancellationTokenSource();
         }
 
         public ICommand AppearingCommand => new DelegateCommand(() =>
@@ -68,12 +71,14 @@ namespace Rztm.ViewModels
         {
             _locator.PositionChanged -= GeolocatorOnPositionChanged;
             _locator.PositionError -= GeolocatorOnPositionError;
+            _ctsCurrentPosition.Cancel();
         });
 
         public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
             BusStop.AddDownloadedData(await DownloadBusStop());
+            BusStop.Distance = await GetDistanceToBusStop();
             IsBusy = false;
         });
 
@@ -139,11 +144,9 @@ namespace Rztm.ViewModels
             await PrepareBusStopUsingApiData();
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
-
-            var currentPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10));
-            BusStop.Distance = currentPosition.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
-            IsBusy = false;
+            BusStop.Distance = await GetDistanceToBusStop();
         }
+
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
             => DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
@@ -152,6 +155,30 @@ namespace Rztm.ViewModels
         {
             var position = e.Position;
             BusStop.Distance = position.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
+        }
+
+        private async Task<double> GetDistanceToBusStop()
+        {
+            try
+            {
+                var currentPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), _ctsCurrentPosition.Token);
+                var distance = currentPosition.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
+
+                if (currentPosition.Latitude == 0 && currentPosition.Longitude == 0 && currentPosition.Accuracy == 0)
+                    throw new OperationCanceledException(); //For some phones, where cancellation token not throwing
+
+                return distance;
+            }
+            catch (OperationCanceledException)
+            {
+                //Nothing needed, just BusStop.Distance is unset
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+            return default;
         }
 
         private async Task PrepareBusStopUsingApiData()
