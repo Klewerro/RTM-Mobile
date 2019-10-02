@@ -37,7 +37,7 @@ namespace Rztm.UnitTests
             });
 
             _listPageViewModelBase.SearchText = "Rejtana";
-            _listPageViewModelBase.SearchTextChangedCommand?.Execute(null);
+            _listPageViewModelBase.SearchCommand?.Execute(null);
 
             Assert.AreEqual(2, _listPageViewModelBase.BusStops.Count);
         }
@@ -58,7 +58,7 @@ namespace Rztm.UnitTests
             });
 
             _listPageViewModelBase.SearchText = "Rejtana";
-            _listPageViewModelBase.SearchTextChangedCommand?.Execute(null);
+            _listPageViewModelBase.SearchCommand?.Execute(null);
 
             Assert.AreEqual(2, _listPageViewModelBase.BusStops.Count);
         }
@@ -79,7 +79,7 @@ namespace Rztm.UnitTests
             });
 
             _listPageViewModelBase.SearchText = "Rejtana";
-            _listPageViewModelBase.SearchTextChangedCommand?.Execute(null);
+            _listPageViewModelBase.SearchCommand?.Execute(null);
 
             Assert.AreEqual(2, _listPageViewModelBase.BusStops.Count);
         }

@@ -47,12 +47,7 @@ namespace Rztm.ViewModels
             await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
         });
 
-        public ICommand SearchCommand => new DelegateCommand(async () =>
-        {
-            BusStops = BusStopsAll.Where(b => b.Name.ToLower().Contains(SearchText.ToLower())).ToList();    //Todo: change to BusStopsForSearch 
-        });
-
-        public ICommand SearchTextChangedCommand => new DelegateCommand(() =>
+        public ICommand SearchCommand => new DelegateCommand(() =>
         {
             BusStops = SearchForBusStops(SearchText);
         });

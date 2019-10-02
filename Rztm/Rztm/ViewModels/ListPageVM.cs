@@ -45,7 +45,6 @@ namespace Rztm.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
-            base.OnNavigatedTo(parameters);
             await DownloadBusStopsAutomaticallyIfEmpty();
         }
 

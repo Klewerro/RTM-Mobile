@@ -40,10 +40,15 @@ namespace Rztm.Repositories
             => _connection.Get<BusStop>(id);
 
         public List<BusStop> GetAll()
-            => _connection.Table<BusStop>().ToList();
+            => _connection.Table<BusStop>()
+                .OrderBy(b => b.Name)
+                .ToList();
 
         public List<BusStop> GetAllFavorites()
-            => _connection.Table<BusStop>().Where(b => b.IsFavorite).ToList();
+            => _connection.Table<BusStop>()
+                .Where(b => b.IsFavorite)
+                .OrderBy(b => b.Name)
+                .ToList();
 
         public void Delete(int id)
             => _connection.Table<BusStop>().Delete(b => b.Id == id);

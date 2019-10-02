@@ -28,7 +28,7 @@
                        TextColor="{StaticResource UnderNavigationTextColor}">
                 <SearchBar.Behaviors>
                     <b:EventToCommandBehavior EventName="TextChanged"
-                                              Command="{Binding SearchTextChangedCommand}" />
+                                              Command="{Binding SearchCommand}" />
                 </SearchBar.Behaviors>
             </SearchBar>
 
