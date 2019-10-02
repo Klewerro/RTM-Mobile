@@ -61,8 +61,9 @@ namespace Rztm.ViewModels
         protected List<BusStop> SearchForBusStops(string searchText)
         {
             var query = from busStop in BusStopsAll
-                        where busStop.Name.ToLower().StartsWith(searchText.ToLower())
-                            || (!string.IsNullOrEmpty(busStop.CustomName) && busStop.CustomName.ToLower().StartsWith(searchText.ToLower()))
+                        where busStop.Name.ToLower().Split().Any(b => b.StartsWith(searchText.ToLower()))
+                            || (!string.IsNullOrEmpty(busStop.CustomName) 
+                                && busStop.CustomName.ToLower().Split().Any(b => b.StartsWith(searchText.ToLower())))
                         orderby busStop.Name, busStop.CustomName
                         select busStop;
             return query.ToList();

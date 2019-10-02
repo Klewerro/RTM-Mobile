@@ -44,6 +44,10 @@ namespace Rztm.ViewModels
         public ViewModelBase(INavigationService navigationService)
         {
             NavigationService = navigationService;
+#if DEBUG
+            if (DeviceInfo.Platform == DevicePlatform.Unknown)  //for unitTesting purposes
+                return;
+#endif
             CheckInternetConnection();
             Connectivity.ConnectivityChanged += Connectivity_ConnectionChanged;
         }
