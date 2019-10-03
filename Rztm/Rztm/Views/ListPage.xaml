@@ -15,10 +15,7 @@
     </ContentPage.BindingContext>-->
 
     <ContentPage.Resources>
-        <converters:ValueConverterGroup x:Key="isListEmptyConverterAndBoolInverter">
-            <converters:IsListEmptyConverter />
-            <converters:InverseBoolConverter />
-        </converters:ValueConverterGroup> 
+        <converters:InverseBoolConverter x:Key="inverseBoolConverter"/>
     </ContentPage.Resources>
     
     <ContentPage.Content>
@@ -34,7 +31,8 @@
                 </SearchBar.Behaviors>
             </SearchBar>
             <Button Text="Pobierz przystanki"
-                    IsVisible="{Binding BusStops, Converter={StaticResource isListEmptyConverterAndBoolInverter}}"
+                    HorizontalOptions="CenterAndExpand"
+                    IsVisible="{Binding AreBusStopsDownloaded, Converter={StaticResource inverseBoolConverter}}"
                     Command="{Binding DownloadBusStopsCommand}"/>
             <ListView ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"

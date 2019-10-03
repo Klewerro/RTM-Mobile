@@ -39,6 +39,7 @@ namespace Rztm.ViewModels
                 return;
 
             _busStopRepository.DeleteAll();
+            Xamarin.Essentials.Preferences.Set("busStopsDownloaded", false);
             DialogHelper.DisplayToast("Usunięto wszystkie przystanki", ToastTime.Short);
         });
 

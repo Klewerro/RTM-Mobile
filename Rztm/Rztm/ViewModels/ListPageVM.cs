@@ -25,6 +25,17 @@ namespace Rztm.ViewModels
         private readonly IPageDialogService _pageDialogService;
         private readonly IRtmService _rtmService;
         private readonly IBusStopRepository _busStopRepository;
+        private bool _areBusStopsDownloaded;
+
+        public bool AreBusStopsDownloaded
+        {
+            get => _areBusStopsDownloaded;
+            set
+            {
+                Preferences.Set("busStopsDownloaded", value);
+                SetProperty(ref _areBusStopsDownloaded, value);
+            }
+        }
 
 
         public ListPageVM(INavigationService navigationService, 
@@ -36,7 +47,11 @@ namespace Rztm.ViewModels
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
             BusStops = new List<BusStop>();
-            _busStopRepository.BusStopsDeletedEvent += (s, e) => BusStops = new List<BusStop>();
+            _busStopRepository.BusStopsDeletedEvent += (s, e) =>
+            {
+                BusStops = new List<BusStop>();
+                AreBusStopsDownloaded = false;
+            };
         }
 
         
@@ -45,6 +60,7 @@ namespace Rztm.ViewModels
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            AreBusStopsDownloaded = Preferences.Get("busStopsDownloaded", false);
             await DownloadBusStopsAutomaticallyIfEmpty();
         }
 
@@ -83,10 +99,12 @@ namespace Rztm.ViewModels
                 _busStopRepository.AddRange(result);
                 BusStopsAll = result.AsReadOnly();
                 BusStops = result;
+                AreBusStopsDownloaded = true;
             }
             catch (Exceptions.ConnectionException ex)
             {
                 ConnectionErrorRetry(async () => await DownloadBusStops());
+                AreBusStopsDownloaded = false;
             }
             finally
             {
