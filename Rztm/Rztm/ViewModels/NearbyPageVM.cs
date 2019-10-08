@@ -23,6 +23,7 @@ namespace Rztm.ViewModels
         private Position _position;
         private int _rangePickerIndex;
         private bool _isSearchInLineEnabled;
+        private bool _isGeolocationNotAvailable;
         private readonly double[] _ranges;
 
         public Position Position
@@ -40,7 +41,13 @@ namespace Rztm.ViewModels
         public bool IsSearchInLineEnabled
         {
             get => _isSearchInLineEnabled;
-            set => _isSearchInLineEnabled = value;
+            set => SetProperty(ref _isSearchInLineEnabled, value);
+        }
+
+        public bool IsGeolocationNotAvailable
+        {
+            get => _isGeolocationNotAvailable;
+            set => SetProperty(ref _isGeolocationNotAvailable, value); 
         }
 
 
@@ -100,6 +107,18 @@ namespace Rztm.ViewModels
         private async Task<Position> GetCurrentPosition()
         {
             IsBusy = true;
+
+            if (!_locator.IsGeolocationAvailable || !_locator.IsGeolocationEnabled)
+            {
+                IsGeolocationNotAvailable = true;
+                IsBusy = false;
+                return null;
+            }
+            else
+            {
+                IsGeolocationNotAvailable = false;
+            }
+                
             var result = await _locator.GetLastKnownLocationAsync();
 
             var currentPosition = await _locator.GetPositionAsync(timeout: TimeSpan.FromSeconds(10));
@@ -114,6 +133,12 @@ namespace Rztm.ViewModels
 
         private List<BusStop> GetNearbyBusStops(double range)
         {
+            if (Position == null)
+            {
+                IsBusy = false;
+                return new List<BusStop>();
+            }
+
             IsBusy = true;
             foreach (var stop in BusStopsAll)
             {
@@ -121,8 +146,8 @@ namespace Rztm.ViewModels
             }
 
             var result = BusStopsAll.Where(b => b.Distance < range)
-            .OrderBy(b => b.Distance)
-            .ToList();
+                .OrderBy(b => b.Distance)
+                .ToList();
 
             IsBusy = false;
             return result;

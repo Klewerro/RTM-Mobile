@@ -30,5 +30,8 @@ namespace Rztm.Helpers
 
         public static Position ConvertBusStopToPositon(this BusStop busStop)
             => new Position(busStop.Latitude, busStop.Longitude);
+
+        public static bool IsZeroPosition(this Position position)
+            => (position.Latitude == 0 && position.Longitude == 0 && position.Accuracy == 0) ? true : false;
     }
 }

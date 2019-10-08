@@ -164,7 +164,7 @@ namespace Rztm.ViewModels
                 var currentPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), _ctsCurrentPosition.Token);
                 var distance = currentPosition.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
 
-                if (currentPosition.Latitude == 0 && currentPosition.Longitude == 0 && currentPosition.Accuracy == 0)
+                if (currentPosition.IsZeroPosition())
                     throw new OperationCanceledException(); //For some phones, where cancellation token not throwing
 
                 return distance;
