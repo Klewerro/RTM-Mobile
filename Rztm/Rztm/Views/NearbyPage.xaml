@@ -148,8 +148,22 @@
                         HorizontalOptions="Start" VerticalOptions="Center"
                         Grid.Column="4"/>
             </Grid>
+
+            <Label Text="Brak wyników"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   FontSize="Medium">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" 
+                                 Binding="{Binding Source={x:Reference NearbyBusStopsList}, Path=ItemsSource.Count}"
+                                 Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
             
-            <ListView ItemsSource="{Binding BusStops}"
+            <ListView x:Name="NearbyBusStopsList"
+                      ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshCommand}"

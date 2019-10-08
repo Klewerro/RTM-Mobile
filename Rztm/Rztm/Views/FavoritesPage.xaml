@@ -32,7 +32,21 @@
                 </SearchBar.Behaviors>
             </SearchBar>
 
-            <ListView ItemsSource="{Binding BusStops}"
+            <Label Text="Brak zapisanych ulubionych"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   FontSize="Medium">
+                <Label.Triggers>
+                    <DataTrigger TargetType="Label" 
+                                 Binding="{Binding Source={x:Reference FavoritesListView}, Path=ItemsSource.Count}"
+                                 Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+            
+            <ListView x:Name="FavoritesListView" 
+                      ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"
                       ItemTemplate="{StaticResource busStopDataTemplateSelector}"
                       HasUnevenRows="True">

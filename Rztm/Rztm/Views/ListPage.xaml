@@ -32,9 +32,18 @@
             </SearchBar>
             <Button Text="Pobierz przystanki"
                     HorizontalOptions="CenterAndExpand"
-                    IsVisible="{Binding AreBusStopsDownloaded, Converter={StaticResource inverseBoolConverter}}"
-                    Command="{Binding DownloadBusStopsCommand}"/>
-            <ListView ItemsSource="{Binding BusStops}"
+                    IsVisible="False"
+                    Command="{Binding DownloadBusStopsCommand}">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button"
+                                 Binding="{Binding Source={x:Reference BusStopsListView}, Path=ItemsSource.Count}"
+                                 Value="0">
+                        <Setter Property="IsVisible" Value="True"/>
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <ListView x:Name="BusStopsListView"
+                      ItemsSource="{Binding BusStops}"
                       IsRefreshing="{Binding IsBusy}"
                       ItemTemplate="{StaticResource busStopDataTemplateSelector}"
                       HasUnevenRows="True">
