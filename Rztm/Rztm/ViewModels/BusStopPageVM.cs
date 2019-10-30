@@ -34,6 +34,7 @@ namespace Rztm.ViewModels
         private CancellationTokenSource _ctsCurrentPosition;
         private BusStop _busStop;
         private string _changeNameText;
+        private List<string> _coursingLines;
 
         public BusStop BusStop
         {
@@ -48,7 +49,7 @@ namespace Rztm.ViewModels
         public string ChangeNameText
         {
             get => _changeNameText;
-            set =>  SetProperty(ref _changeNameText, value);
+            set => SetProperty(ref _changeNameText, value);
         }
 
 
@@ -142,6 +143,7 @@ namespace Rztm.ViewModels
                 BusStop.Distance = (double)parameters["distance"];
 
             await PrepareBusStopUsingApiData();
+            BusStop.CoursingLines = await _rtmService.GetBusStopCoursingLines(BusStop.Id);
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
             BusStop.Distance = await GetDistanceToBusStop();

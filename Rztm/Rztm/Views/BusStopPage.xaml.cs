@@ -29,7 +29,12 @@ namespace Rztm.Views
 
         private async void ArrowButton_Clicked(object sender, EventArgs e)
         {
-            DescriptionLabel.IsVisible = !DescriptionLabel.IsVisible;
+            if (DescriptionLabel.Text.Length > 0)
+            {
+                DescriptionStackLayout.IsVisible = !DescriptionStackLayout.IsVisible;
+            }
+            Carousel.IsVisible = !Carousel.IsVisible;
+
             if (ArrowButton.Rotation == 0)
             {
                 await ArrowButton.RotateTo(180, easing: Easing.SinInOut);

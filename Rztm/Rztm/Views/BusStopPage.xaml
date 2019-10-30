@@ -10,7 +10,7 @@
              xmlns:converters="clr-namespace:Rztm.Converters"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              x:Class="Rztm.Views.BusStopPage">
-    
+
     <NavigationPage.TitleView>
         <Label Text="{Binding BusStop.NameToDisplay}"
                TextColor="White"
@@ -59,13 +59,14 @@
                 </OnPlatform>
             </ToolbarItem.Text>
         </ToolbarItem>
-            <ToolbarItem Text="Zmień nazwę"
+        <ToolbarItem Text="Zmień nazwę"
                      Order="Secondary"
                      Clicked="RenameToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource UnderNavigationBackgroundColor}">
+            
             <Label Text="{Binding BusStop.Name}"
                    IsVisible="{Binding BusStop.CustomName, Converter={StaticResource isTextNotEmptyConverter}}"
                    TextColor="{StaticResource UnderNavigationTextColor}"
@@ -165,17 +166,49 @@
                         CornerRadius="20"
                         Padding="0"
                         BackgroundColor="Transparent"
-                        IsVisible="{Binding BusStop.Description, Converter={StaticResource isTextNotEmptyConverter}}"
+                        
                         HorizontalOptions="End" VerticalOptions="End"
                         Clicked="ArrowButton_Clicked"/>
             </StackLayout>
 
-            <Label x:Name="DescriptionLabel" Text="{Binding BusStop.Description}"
-                   BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
-                   VerticalOptions="EndAndExpand"
-                   TextColor="{StaticResource UnderNavigationTextColor}"
-                   IsVisible="False"
-                   Margin="8,0,0,0"/>
+            <CarouselView x:Name="Carousel" ItemsSource="{Binding BusStop.CoursingLines}"
+                          ItemsLayout="HorizontalList"
+                          VerticalOptions="Center"
+                          HeightRequest="30"
+                          IsVisible="False">
+                <CarouselView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Margin="10,0,10,0"
+                                     VerticalOptions="Center" HorizontalOptions="Center">
+                            <Frame BackgroundColor="Transparent" 
+                                   HasShadow="True"
+                                   Padding="0" Margin="0" 
+                                   BorderColor="White"
+                                   CornerRadius="10" 
+                                   VerticalOptions="Center" HorizontalOptions="Center">
+                                <Label Text="{Binding .}"
+                                       TextColor="White"
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                       HeightRequest="30" WidthRequest="30"/>
+                            </Frame>
+                        </StackLayout>
+                    </DataTemplate>
+                </CarouselView.ItemTemplate>
+            </CarouselView>
+
+            <StackLayout x:Name="DescriptionStackLayout"
+                         IsVisible="False">
+                <BoxView HeightRequest="1" 
+                         Color="White"
+                         Opacity="0.8"
+                         Margin="0"/>
+                <Label x:Name="DescriptionLabel" Text="{Binding BusStop.Description}"
+                       BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
+                       VerticalOptions="EndAndExpand"
+                       TextColor="{StaticResource UnderNavigationTextColor}"
+                       Margin="8,0,0,0"/>
+            </StackLayout>
+            
         </StackLayout>
     </ContentPage.Content>
 

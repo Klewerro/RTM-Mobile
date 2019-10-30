@@ -17,6 +17,7 @@ namespace Rztm.Models
         private string _customName;
         private string _nameToDisplay;
         private string _name;
+        private List<string> _coursingLines;
 
         [PrimaryKey]
         public int Id { get; set; }
@@ -69,10 +70,17 @@ namespace Rztm.Models
         [Ignore]
         public double Distance { get => _distance; set => SetProperty(ref _distance, value); }
 
+        [Ignore]
+        public List<string> CoursingLines 
+        { 
+            get => _coursingLines; 
+            set => SetProperty(ref _coursingLines, value);
+        }
 
         public BusStop()
         {
             Departures = new List<Departure>();
+            CoursingLines = new List<string>();
         }
 
         public void SetLatLng() => LatLng = $"{Latitude},{Longitude}";
