@@ -11,5 +11,7 @@ namespace Rztm.Models
         public string Direction { get; set; }
 
         public string Time { get; set; }
+
+        public bool HaveTicketMachine { get; set; }
     }
 }

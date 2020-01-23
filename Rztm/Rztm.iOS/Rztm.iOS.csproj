@@ -62,6 +62,7 @@
     <Compile Include="DependencyImplementations\SQLiteDatabase_iOS.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <BundleResource Include="Resources\biletomat.png" />
     <BundleResource Include="Resources\bus-stop%403.png" />
     <BundleResource Include="Resources\bus-stop%402.png" />
     <BundleResource Include="Resources\bus-stop.png" />
@@ -71,6 +72,7 @@
     <BundleResource Include="Resources\near-me%403.png" />
     <BundleResource Include="Resources\near-me%402.png" />
     <BundleResource Include="Resources\near-me.png" />
+    <BundleResource Include="Resources\biletomat_green.png" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Entitlements.plist" />

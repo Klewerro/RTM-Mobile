@@ -41,7 +41,8 @@ namespace Rztm.Services
                 {
                     Number = r.Attribute("nr").Value,
                     Direction = r.Attribute("dir").Value,
-                    Time = r.Element("S").Attribute("t").Value
+                    Time = r.Element("S").Attribute("t").Value,
+                    HaveTicketMachine =  r.Attribute("vuw").Value.Equals("B")
                 });
             }
 
