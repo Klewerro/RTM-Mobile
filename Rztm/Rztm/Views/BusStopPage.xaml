@@ -142,6 +142,7 @@
                                     <Label Text="{Binding Time}"
                                            TextColor="Gray"
                                            FontSize="Large"
+                                           BindingContextChanged="TimeLabel_BindingContextChanged"
                                            Grid.Column="3">
                                         <Label.Triggers>
                                             <DataTrigger TargetType="Label" Binding="{Binding Time, Converter={StaticResource isTimeInMinutesConverter}}" Value="True">
