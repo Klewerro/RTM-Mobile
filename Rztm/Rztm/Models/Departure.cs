@@ -13,5 +13,7 @@ namespace Rztm.Models
         public string Time { get; set; }
 
         public bool HaveTicketMachine { get; set; }
+
+        public int? RouteId { get; set; }
     }
 }

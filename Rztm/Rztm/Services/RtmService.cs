@@ -74,21 +74,6 @@ namespace Rztm.Services
             return busStops.OrderBy(b => b.Name).ToList();
         }
 
-        public async Task<List<string>> GetBusStopCoursingLines(int busStopId)
-        {
-            var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBusStopRouteList?id={busStopId}&ttId=0");
-
-            var json = JsonConvert.DeserializeObject(response).ToString();
-            var jArray = JArray.Parse(json);
-
-            var lines = jArray[4][1]
-                .Where((item, index) => index % 2 != 0)
-                .Select(x => x.ToString())
-                .ToList();
-
-            return lines;
-        }
-
         public async Task<List<(int, string)>> GetRouteList()
         {
             var response = await _httpClient.GetStringAsync("http://einfo.erzeszow.pl/Home/GetRouteList?ttId=0");
