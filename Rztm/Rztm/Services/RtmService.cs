@@ -89,5 +89,65 @@ namespace Rztm.Services
             return lines;
         }
 
+        public async Task<List<(int, string)>> GetRouteList()
+        {
+            var response = await _httpClient.GetStringAsync("http://einfo.erzeszow.pl/Home/GetRouteList?ttId=0");
+
+            var json = JsonConvert.DeserializeObject(response).ToString();
+            var jArray = JArray.Parse(json);
+
+            var jValues = jArray[0][1].ToList();
+            var result = new List<(int, string)>();
+
+            for (int i = 0; i < jValues.Count; i = i + 2)
+            {
+                var tuple = ((int)jValues[i], jValues[i + 1].ToString());
+                result.Add(tuple);               
+            }
+
+            return result;
+        }
+
+        public async Task<List<(int routeId, string number)>> GetBusStopRouteList(int busStopId)
+        {
+            var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBusStopRouteList?id={busStopId}&ttId=0");
+
+            var json = JsonConvert.DeserializeObject(response).ToString();
+            var jArray = JArray.Parse(json);
+
+            var jValues = jArray[4][1].ToList();
+            var result = new List<(int, string)>();
+
+            for (int i = 0; i < jValues.Count; i = i + 2)
+            {
+                var tuple = ((int)jValues[i], jValues[i + 1].ToString());
+                result.Add(tuple);
+            }
+
+            return result;
+        }
+
+        public async Task<List<(int busStopId, string busStopName)>> GetNextBusStops(int busStopId, int routeId)
+        {
+            var result = new List<(int busStopId, string busStopName)>();
+            var startAdding = false;
+
+            var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBaseTripTimeTable?directionId={routeId}&id_sub=0&ttId=0");
+
+            var json = JsonConvert.DeserializeObject(response).ToString(); 
+            var jArray = JArray.Parse(json);
+
+            var jValues = jArray[0].ToList();
+            foreach (var value in jValues)
+            {
+                if (startAdding)
+                    result.Add((value[0].Value<int>(), value[1].Value<string>()));
+                else if (value[0].Value<int>() == busStopId)
+                    startAdding = true;
+            }
+
+            return result;
+        }
+
     }
 }
