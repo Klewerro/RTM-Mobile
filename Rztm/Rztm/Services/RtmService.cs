@@ -117,7 +117,8 @@ namespace Rztm.Services
             var result = new List<(int busStopId, string busStopName)>();
             var startAdding = false;
 
-            var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBaseTripTimeTable?directionId={routeId}&id_sub=0&ttId=0");
+            var finalRouteId = await GetFinalRouteId(busStopId, routeId);
+            var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBaseTripTimeTable?directionId={finalRouteId}&id_sub=0&ttId=0");
 
             var json = JsonConvert.DeserializeObject(response).ToString(); 
             var jArray = JArray.Parse(json);
@@ -134,5 +135,15 @@ namespace Rztm.Services
             return result;
         }
 
+
+        private async Task<int> GetFinalRouteId(int busStopId, int routeId)
+        {
+            var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBusStopTimeTable?busStopId={busStopId}&routeId={routeId}&ttId=0");
+            var json = JsonConvert.DeserializeObject(response).ToString();  //Todo: Extract parsing jArray to separate method
+            var jArray = JArray.Parse(json);
+
+            var result = jArray[2][0][1].ToObject<int>();
+            return result;
+        }
     }
 }

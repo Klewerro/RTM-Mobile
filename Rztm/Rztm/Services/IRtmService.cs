@@ -10,8 +10,6 @@ namespace Rztm.Services
     {
         Task<BusStop> GetBusStop(int id);
         Task<List<BusStop>> GetAllBusStops();
-
-
         Task<List<(int, string)>> GetRouteList();
         Task<List<(int routeId, string number)>> GetBusStopRouteList(int busStopId);
         Task<List<(int busStopId, string busStopName)>> GetNextBusStops(int busStopId, int routeId);
