@@ -113,17 +113,30 @@
                           IsPullToRefreshEnabled="True"
                           RefreshCommand="{Binding RefreshCommand}"
                           IsRefreshing="{Binding IsBusy}"
-                          VerticalOptions="Start">
+                          VerticalOptions="Start"
+                          HasUnevenRows="True">
+                    <ListView.Behaviors>
+                        <b:EventToCommandBehavior EventName="ItemTapped"
+                                              Command="{Binding ItemTappedCommand}"
+                                              EventArgsConverter="{converters:ItemTappedEventArgsConverter}" />
+                    </ListView.Behaviors>
+                    
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <Grid VerticalOptions="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="1*"/>
                                         <ColumnDefinition Width="20"/>
                                         <ColumnDefinition Width="6*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
+                                    
                                     <Label Text="{Binding Number}"
                                            TextColor="{StaticResource AccentColor}"
                                            FontSize="Large"
@@ -153,6 +166,43 @@
                                             </DataTrigger>
                                         </Label.Triggers>
                                     </Label>
+
+                                    <!--Second Row-->
+                                    <ActivityIndicator IsVisible="{Binding IsFetching}" IsEnabled="{Binding IsFetching}"
+                                                       IsRunning="{Binding IsFetching}"
+                                                       Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                                       />
+
+                                    <!--Thrid Row-->
+                                    <CollectionView ItemsSource="{Binding NextBusStopsNames}"
+                                                    IsVisible="{Binding IsExpanded}"
+                                                    HeightRequest="55"
+                                                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                                    HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Never"
+                                                    PropertyChanged="CollectionView_PropertyChanged">
+                                        <CollectionView.ItemsLayout>
+                                            <GridItemsLayout Orientation="Horizontal"
+                                                             HorizontalItemSpacing="5"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackLayout>
+                                                    <Frame BackgroundColor="WhiteSmoke"
+                                                           HasShadow="True"
+                                                           IsClippedToBounds="True"
+                                                           CornerRadius="10"
+                                                           Padding="5"
+                                                           VerticalOptions="FillAndExpand"
+                                                           Margin="0,0,0,10">
+                                                        <Label Text="{Binding .}" 
+                                                               TextColor="Black" 
+                                                               WidthRequest="120"
+                                                               VerticalOptions="Center"/>
+                                                    </Frame>
+                                                </StackLayout>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

@@ -3,6 +3,7 @@ using Rztm.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace Rztm.Helpers
@@ -33,5 +34,15 @@ namespace Rztm.Helpers
 
         public static bool IsZeroPosition(this Position position)
             => (position.Latitude == 0 && position.Longitude == 0 && position.Accuracy == 0) ? true : false;
+
+        public static void AddRouteIdsToDepartures(this List<Departure> departures, List<(int routeId, string number)> stopRouteList)
+        {
+            foreach (var departure in departures)
+            {
+                departure.RouteId = stopRouteList
+                    .SingleOrDefault(x => x.number.Equals(departure.Number))
+                    .routeId;
+            }
+        }
     }
 }

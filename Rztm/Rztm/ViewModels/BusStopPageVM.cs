@@ -1,28 +1,17 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Plugin.Geolocator;
+﻿using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
-using Prism.Services;
 using Rztm.Helpers;
 using Rztm.Models;
 using Rztm.Repositories;
 using Rztm.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
-using Xamarin.Forms;
 
 namespace Rztm.ViewModels
 {
@@ -125,6 +114,19 @@ namespace Rztm.ViewModels
             _busStopRepository.Rename(BusStop, ChangeNameText);
         });
 
+        public ICommand ItemTappedCommand => new DelegateCommand<Departure>(async departure =>
+        {
+            departure.IsExpanded = !departure.IsExpanded;
+            if (departure.NextBusStopsNames.Count == 0)
+            {
+                departure.IsFetching = true;
+                var nextStops = await _rtmService.GetNextBusStops(BusStop.Id, departure.RouteId.GetValueOrDefault());
+                departure.NextBusStopsNames = nextStops.Select(x => x.busStopName).ToList();
+                departure.IsFetching = false;
+            }
+        });
+
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             IsBusy = true;
@@ -145,9 +147,6 @@ namespace Rztm.ViewModels
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
             BusStop.Distance = await GetDistanceToBusStop();
-
-            var stopRouteList = await _rtmService.GetBusStopRouteList(BusStop.Id);
-            BusStop.CoursingLines = stopRouteList.Select(x => x.number).ToList();
         }     
 
 
@@ -199,6 +198,9 @@ namespace Rztm.ViewModels
             try
             {
                 var responseBusStop = await ApiCall(_rtmService.GetBusStop(BusStop.Id));
+                var stopRouteList = await ApiCall(_rtmService.GetBusStopRouteList(BusStop.Id));
+                responseBusStop.CoursingLines = stopRouteList.Select(x => x.number).ToList();
+                responseBusStop.Departures.AddRouteIdsToDepartures(stopRouteList);
                 return responseBusStop;
             }
             catch (Exceptions.ConnectionException)

@@ -1,4 +1,5 @@
-﻿using Rztm.Models;
+﻿using Rztm.DependencyInterfaces;
+using Rztm.Models;
 using Rztm.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Rztm.Views
     [DesignTimeVisible(false)] 
     public partial class BusStopPage : ContentPage
     {
+        private readonly ITextMeter _textMeter;
+
         private int _counter = 0;
         private List<Label> _labelsToBlink;
         private bool _isBlinking;
@@ -20,6 +23,7 @@ namespace Rztm.Views
         {
             InitializeComponent();
             _labelsToBlink = new List<Label>(10);
+            _textMeter = DependencyService.Get<ITextMeter>();
         }
 
         private void RenameToolbarItem_Clicked(object sender, EventArgs e)
@@ -80,6 +84,26 @@ namespace Rztm.Views
             }
         }
 
+        private void CollectionView_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var labelWidth = 120;
+            var propName = e.PropertyName;
+
+            if (propName.Equals("ItemsSource"))
+            {
+                var cv = sender as CollectionView;
+                if (cv.ItemsSource == null)
+                    return;
+
+                var departuresNames = cv.ItemsSource as List<string>;
+                if (departuresNames.Count > 0)
+                {
+                    var height = GetCellHeight(departuresNames, labelWidth);
+                    if (height > cv.HeightRequest)
+                        cv.HeightRequest = height;
+                }
+            }
+        }
 
         private async Task BlinkLabels(List<Label> labels, Color initialColor, int delayTime)
         {
@@ -93,5 +117,22 @@ namespace Rztm.Views
             }
         }
 
+        private double GetCellHeight(IEnumerable<string> departures, int labelWitdh)
+        {
+            double result = 0.0;
+            double frameMarginBottom = 10.0;
+            double framePadding = 10.0;     //top+bottom
+
+            //Get highest label height
+            foreach (var departure in departures)
+            {
+                var height = _textMeter.MeasureTextSize(departure, labelWitdh, 
+                    Device.GetNamedSize(NamedSize.Default, typeof(Label)));
+                if (height > result)
+                    result = height;
+            }
+
+            return result + frameMarginBottom + framePadding;
+        }
     }
 }
