@@ -14,6 +14,7 @@ namespace Rztm
 {
     public partial class App
     {
+        public string ApplicationVersion { get; set; } = "v1.0";
 
         public App() : this(null) { }
 
@@ -42,6 +43,7 @@ namespace Rztm
             containerRegistry.RegisterForNavigation<NearbyPage, NearbyPageVM>();
 
             containerRegistry.Register<IRtmService, RtmService>();
+            containerRegistry.Register<IGithubService, GithubService>();
             containerRegistry.RegisterSingleton<IBusStopRepository, BusStopRepository>();
             containerRegistry.Register<ILocalDatabase, LocalDatabase>();
         }
