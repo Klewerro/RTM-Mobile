@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using Plugin.DownloadManager;
 using UIKit;
 
 namespace Rztm.iOS
@@ -21,6 +22,15 @@ namespace Rztm.iOS
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
             return base.FinishedLaunching(application, launchOptions);
+        }
+
+        /**
+        * Save the completion-handler we get when the app opens from the background.
+        * This method informs iOS that the app has finished all internal processing and can sleep again.
+        */
+        public override void HandleEventsForBackgroundUrl(UIApplication application, string sessionIdentifier, Action completionHandler)
+        {
+            CrossDownloadManager.BackgroundSessionCompletionHandler = completionHandler;
         }
 
     }

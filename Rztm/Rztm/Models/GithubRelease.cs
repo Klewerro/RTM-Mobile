@@ -8,6 +8,9 @@ namespace Rztm.Models
 {
     public class GithubRelease
     {
+        private bool _latestReleastHasBeenChecked;
+        private bool _isLatestRelease;
+
         public int Id { get; set; }
 
         [JsonProperty("tag_name")]
@@ -20,8 +23,23 @@ namespace Rztm.Models
 
         public List<Asset> Assets { get; set; }
 
+        public bool IsLatestRelease
+        { 
+            get
+            {
+                if (!_latestReleastHasBeenChecked)
+                {
+                    _isLatestRelease = CheckIsLatestRelease();
+                    return _isLatestRelease;
+                }
 
-        public bool IsLatestRelease()
+                return _isLatestRelease;
+            }
+            set => _isLatestRelease = value; 
+        }
+
+
+        private bool CheckIsLatestRelease()
         {
             var currentVersion = (Xamarin.Forms.Application.Current as App).ApplicationVersion;
             var currentVersionNumber = parseVersion(currentVersion);
