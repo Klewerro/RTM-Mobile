@@ -5,6 +5,6 @@ namespace Rztm.Services
 {
     public interface IGithubService
     {
-        Task<GithubRelease> GetLatestVersionCode();
+        Task<GithubRelease> GetLatestVersionCodeAsync();
     }
 }

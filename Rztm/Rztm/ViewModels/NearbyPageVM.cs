@@ -73,7 +73,7 @@ namespace Rztm.ViewModels
         public ICommand AppearingCommand => new DelegateCommand(async () =>
         {
             await Task.Delay(200);
-            Position = await GetCurrentPosition();
+            Position = await GetCurrentPositionAsync();
             BusStopsAll = _busStopRepository.GetAll().AsReadOnly();
             BusStops = GetNearbyBusStops(_ranges[RangePickerIndex]);
         });
@@ -85,7 +85,7 @@ namespace Rztm.ViewModels
         public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
-            Position = await GetCurrentPosition();
+            Position = await GetCurrentPositionAsync();
             BusStops = GetNearbyBusStops(_ranges[RangePickerIndex]);
             IsBusy = false;
         });
@@ -104,7 +104,7 @@ namespace Rztm.ViewModels
             DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
         }
 
-        private async Task<Position> GetCurrentPosition()
+        private async Task<Position> GetCurrentPositionAsync()
         {
             IsBusy = true;
 

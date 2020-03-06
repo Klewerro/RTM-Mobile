@@ -8,10 +8,10 @@ namespace Rztm.Services
 {
     public interface IRtmService
     {
-        Task<BusStop> GetBusStop(int id);
-        Task<List<BusStop>> GetAllBusStops();
-        Task<List<(int, string)>> GetRouteList();
-        Task<List<(int routeId, string number)>> GetBusStopRouteList(int busStopId);
-        Task<List<(int busStopId, string busStopName)>> GetNextBusStops(int busStopId, int routeId);
+        Task<BusStop> GetBusStopAsync(int id);
+        Task<List<BusStop>> GetAllBusStopsAsync();
+        Task<List<(int, string)>> GetRouteListAsync();
+        Task<List<(int routeId, string number)>> GetBusStopRouteListAsync(int busStopId);
+        Task<List<(int busStopId, string busStopName)>> GetNextBusStopsAsync(int busStopId, int routeId);
     }
 }

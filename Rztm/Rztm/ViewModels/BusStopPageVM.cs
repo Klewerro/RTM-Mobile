@@ -66,8 +66,8 @@ namespace Rztm.ViewModels
         public ICommand RefreshCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
-            BusStop.AddDownloadedData(await DownloadBusStop());
-            BusStop.Distance = await GetDistanceToBusStop();
+            BusStop.AddDownloadedData(await DownloadBusStopAsync());
+            BusStop.Distance = await GetDistanceToBusStopAsync();
             IsBusy = false;
         });
 
@@ -120,7 +120,7 @@ namespace Rztm.ViewModels
             if (departure.NextBusStopsNames.Count == 0)
             {
                 departure.IsFetching = true;
-                var nextStops = await _rtmService.GetNextBusStops(BusStop.Id, departure.RouteId.GetValueOrDefault());
+                var nextStops = await _rtmService.GetNextBusStopsAsync(BusStop.Id, departure.RouteId.GetValueOrDefault());
                 departure.NextBusStopsNames = nextStops.Select(x => x.busStopName).ToList();
                 departure.IsFetching = false;
             }
@@ -143,10 +143,10 @@ namespace Rztm.ViewModels
             if (parameters.ContainsKey("distance"))
                 BusStop.Distance = (double)parameters["distance"];
 
-            await PrepareBusStopUsingApiData();
+            await PrepareBusStopUsingApiDataAsync();
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
-            BusStop.Distance = await GetDistanceToBusStop();
+            BusStop.Distance = await GetDistanceToBusStopAsync();
         }     
 
 
@@ -159,7 +159,7 @@ namespace Rztm.ViewModels
             BusStop.Distance = position.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
         }
 
-        private async Task<double> GetDistanceToBusStop()
+        private async Task<double> GetDistanceToBusStopAsync()
         {
             try
             {
@@ -183,13 +183,13 @@ namespace Rztm.ViewModels
             return default;
         }
 
-        private async Task PrepareBusStopUsingApiData()
+        private async Task PrepareBusStopUsingApiDataAsync()
         {
-            var busStopFromApi = await DownloadBusStop();
+            var busStopFromApi = await DownloadBusStopAsync();
             BusStop.AddDownloadedData(busStopFromApi);
         }
 
-        private async Task<BusStop> DownloadBusStop()
+        private async Task<BusStop> DownloadBusStopAsync()
         {
             if (!IsInternetAccess)
                 return BusStop;
@@ -197,15 +197,15 @@ namespace Rztm.ViewModels
             IsBusy = true;
             try
             {
-                var responseBusStop = await ApiCall(_rtmService.GetBusStop(BusStop.Id));
-                var stopRouteList = await ApiCall(_rtmService.GetBusStopRouteList(BusStop.Id));
+                var responseBusStop = await ApiCall(_rtmService.GetBusStopAsync(BusStop.Id));
+                var stopRouteList = await ApiCall(_rtmService.GetBusStopRouteListAsync(BusStop.Id));
                 responseBusStop.CoursingLines = stopRouteList.Select(x => x.number).ToList();
                 responseBusStop.Departures.AddRouteIdsToDepartures(stopRouteList);
                 return responseBusStop;
             }
             catch (Exceptions.ConnectionException)
             {
-                ConnectionErrorRetry(async () => await PrepareBusStopUsingApiData());
+                ConnectionErrorRetry(async () => await PrepareBusStopUsingApiDataAsync());
             }
             finally
             {

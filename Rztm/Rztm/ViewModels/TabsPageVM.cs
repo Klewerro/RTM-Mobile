@@ -56,13 +56,13 @@ namespace Rztm.ViewModels
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
-            await PrepareGeolocation();
+            await PrepareGeolocationAsync();
         }
 
 
-        private async Task PrepareGeolocation()
+        private async Task PrepareGeolocationAsync()
         {
-            if (_locator.IsListening || !await IsGeolocationAvailable())
+            if (_locator.IsListening || !await IsGeolocationAvailableAsync())
                 return;
 
             await _locator.StartListeningAsync(
@@ -77,7 +77,7 @@ namespace Rztm.ViewModels
                 });
         }
 
-        private async Task<bool> IsGeolocationAvailable()
+        private async Task<bool> IsGeolocationAvailableAsync()
         {
             if (_locator.IsGeolocationAvailable && _locator.IsGeolocationEnabled)
                 return true;
@@ -90,7 +90,7 @@ namespace Rztm.ViewModels
 
         private async Task UpdateAppAsync()
         {
-            var latestRelease = await _githubService.GetLatestVersionCode();
+            var latestRelease = await _githubService.GetLatestVersionCodeAsync();
             var appUpdater = new AppUpdater();
 
             if (latestRelease.IsCurrentAppVersionLatestRelease)

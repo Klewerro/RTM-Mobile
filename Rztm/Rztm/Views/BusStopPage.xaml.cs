@@ -80,7 +80,7 @@ namespace Rztm.Views
             if (_counter >= 10 && !_isBlinking && _labelsToBlink.Count > 0)
             {
                 _isBlinking = true;
-                await BlinkLabels(_labelsToBlink, _labelsToBlink[0].TextColor, 1000);
+                await BlinkLabelsAsync(_labelsToBlink, _labelsToBlink[0].TextColor, 1000);
             }
         }
 
@@ -105,7 +105,7 @@ namespace Rztm.Views
             }
         }
 
-        private async Task BlinkLabels(List<Label> labels, Color initialColor, int delayTime)
+        private async Task BlinkLabelsAsync(List<Label> labels, Color initialColor, int delayTime)
         {
             while (true)
             {

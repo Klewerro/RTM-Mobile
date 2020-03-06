@@ -23,7 +23,7 @@ namespace Rztm.Services
         }
 
 
-        public async Task<GithubRelease> GetLatestVersionCode()
+        public async Task<GithubRelease> GetLatestVersionCodeAsync()
         {
             var response = await _httpClient.GetStringAsync($"repos/Klewerro/RzTM-Mobile/releases/latest");
             var jObject = JObject.Parse(response);

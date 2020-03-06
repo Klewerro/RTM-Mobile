@@ -56,16 +56,16 @@ namespace Rztm.ViewModels
 
         
         public ICommand DownloadBusStopsCommand => new DelegateCommand(async () => 
-            await DownloadBusStops());
+            await DownloadBusStopsAsync());
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             AreBusStopsDownloaded = Preferences.Get("busStopsDownloaded", false);
-            await DownloadBusStopsAutomaticallyIfEmpty();
+            await DownloadBusStopsAutomaticallyIfEmptyAsync();
         }
 
 
-        private async Task DownloadBusStopsAutomaticallyIfEmpty()
+        private async Task DownloadBusStopsAutomaticallyIfEmptyAsync()
         {
             await Task.Delay(500);
 
@@ -78,7 +78,7 @@ namespace Rztm.ViewModels
                     "Yes", "No");
                 if (dialogResponse)
                 {
-                    await DownloadBusStops();
+                    await DownloadBusStopsAsync();
                 }
             }
             else
@@ -88,14 +88,14 @@ namespace Rztm.ViewModels
             }
         }
 
-        private async Task DownloadBusStops()
+        private async Task DownloadBusStopsAsync()
         {
             if (!IsInternetAccess)
                 return;
             IsBusy = true;
             try
             {
-                var result = await ApiCall(_rtmService.GetAllBusStops());
+                var result = await ApiCall(_rtmService.GetAllBusStopsAsync());
                 _busStopRepository.AddRange(result);
                 BusStopsAll = result.AsReadOnly();
                 BusStops = result;
@@ -103,7 +103,7 @@ namespace Rztm.ViewModels
             }
             catch (Exceptions.ConnectionException ex)
             {
-                ConnectionErrorRetry(async () => await DownloadBusStops());
+                ConnectionErrorRetry(async () => await DownloadBusStopsAsync());
                 AreBusStopsDownloaded = false;
             }
             finally

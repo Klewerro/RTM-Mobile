@@ -20,7 +20,7 @@ namespace Rztm.Services
             _httpClient = new HttpClient();
         }
 
-        public async Task<BusStop> GetBusStop(int id)
+        public async Task<BusStop> GetBusStopAsync(int id)
         {
             var response = await _httpClient.GetAsync($"http://einfo.erzeszow.pl/Home/GetTimetableReal?busStopId={id}");
 
@@ -49,7 +49,7 @@ namespace Rztm.Services
             return busStop;
         }
 
-        public async Task<List<BusStop>> GetAllBusStops()
+        public async Task<List<BusStop>> GetAllBusStopsAsync()
         {
             var response = await _httpClient.GetAsync("http://einfo.erzeszow.pl/Home/GetMapBusStopList?ttId=0");
             var responseString = await response.Content.ReadAsStringAsync();
@@ -74,7 +74,7 @@ namespace Rztm.Services
             return busStops.OrderBy(b => b.Name).ToList();
         }
 
-        public async Task<List<(int, string)>> GetRouteList()
+        public async Task<List<(int, string)>> GetRouteListAsync()
         {
             var response = await _httpClient.GetStringAsync("http://einfo.erzeszow.pl/Home/GetRouteList?ttId=0");
 
@@ -93,7 +93,7 @@ namespace Rztm.Services
             return result;
         }
 
-        public async Task<List<(int routeId, string number)>> GetBusStopRouteList(int busStopId)
+        public async Task<List<(int routeId, string number)>> GetBusStopRouteListAsync(int busStopId)
         {
             var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBusStopRouteList?id={busStopId}&ttId=0");
 
@@ -112,12 +112,12 @@ namespace Rztm.Services
             return result;
         }
 
-        public async Task<List<(int busStopId, string busStopName)>> GetNextBusStops(int busStopId, int routeId)
+        public async Task<List<(int busStopId, string busStopName)>> GetNextBusStopsAsync(int busStopId, int routeId)
         {
             var result = new List<(int busStopId, string busStopName)>();
             var startAdding = false;
 
-            var finalRouteId = await GetFinalRouteId(busStopId, routeId);
+            var finalRouteId = await GetFinalRouteIdAsync(busStopId, routeId);
             var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBaseTripTimeTable?directionId={finalRouteId}&id_sub=0&ttId=0");
 
             var json = JsonConvert.DeserializeObject(response).ToString(); 
@@ -136,7 +136,7 @@ namespace Rztm.Services
         }
 
 
-        private async Task<int> GetFinalRouteId(int busStopId, int routeId)
+        private async Task<int> GetFinalRouteIdAsync(int busStopId, int routeId)
         {
             var response = await _httpClient.GetStringAsync($"http://einfo.erzeszow.pl/Home/GetBusStopTimeTable?busStopId={busStopId}&routeId={routeId}&ttId=0");
             var json = JsonConvert.DeserializeObject(response).ToString();  //Todo: Extract parsing jArray to separate method
