@@ -9,7 +9,7 @@ namespace Rztm.Models
     public class GithubRelease
     {
         private bool _latestReleastHasBeenChecked;
-        private bool _isLatestRelease;
+        private bool _isCurrentAppVersionLatestRelease;
 
         public int Id { get; set; }
 
@@ -23,19 +23,20 @@ namespace Rztm.Models
 
         public List<Asset> Assets { get; set; }
 
-        public bool IsLatestRelease
+        public bool IsCurrentAppVersionLatestRelease
         { 
             get
             {
                 if (!_latestReleastHasBeenChecked)
                 {
-                    _isLatestRelease = CheckIsLatestRelease();
-                    return _isLatestRelease;
+                    _isCurrentAppVersionLatestRelease = CheckIsLatestRelease();
+                    _latestReleastHasBeenChecked = true;
+                    return _isCurrentAppVersionLatestRelease;
                 }
 
-                return _isLatestRelease;
+                return _isCurrentAppVersionLatestRelease;
             }
-            set => _isLatestRelease = value; 
+            set => _isCurrentAppVersionLatestRelease = value; 
         }
 
 
@@ -43,14 +44,13 @@ namespace Rztm.Models
         {
             var currentVersion = (Xamarin.Forms.Application.Current as App).ApplicationVersion;
             var currentVersionNumber = parseVersion(currentVersion);
-            var latestVersionNumber = parseVersion("v1.1");
+            var latestVersionNumber = parseVersion(TagName);
 
             if (latestVersionNumber > currentVersionNumber)
                 return false;
 
             return true;
         }
-
 
         private double parseVersion(string versionTag)
         {

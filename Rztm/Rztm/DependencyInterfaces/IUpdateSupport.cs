@@ -8,5 +8,6 @@ namespace Rztm.DependencyInterfaces
     {
         bool CheckIfApkIsDownloaded();
         void ApkInstall();
+        void RemoveApkFile();
     }
 }

@@ -91,7 +91,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AndroidConstants.cs" />
+    <Compile Include="ConstantsAndroid.cs" />
     <Compile Include="DependencyImplementations\UpdateSupport_Droid.cs" />
     <Compile Include="DependencyImplementations\SQLiteDatabase_Droid.cs" />
     <Compile Include="MainActivity.cs" />

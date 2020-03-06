@@ -59,7 +59,7 @@ namespace Rztm.Droid
             (CrossDownloadManager.Current as DownloadManagerImplementation).NotificationVisibility = DownloadVisibility.VisibleNotifyCompleted;
 
             CrossDownloadManager.Current.PathNameForDownloadedFile = new System.Func<IDownloadFile, string>(file => 
-                AndroidConstants.UpdateInstallationPath);
+                ConstantsAndroid.UpdateInstallationPath);
         }
     }
 

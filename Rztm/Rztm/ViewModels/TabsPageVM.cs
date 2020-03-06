@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Plugin.Geolocator;
@@ -9,9 +7,9 @@ using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
-using Rztm.Database;
 using Rztm.Helpers;
 using Rztm.Repositories;
+using Rztm.Services;
 using Xamarin.Essentials;
 
 namespace Rztm.ViewModels
@@ -19,14 +17,17 @@ namespace Rztm.ViewModels
     public class TabsPageVM : ViewModelBase
     {
         private readonly IPageDialogService _pageDialogService;
+        private readonly IGithubService _githubService;
         private readonly IBusStopRepository _busStopRepository;
         private readonly IGeolocator _locator;
 
         public TabsPageVM(INavigationService navigationService, 
             IPageDialogService pageDialogService,
+            IGithubService githubService,
             IBusStopRepository busStopRepository) : base(navigationService)
         {
             _pageDialogService = pageDialogService;
+            _githubService = githubService;
             _busStopRepository = busStopRepository;
             _locator = CrossGeolocator.Current;
         }
@@ -48,6 +49,9 @@ namespace Rztm.ViewModels
             {
                 PreferredToolbarColor = Color.IndianRed
             }));
+
+        public ICommand CheckForUpdatesCommand => new DelegateCommand(async () 
+            => await UpdateAppAsync());
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
@@ -82,6 +86,33 @@ namespace Rztm.ViewModels
             await Task.Delay(9000);
             CheckInternetConnection();
             return false;
+        }
+
+        private async Task UpdateAppAsync()
+        {
+            var latestRelease = await _githubService.GetLatestVersionCode();
+            var appUpdater = new AppUpdater();
+
+            if (latestRelease.IsCurrentAppVersionLatestRelease)
+            {
+                if (!appUpdater.CheckIsAppAfterUpdate())
+                    return;
+
+                var dialogAnswer = await _pageDialogService
+                    .DisplayAlertAsync("Uwaga", "Czy chcesz usunąć stary plik instalacyjny aplikacji (.apk)?",
+                    "Tak", "Nie");
+                if (dialogAnswer)
+                    appUpdater.RemoveApkFile();
+                return;
+            }
+
+            var dialogResponse = await _pageDialogService.DisplayAlertAsync("Aktualizacja",
+                $"Aktualizacja {latestRelease.TagName.Remove(0, 1)} jest możliwa do pobrania. Czy chcesz pobrać ją teraz?",
+                "Tak", "Nie");
+            if (!dialogResponse)
+                return;
+
+            appUpdater.UpdateApp(latestRelease);
         }
     }
 }

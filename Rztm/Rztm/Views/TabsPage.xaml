@@ -15,6 +15,9 @@
         <ToolbarItem Text="Strona domowa RTM"
                      Order="Secondary"
                      Command="{Binding OpenWebsiteCommand}" />
+        <ToolbarItem Text="Sprawdź dostępność aktualizacji"
+                     Order="Secondary"
+                     Command="{Binding CheckForUpdatesCommand}" />
     </TabbedPage.ToolbarItems>
 
     <!--Make icon image source onPlatform iOS only-->

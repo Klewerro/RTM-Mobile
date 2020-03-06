@@ -23,14 +23,14 @@ namespace Rztm.Droid.DependencyImplementations
         private static readonly string providerPath = ".apkprovider";
 
         public bool CheckIfApkIsDownloaded()
-            => File.Exists(AndroidConstants.UpdateInstallationPath);
+            => File.Exists(ConstantsAndroid.UpdateInstallationPath);
 
         public void ApkInstall()
         {
             var apkUri = FileProvider.GetUriForFile(
                MainActivity.Instance,
                MainActivity.Instance.ApplicationContext.PackageName + providerPath,
-               new Java.IO.File(AndroidConstants.UpdateInstallationPath));
+               new Java.IO.File(ConstantsAndroid.UpdateInstallationPath));
 
             Intent install = new Intent(Intent.ActionView);
             install.AddFlags(ActivityFlags.GrantReadUriPermission);
@@ -41,5 +41,8 @@ namespace Rztm.Droid.DependencyImplementations
 
             //Todo: Add support for Android < N!
         }
+
+        public void RemoveApkFile()
+            => File.Delete(ConstantsAndroid.UpdateInstallationPath); //Directory.Delete(ConstantsAndroid.DownloadDirectory);
     }
 }

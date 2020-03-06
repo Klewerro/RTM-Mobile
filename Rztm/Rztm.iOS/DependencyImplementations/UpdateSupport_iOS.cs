@@ -23,5 +23,10 @@ namespace Rztm.iOS.DependencyImplementations
         {
             throw new NotImplementedException();
         }
+
+        public void RemoveApkFile()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

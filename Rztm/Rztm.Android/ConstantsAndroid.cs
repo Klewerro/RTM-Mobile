@@ -2,7 +2,7 @@
 
 namespace Rztm.Droid
 {
-    public class AndroidConstants
+    public class ConstantsAndroid
     {
         public static readonly string DownloadDirectory = Android.OS.Environment
             .GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDownloads).AbsolutePath;
