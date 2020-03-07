@@ -19,6 +19,7 @@ namespace Rztm.Helpers
         {
             busStop.Description = downloadedBusStop.Description;
             busStop.Departures = downloadedBusStop.Departures;
+            busStop.CoursingLines = downloadedBusStop.CoursingLines;
         }
 
         public static void AddRange<T>(this ObservableCollection<T> observableCollection, IEnumerable<T> collection)

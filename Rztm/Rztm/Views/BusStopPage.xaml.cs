@@ -42,7 +42,7 @@ namespace Rztm.Views
             {
                 DescriptionStackLayout.IsVisible = !DescriptionStackLayout.IsVisible;
             }
-            Carousel.IsVisible = !Carousel.IsVisible;
+            CoursingLinesCollectionView.IsVisible = !CoursingLinesCollectionView.IsVisible;
 
             if (ArrowButton.Rotation == 0)
             {

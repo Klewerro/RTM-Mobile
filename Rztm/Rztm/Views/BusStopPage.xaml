@@ -66,7 +66,7 @@
 
     <ContentPage.Content>
         <StackLayout BackgroundColor="{StaticResource UnderNavigationBackgroundColor}">
-            
+
             <Label Text="{Binding BusStop.Name}"
                    IsVisible="{Binding BusStop.CustomName, Converter={StaticResource isTextNotEmptyConverter}}"
                    TextColor="{StaticResource UnderNavigationTextColor}"
@@ -120,7 +120,7 @@
                                               Command="{Binding ItemTappedCommand}"
                                               EventArgsConverter="{converters:ItemTappedEventArgsConverter}" />
                     </ListView.Behaviors>
-                    
+
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
@@ -136,7 +136,7 @@
                                         <ColumnDefinition Width="6*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
-                                    
+
                                     <Label Text="{Binding Number}"
                                            TextColor="{StaticResource AccentColor}"
                                            FontSize="Large"
@@ -229,12 +229,13 @@
                         Clicked="ArrowButton_Clicked"/>
             </StackLayout>
 
-            <CarouselView x:Name="Carousel" ItemsSource="{Binding BusStop.CoursingLines}"
-                          ItemsLayout="HorizontalList"
-                          VerticalOptions="Center"
-                          HeightRequest="30"
-                          IsVisible="False">
-                <CarouselView.ItemTemplate>
+            <CollectionView x:Name="CoursingLinesCollectionView"
+                            ItemsSource="{Binding BusStop.CoursingLines}"
+                            ItemsLayout="HorizontalList"
+                            VerticalOptions="Center" 
+                            HeightRequest="35"
+                            IsVisible="False">
+                <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Margin="10,0,10,0"
                                      VerticalOptions="Center" HorizontalOptions="Center">
@@ -251,8 +252,8 @@
                             </Frame>
                         </StackLayout>
                     </DataTemplate>
-                </CarouselView.ItemTemplate>
-            </CarouselView>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
             <StackLayout x:Name="DescriptionStackLayout"
                          IsVisible="False">
@@ -266,7 +267,7 @@
                        TextColor="{StaticResource UnderNavigationTextColor}"
                        Margin="8,0,0,0"/>
             </StackLayout>
-            
+
         </StackLayout>
     </ContentPage.Content>
 
