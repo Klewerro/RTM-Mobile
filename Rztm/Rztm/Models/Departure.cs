@@ -1,7 +1,5 @@
 ﻿using Prism.Mvvm;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Rztm.Models
 {
@@ -11,7 +9,7 @@ namespace Rztm.Models
         private bool _isExpanded;
         private bool _isFetching;
         private List<string> _nextBusStopsNames;
-
+        private string _selectedNextBusStopsName;
 
         public string Number { get; set; }
 
@@ -43,6 +41,12 @@ namespace Rztm.Models
         {
             get => _nextBusStopsNames;
             set => SetProperty(ref _nextBusStopsNames, value);
+        }
+
+        public string SelectedNextBusStopsName
+        {
+            get => _selectedNextBusStopsName;
+            set => SetProperty(ref _selectedNextBusStopsName, value);
         }
 
         public Departure()

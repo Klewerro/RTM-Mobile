@@ -17,12 +17,18 @@ namespace Rztm.ViewModels
 {
     public class BusStopPageVM : ViewModelBase
     {
+        private static readonly string parameterKeyIsInPopupView = "isInPopupView";
+        private static readonly string parameterKeyBusStopId = "busStopId";
+
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
         private IGeolocator _locator;
         private CancellationTokenSource _ctsCurrentPosition;
+        private bool _isInPopupView;
+
         private BusStop _busStop;
         private string _changeNameText;
+        private string _selectedNextBusStopsName;
 
         public BusStop BusStop
         {
@@ -116,6 +122,9 @@ namespace Rztm.ViewModels
 
         public ICommand ItemTappedCommand => new DelegateCommand<Departure>(async departure =>
         {
+            if (_isInPopupView)
+                return;
+
             departure.IsExpanded = !departure.IsExpanded;
             if (departure.NextBusStopsNames.Count == 0)
             {
@@ -126,15 +135,39 @@ namespace Rztm.ViewModels
             }
         });
 
+        public ICommand CollectionItemPicked => new DelegateCommand<Departure>(async departure =>
+        {
+            //Setting null to SelectedNextBusStopsName causing second call, so retire on null
+            if (departure.SelectedNextBusStopsName == null)
+                return;
+
+            NavigationParameters parameters = new NavigationParameters();
+            var selectedNextBusStop = _busStopRepository.Get(departure.SelectedNextBusStopsName);
+
+            parameters.Add(parameterKeyBusStopId, selectedNextBusStop.Id);
+            parameters.Add(parameterKeyIsInPopupView, true);
+
+            departure.SelectedNextBusStopsName = null;
+            await NavigationService.NavigateAsync(nameof(Views.BusStopPopupPage), parameters);
+        });
+
 
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
+            if (parameters.ContainsKey(parameterKeyIsInPopupView))
+            {
+                _isInPopupView = (bool)parameters[parameterKeyIsInPopupView];
+                if (!_isInPopupView)
+                    return;
+            }
+
+
             IsBusy = true;
             base.OnNavigatedTo(parameters);
             if (!IsInternetAccess)
                 return;
 
-            BusStop.Id = (int)parameters["busStopIp"];
+            BusStop.Id = (int)parameters[parameterKeyBusStopId];
             if (BusStop.Id == 0)
                 return;
 
@@ -147,7 +180,15 @@ namespace Rztm.ViewModels
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
             BusStop.Distance = await GetDistanceToBusStop();
-        }     
+        }
+
+        public override void OnNavigatedFrom(INavigationParameters parameters)
+        {
+            base.OnNavigatedFrom(parameters);
+            if (_isInPopupView)
+                parameters.Add(parameterKeyIsInPopupView, false);
+
+        }
 
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)

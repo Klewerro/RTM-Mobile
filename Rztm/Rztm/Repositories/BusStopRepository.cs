@@ -39,6 +39,9 @@ namespace Rztm.Repositories
         public BusStop Get(int id)
             => _connection.Get<BusStop>(id);
 
+        public BusStop Get(string name)
+            => _connection.Get<BusStop>(b => b.Name.Equals(name));
+
         public List<BusStop> GetAll()
             => _connection.Table<BusStop>()
                 .OrderBy(b => b.Name)

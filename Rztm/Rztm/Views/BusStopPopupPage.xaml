@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:views="clr-namespace:Rztm.Views" 
+                 xmlns:b="http://prismlibrary.com" xmlns:converters="clr-namespace:Rztm.Converters"
+                 mc:Ignorable="d"
+                 x:Class="Rztm.Views.BusStopPopupPage"
+                 CloseWhenBackgroundIsClicked="True">
+
+    <pages:PopupPage.Resources>
+        <converters:DistanceConverter x:Key="distanceConverter"/>
+        <converters:IsTextNotEmptyConverter x:Key="isTextNotEmptyConverter"/>
+        <converters:IsTimeInMinutesConverter x:Key="isTimeInMinutesConverter"/>
+    </pages:PopupPage.Resources>
+
+    <pages:PopupPage.Behaviors>
+        <b:EventToCommandBehavior EventName="Appearing"
+                                  Command="{Binding AppearingCommand}" />
+        <b:EventToCommandBehavior EventName="Disappearing"
+                                  Command="{Binding DisappearingCommand}" />
+    </pages:PopupPage.Behaviors>
+
+    <pages:PopupPage.Content>
+        <Frame Margin="20" 
+               Padding="0"
+               BorderColor="Black"
+               HasShadow="True"
+               CornerRadius="10">
+            <StackLayout>
+
+                <Label Text="{Binding BusStop.NameToDisplay}"
+                   TextColor="White"
+                       FontSize="Medium"
+                       FontAttributes="Bold"
+                   BackgroundColor="{StaticResource PrimaryColor}"
+                       Padding="10"/>
+                <Label Text="{Binding BusStop.Name}"
+                   IsVisible="{Binding BusStop.CustomName, Converter={StaticResource isTextNotEmptyConverter}}"
+                   TextColor="{StaticResource UnderNavigationTextColor}"
+                   Margin="70,0,0,0"/>
+
+                <StackLayout Padding="15,15,15,0"
+                         BackgroundColor="White">
+                    <ListView ItemsSource="{Binding BusStop.Departures}"
+                          IsPullToRefreshEnabled="True"
+                          RefreshCommand="{Binding RefreshCommand}"
+                          IsRefreshing="{Binding IsBusy}"
+                          VerticalOptions="Start"
+                          HasUnevenRows="True">
+                        <ListView.Behaviors>
+                            <b:EventToCommandBehavior EventName="ItemTapped"
+                                              Command="{Binding ItemTappedCommand}"
+                                              EventArgsConverter="{converters:ItemTappedEventArgsConverter}" />
+                        </ListView.Behaviors>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid VerticalOptions="Center">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="20"/>
+                                            <ColumnDefinition Width="6*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Text="{Binding Number}"
+                                           TextColor="{StaticResource AccentColor}"
+                                           FontSize="Large"
+                                           Grid.Column="0"/>
+                                        <Image Source="biletomat_green.png"
+                                           Aspect="AspectFit"
+                                           Margin="0,3,0,0"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding HaveTicketMachine}"
+                                           Grid.Column="1"/>
+                                        <Label Text="{Binding Direction}"
+                                           VerticalTextAlignment="Center"
+                                           FontSize="Medium"
+                                           TextColor="Black"
+                                           Grid.Column="2"/>
+                                        <Label Text="{Binding Time}"
+                                           TextColor="Gray"
+                                           FontSize="Large"
+                                           BindingContextChanged="TimeLabel_BindingContextChanged"
+                                           Grid.Column="3">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Time, Converter={StaticResource isTimeInMinutesConverter}}" Value="True">
+                                                    <Setter Property="TextColor" Value="Black"/>
+                                                </DataTrigger>
+                                                <DataTrigger TargetType="Label" Binding="{Binding Time}" Value="&lt;1min">
+                                                    <Setter Property="TextColor" Value="ForestGreen"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+
+                                        <!--Second Row-->
+                                        <ActivityIndicator IsVisible="{Binding IsFetching}" IsEnabled="{Binding IsFetching}"
+                                                       IsRunning="{Binding IsFetching}"
+                                                       Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                                       />
+
+                                        <!--Thrid Row-->
+                                        <CollectionView ItemsSource="{Binding NextBusStopsNames}"
+                                                    IsVisible="{Binding IsExpanded}"
+                                                    HeightRequest="55"
+                                                    Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                                    HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Never"
+                                                    PropertyChanged="CollectionView_PropertyChanged">
+                                            <CollectionView.ItemsLayout>
+                                                <GridItemsLayout Orientation="Horizontal"
+                                                             HorizontalItemSpacing="5"/>
+                                            </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackLayout>
+                                                        <Frame BackgroundColor="WhiteSmoke"
+                                                           HasShadow="True"
+                                                           IsClippedToBounds="True"
+                                                           CornerRadius="10"
+                                                           Padding="5"
+                                                           VerticalOptions="FillAndExpand"
+                                                           Margin="0,0,0,10">
+                                                            <Label Text="{Binding .}" 
+                                                               TextColor="Black" 
+                                                               WidthRequest="120"
+                                                               VerticalOptions="Center"/>
+                                                        </Frame>
+                                                    </StackLayout>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <Label Text="{Binding BusStop.Distance, Converter={StaticResource distanceConverter}, StringFormat='Dystans: {0}'}"
+                       IsVisible="{Binding BusStop.Distance}"
+                       TextColor="Black"
+                       FontSize="Medium"
+                       VerticalOptions="EndAndExpand" HorizontalOptions="End"/>
+
+
+                    <Button x:Name="ArrowButton" 
+                        Text="▲"
+                        TextColor="{StaticResource PrimaryColor}"
+                        FontSize="30"
+                        WidthRequest="40" HeightRequest="40"
+                        CornerRadius="20"
+                        Padding="0"
+                        BackgroundColor="Transparent"
+                        
+                        HorizontalOptions="End" VerticalOptions="End"
+                        Clicked="ArrowButton_Clicked"/>
+                </StackLayout>
+
+                <CarouselView x:Name="Carousel" ItemsSource="{Binding BusStop.CoursingLines}"
+                          ItemsLayout="HorizontalList"
+                          VerticalOptions="Center"
+                          HeightRequest="30"
+                          IsVisible="False">
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout Margin="10,0,10,0"
+                                     VerticalOptions="Center" HorizontalOptions="Center">
+                                <Frame BackgroundColor="Transparent" 
+                                   HasShadow="True"
+                                   Padding="0" Margin="0" 
+                                   BorderColor="White"
+                                   CornerRadius="10" 
+                                   VerticalOptions="Center" HorizontalOptions="Center">
+                                    <Label Text="{Binding .}"
+                                       TextColor="White"
+                                       HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                                       HeightRequest="30" WidthRequest="30"/>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+
+                <StackLayout x:Name="DescriptionStackLayout"
+                         IsVisible="False">
+                    <BoxView HeightRequest="1" 
+                         Color="White"
+                         Opacity="0.8"
+                         Margin="0"/>
+                    <Label x:Name="DescriptionLabel" Text="{Binding BusStop.Description}"
+                       BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
+                       VerticalOptions="EndAndExpand"
+                       TextColor="{StaticResource UnderNavigationTextColor}"
+                       Margin="8,0,0,0"/>
+                </StackLayout>
+
+            </StackLayout>
+        </Frame>
+    </pages:PopupPage.Content>
+</pages:PopupPage>

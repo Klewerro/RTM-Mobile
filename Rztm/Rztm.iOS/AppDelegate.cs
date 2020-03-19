@@ -16,8 +16,8 @@ namespace Rztm.iOS
 
             //// make the window visible
             //Window.MakeKeyAndVisible();
-
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
+            Rg.Plugins.Popup.Popup.Init();
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
             return base.FinishedLaunching(application, launchOptions);

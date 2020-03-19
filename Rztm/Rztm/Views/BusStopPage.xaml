@@ -9,7 +9,8 @@
              xmlns:customcontrols="clr-namespace:Rztm.CustomControls"
              xmlns:converters="clr-namespace:Rztm.Converters"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
-             x:Class="Rztm.Views.BusStopPage">
+             x:Class="Rztm.Views.BusStopPage"
+             x:Name="This">
 
     <NavigationPage.TitleView>
         <Label Text="{Binding BusStop.NameToDisplay}"
@@ -179,7 +180,11 @@
                                                     HeightRequest="55"
                                                     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
                                                     HorizontalScrollBarVisibility="Always" VerticalScrollBarVisibility="Never"
-                                                    PropertyChanged="CollectionView_PropertyChanged">
+                                                    PropertyChanged="CollectionView_PropertyChanged" 
+                                                    SelectionMode="Single" 
+                                                    SelectionChangedCommand="{Binding Path=BindingContext.CollectionItemPicked, Source={x:Reference Name=This}}"
+                                                    SelectionChangedCommandParameter="{Binding .}"
+                                                    SelectedItem="{Binding SelectedNextBusStopsName}">
                                         <CollectionView.ItemsLayout>
                                             <GridItemsLayout Orientation="Horizontal"
                                                              HorizontalItemSpacing="5"/>
