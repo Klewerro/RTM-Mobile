@@ -12,6 +12,9 @@ using Plugin.DownloadManager.Abstractions;
 using System.IO;
 using System.Linq;
 using Android.Content;
+using Rztm.Helpers;
+using Rztm.DependencyInterfaces;
+using Rztm.Droid.DependencyImplementations;
 
 namespace Rztm.Droid
 {
@@ -42,7 +45,7 @@ namespace Rztm.Droid
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState); //for geolocator plugin
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App());
+            LoadApplication(new App(new AndroidInitializer()));
             Instance = this;
         }
 
@@ -69,6 +72,8 @@ namespace Rztm.Droid
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Register any platform specific implementations
+            containerRegistry.Register<IUpdateSupport, UpdateSupport_Droid>();
+            //containerRegistry.RegisterInstance<IDownloadManager>(CrossDownloadManager.Current);
         }
     }
 }

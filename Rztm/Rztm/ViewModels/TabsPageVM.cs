@@ -7,6 +7,7 @@ using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
+using Rztm.DependencyInterfaces;
 using Rztm.Helpers;
 using Rztm.Repositories;
 using Rztm.Services;
@@ -20,16 +21,38 @@ namespace Rztm.ViewModels
         private readonly IGithubService _githubService;
         private readonly IBusStopRepository _busStopRepository;
         private readonly IGeolocator _locator;
+        private readonly IAppUpdater _appUpdater;
+        private readonly IAppPropertyService _appPropertyService;
 
         public TabsPageVM(INavigationService navigationService, 
             IPageDialogService pageDialogService,
             IGithubService githubService,
-            IBusStopRepository busStopRepository) : base(navigationService)
+            IBusStopRepository busStopRepository,
+            IAppUpdater appUpdater,
+            IAppPropertyService appPropertyService) : base(navigationService)
         {
             _pageDialogService = pageDialogService;
             _githubService = githubService;
             _busStopRepository = busStopRepository;
             _locator = CrossGeolocator.Current;
+            _appUpdater = appUpdater;
+            _appPropertyService = appPropertyService;
+        }
+
+        public TabsPageVM(INavigationService navigationService,
+            IPageDialogService pageDialogService,
+            IGithubService githubService,
+            IBusStopRepository busStopRepository,
+            IAppUpdater appUpdater,
+            IAppPropertyService appPropertyService,
+            IGeolocator geolocator) : base(navigationService)
+        {
+            _pageDialogService = pageDialogService;
+            _githubService = githubService;
+            _busStopRepository = busStopRepository;
+            _locator = geolocator;
+            _appUpdater = appUpdater;
+            _appPropertyService = appPropertyService;
         }
 
         public ICommand DeleteBusStopsCommand => new DelegateCommand(async () =>
@@ -91,18 +114,23 @@ namespace Rztm.ViewModels
         private async Task UpdateAppAsync()
         {
             var latestRelease = await _githubService.GetLatestVersionCodeAsync();
-            var appUpdater = new AppUpdater();
+            //latestRelease.TagName = "v1.1";
 
-            if (latestRelease.IsCurrentAppVersionLatestRelease)
+            var currentAppVersion = _appPropertyService.GetCurrentAppVersion();
+            if (latestRelease.CheckIsLatestRelease(currentAppVersion))
             {
-                if (!appUpdater.CheckIsAppAfterUpdate())
+                if (!_appUpdater.CheckIsAppAfterUpdate())
+                {
+                    DialogHelper.DisplayToast("Aplikacja jest aktualna", ToastTime.Short);
                     return;
+                }
+                    
 
                 var dialogAnswer = await _pageDialogService
                     .DisplayAlertAsync("Uwaga", "Czy chcesz usunąć stary plik instalacyjny aplikacji (.apk)?",
                     "Tak", "Nie");
                 if (dialogAnswer)
-                    appUpdater.RemoveApkFile();
+                    _appUpdater.RemoveApkFile();
                 return;
             }
 
@@ -112,7 +140,7 @@ namespace Rztm.ViewModels
             if (!dialogResponse)
                 return;
 
-            appUpdater.UpdateApp(latestRelease);
+            _appUpdater.UpdateApp(latestRelease);
         }
     }
 }

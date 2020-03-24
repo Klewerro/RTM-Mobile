@@ -1,7 +1,4 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-using Prism.Unity;
+﻿using Xamarin.Forms;
 using Prism;
 using Prism.Ioc;
 using Rztm.Views;
@@ -9,6 +6,9 @@ using Rztm.ViewModels;
 using Rztm.Services;
 using Rztm.Repositories;
 using Rztm.Database;
+using Rztm.Helpers;
+using Plugin.DownloadManager.Abstractions;
+using Plugin.DownloadManager;
 
 namespace Rztm
 {
@@ -46,6 +46,9 @@ namespace Rztm
             containerRegistry.Register<IGithubService, GithubService>();
             containerRegistry.RegisterSingleton<IBusStopRepository, BusStopRepository>();
             containerRegistry.Register<ILocalDatabase, LocalDatabase>();
+            containerRegistry.Register<IAppPropertyService, AppPropertyService>();
+            containerRegistry.Register<IAppUpdater, AppUpdater>();
+            containerRegistry.RegisterInstance<IDownloadManager>(CrossDownloadManager.Current);
         }
 
     }

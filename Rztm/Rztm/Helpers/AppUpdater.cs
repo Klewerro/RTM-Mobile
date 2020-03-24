@@ -10,21 +10,17 @@ using Xamarin.Essentials;
 
 namespace Rztm.Helpers
 {
-    public class AppUpdater
+    public class AppUpdater : IAppUpdater
     {
         private static readonly string prefApkVersionBefore = "APP_VERSION_BEFORE_APK_INSTALL";
-        private readonly IUpdateSupport _updateSupport = Xamarin.Forms.DependencyService.Get<IUpdateSupport>();
+        private readonly IUpdateSupport _updateSupport;
+        private readonly IDownloadManager _downloadManager;
 
-        //public void CheckLatestVersion(GithubRelease latestRelease)
-        //{
-        //    if (!latestRelease.IsCurrentAppVersionLatestRelease)
-        //    {
-        //        if (_updateSupport.CheckIfApkIsDownloaded())
-        //            _updateSupport.ApkInstall();
-        //        else
-        //            DownloadLatestVersion(latestRelease.Assets[0].Url);
-        //    }
-        //}
+        public AppUpdater(IUpdateSupport updateSupport, IDownloadManager downloadManager)
+        {
+            _updateSupport = updateSupport;
+            _downloadManager = downloadManager;
+        }
 
         public void UpdateApp(GithubRelease latestRelease)
         {
@@ -47,12 +43,11 @@ namespace Rztm.Helpers
         public void RemoveApkFile()
             => _updateSupport.RemoveApkFile();
 
-        private void DownloadLatestVersion(string url)
+        public void DownloadLatestVersion(string url)
         {
-            var downloadManager = CrossDownloadManager.Current;
-            var file = downloadManager.CreateDownloadFile(url);
-            downloadManager.Start(file);
-            downloadManager.CollectionChanged += async (s, e) =>
+            var file = _downloadManager.CreateDownloadFile(url);
+            _downloadManager.Start(file);
+            _downloadManager.CollectionChanged += async (s, e) =>
             {
                 if (file.Status == DownloadFileStatus.COMPLETED)
                 {
