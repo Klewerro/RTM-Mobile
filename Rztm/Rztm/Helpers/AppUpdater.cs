@@ -51,8 +51,7 @@ namespace Rztm.Helpers
             {
                 if (file.Status == DownloadFileStatus.COMPLETED)
                 {
-                    var fileSupport = Xamarin.Forms.DependencyService.Get<IUpdateSupport>();
-                    fileSupport.ApkInstall();
+                    _updateSupport.ApkInstall();
                     Xamarin.Essentials.Preferences.Set(prefApkVersionBefore, GetAppVersion());
                 }
             };

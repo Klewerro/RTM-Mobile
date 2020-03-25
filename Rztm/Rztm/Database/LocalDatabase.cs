@@ -11,11 +11,13 @@ namespace Rztm.Database
     public class LocalDatabase : ILocalDatabase
     {
         private readonly SQLiteConnection _connection;
-        private readonly ISQLiteDatabase _database = DependencyService.Get<ISQLiteDatabase>();
+        private readonly ISQLiteDatabase _database;
 
 
-        public LocalDatabase()
+        public LocalDatabase(ISQLiteDatabase database)
         {
+            _database = database;
+
             _database.CreateDatabaseIfNotExist();
             _connection = _database.GetConnection();
             PrepareDatabaseTables();

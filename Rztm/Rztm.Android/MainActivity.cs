@@ -73,7 +73,7 @@ namespace Rztm.Droid
         {
             // Register any platform specific implementations
             containerRegistry.Register<IUpdateSupport, UpdateSupport_Droid>();
-            //containerRegistry.RegisterInstance<IDownloadManager>(CrossDownloadManager.Current);
+            containerRegistry.Register<ISQLiteDatabase, SQLiteDatabase_Droid>();
         }
     }
 }

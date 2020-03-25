@@ -1,5 +1,10 @@
 ﻿using Foundation;
 using Plugin.DownloadManager;
+using Prism;
+using Prism.Ioc;
+using Rztm.DependencyInterfaces;
+using Rztm.iOS.DependencyImplementations;
+using System;
 using UIKit;
 
 namespace Rztm.iOS
@@ -20,7 +25,7 @@ namespace Rztm.iOS
 
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
             global::Xamarin.Forms.Forms.Init();
-            LoadApplication(new App());
+            LoadApplication(new App(new IosInitializer()));
             return base.FinishedLaunching(application, launchOptions);
         }
 
@@ -33,6 +38,16 @@ namespace Rztm.iOS
             CrossDownloadManager.BackgroundSessionCompletionHandler = completionHandler;
         }
 
+    }
+
+    public class IosInitializer : IPlatformInitializer
+    {
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            // Register any platform specific implementations
+            containerRegistry.Register<IUpdateSupport, UpdateSupport_iOS>();
+            containerRegistry.Register<ISQLiteDatabase, SQLiteDatabase_iOS>();
+        }
     }
 }
 
