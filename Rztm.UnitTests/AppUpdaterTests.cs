@@ -186,9 +186,6 @@ namespace Rztm.UnitTests
             updateSupportMock.Verify(us => us.ApkInstall());
             downloadManagerMock.Verify(dm => dm.Start(It.IsAny<IDownloadFile>(), true), Times.Never);
         }
-
-
-
 #endregion
 
     }
