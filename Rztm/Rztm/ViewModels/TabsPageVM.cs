@@ -114,7 +114,6 @@ namespace Rztm.ViewModels
         private async Task UpdateAppAsync()
         {
             var latestRelease = await _githubService.GetLatestVersionCodeAsync();
-            //latestRelease.TagName = "v1.1";
 
             var currentAppVersion = _appPropertyService.GetCurrentAppVersion();
             if (latestRelease.CheckIsLatestRelease(currentAppVersion))
@@ -134,9 +133,12 @@ namespace Rztm.ViewModels
                 return;
             }
 
+            var description = $"Wersja obecna: {currentAppVersion}\nAktualizacja: {latestRelease.TagName}\n" +
+                $"Opis:\n{latestRelease.Description}\n\n" +
+                $"Czy chcesz pobrać aktualizację teraz?";
+
             var dialogResponse = await _pageDialogService.DisplayAlertAsync("Aktualizacja",
-                $"Aktualizacja {latestRelease.TagName.Remove(0, 1)} jest możliwa do pobrania. Czy chcesz pobrać ją teraz?",
-                "Tak", "Nie");
+                description, "Tak", "Nie");
             if (!dialogResponse)
                 return;
 

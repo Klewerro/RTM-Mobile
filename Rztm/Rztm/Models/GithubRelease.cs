@@ -18,6 +18,9 @@ namespace Rztm.Models
         [JsonProperty("published_at")]
         public DateTime ReleaseDate { get; set; }
 
+        [JsonProperty("body")]
+        public string Description { get; set; }
+
         public List<Asset> Assets { get; set; }
 
         public bool IsCurrentAppVersionLatestRelease { get; private set; }
