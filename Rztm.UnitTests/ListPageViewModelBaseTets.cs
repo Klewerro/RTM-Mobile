@@ -1,6 +1,7 @@
 using Moq;
 using NUnit.Framework;
 using Prism.Navigation;
+using Rztm.Helpers;
 using Rztm.Models;
 using Rztm.ViewModels;
 using Rztm.Views;
@@ -12,13 +13,15 @@ namespace Rztm.UnitTests
     public class ListPageViewModelBaseTets
     {
         private Mock<INavigationService> _navigationService;
+        private Mock<IDialogService> _dialogService;
         private ListPageViewModelBase _listPageViewModelBase;
 
         [SetUp]
         public void Setup()
         {
             _navigationService = new Mock<INavigationService>();
-            _listPageViewModelBase = new ListPageViewModelBase(_navigationService.Object);
+            _dialogService = new Mock<IDialogService>();
+            _listPageViewModelBase = new ListPageViewModelBase(_navigationService.Object, _dialogService.Object);
         }
 
         [Test]

@@ -17,21 +17,19 @@ namespace Rztm.ViewModels
 {
     public class TabsPageVM : ViewModelBase
     {
-        private readonly IPageDialogService _pageDialogService;
         private readonly IGithubService _githubService;
         private readonly IBusStopRepository _busStopRepository;
         private readonly IGeolocator _locator;
         private readonly IAppUpdater _appUpdater;
         private readonly IAppPropertyService _appPropertyService;
 
-        public TabsPageVM(INavigationService navigationService, 
-            IPageDialogService pageDialogService,
+        public TabsPageVM(INavigationService navigationService,
+            IDialogService dialogService,
             IGithubService githubService,
             IBusStopRepository busStopRepository,
             IAppUpdater appUpdater,
-            IAppPropertyService appPropertyService) : base(navigationService)
+            IAppPropertyService appPropertyService) : base(navigationService, dialogService)
         {
-            _pageDialogService = pageDialogService;
             _githubService = githubService;
             _busStopRepository = busStopRepository;
             _locator = CrossGeolocator.Current;
@@ -40,14 +38,13 @@ namespace Rztm.ViewModels
         }
 
         public TabsPageVM(INavigationService navigationService,
-            IPageDialogService pageDialogService,
+            IDialogService dialogService,
             IGithubService githubService,
             IBusStopRepository busStopRepository,
             IAppUpdater appUpdater,
             IAppPropertyService appPropertyService,
-            IGeolocator geolocator) : base(navigationService)
+            IGeolocator geolocator) : base(navigationService, dialogService)
         {
-            _pageDialogService = pageDialogService;
             _githubService = githubService;
             _busStopRepository = busStopRepository;
             _locator = geolocator;
@@ -57,14 +54,14 @@ namespace Rztm.ViewModels
 
         public ICommand DeleteBusStopsCommand => new DelegateCommand(async () =>
         {
-            var alertResult = await _pageDialogService.DisplayAlertAsync("Ostrzeżenie", "Wszystkie zapisane przystanki zostaną usunięte. " + 
+            var alertResult = await DialogService.DisplayAlertAsync("Ostrzeżenie", "Wszystkie zapisane przystanki zostaną usunięte. " + 
                 "Tej operacji nie będzie można cofnąć. Kontynuować?", "Tak", "Nie");
             if (!alertResult)
                 return;
 
             _busStopRepository.DeleteAll();
             Xamarin.Essentials.Preferences.Set("busStopsDownloaded", false);
-            DialogHelper.DisplayToast("Usunięto wszystkie przystanki", ToastTime.Short);
+            DialogService.DisplayToast("Usunięto wszystkie przystanki", ToastTime.Short);
         });
 
         public ICommand OpenWebsiteCommand => new DelegateCommand(async () =>
@@ -105,7 +102,7 @@ namespace Rztm.ViewModels
             if (_locator.IsGeolocationAvailable && _locator.IsGeolocationEnabled)
                 return true;
 
-            DialogHelper.DisplayToast("Brak lokalizacji. Sprawdź GPS.", ToastTime.Long);
+            DialogService.DisplayToast("Brak lokalizacji. Sprawdź GPS.", ToastTime.Long);
             await Task.Delay(9000);
             CheckInternetConnection();
             return false;
@@ -120,12 +117,11 @@ namespace Rztm.ViewModels
             {
                 if (!_appUpdater.CheckIsAppAfterUpdate())
                 {
-                    DialogHelper.DisplayToast("Aplikacja jest aktualna", ToastTime.Short);
+                    DialogService.DisplayToast("Aplikacja jest aktualna", ToastTime.Short);
                     return;
-                }
-                    
+                }   
 
-                var dialogAnswer = await _pageDialogService
+                var dialogAnswer = await DialogService
                     .DisplayAlertAsync("Uwaga", "Czy chcesz usunąć stary plik instalacyjny aplikacji (.apk)?",
                     "Tak", "Nie");
                 if (dialogAnswer)
@@ -137,7 +133,7 @@ namespace Rztm.ViewModels
                 $"Opis:\n{latestRelease.Description}\n\n" +
                 $"Czy chcesz pobrać aktualizację teraz?";
 
-            var dialogResponse = await _pageDialogService.DisplayAlertAsync("Aktualizacja",
+            var dialogResponse = await DialogService.DisplayAlertAsync("Aktualizacja",
                 description, "Tak", "Nie");
             if (!dialogResponse)
                 return;

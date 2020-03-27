@@ -49,6 +49,7 @@ namespace Rztm
             containerRegistry.Register<IAppPropertyService, AppPropertyService>();
             containerRegistry.Register<IAppUpdater, AppUpdater>();
             containerRegistry.RegisterInstance<IDownloadManager>(CrossDownloadManager.Current);
+            containerRegistry.Register<IDialogService, DialogService>();
         }
 
     }

@@ -26,7 +26,7 @@ namespace Rztm.UnitTests
         private TabsPageVM _tabsPageVM;
         private Mock<IGithubService> _githubServiceMock;
         private Mock<IAppUpdater> _appUpdaterMock;
-        private Mock<IPageDialogService> _pageDialogServiceMock;
+        private Mock<IDialogService> _dialogServiceMock;
         private Mock<IAppPropertyService> _appPropertyServiceMock;
 
         private GithubRelease _githubRelease;
@@ -39,14 +39,14 @@ namespace Rztm.UnitTests
         public void SetUp()
         {
             var navigationServiceMock = new Mock<INavigationService>();
-            _pageDialogServiceMock = new Mock<IPageDialogService>();
+            _dialogServiceMock = new Mock<IDialogService>();
             var busStopRepositoryMock = new Mock<IBusStopRepository>();
             _githubServiceMock = new Mock<IGithubService>();
             _appUpdaterMock = new Mock<IAppUpdater>();
             _appPropertyServiceMock = new Mock<IAppPropertyService>();
             var geolocatorMock = new Mock<IGeolocator>();
 
-            _tabsPageVM = new TabsPageVM(navigationServiceMock.Object, _pageDialogServiceMock.Object,
+            _tabsPageVM = new TabsPageVM(navigationServiceMock.Object, _dialogServiceMock.Object,
                 _githubServiceMock.Object, busStopRepositoryMock.Object, _appUpdaterMock.Object, 
                 _appPropertyServiceMock.Object, geolocatorMock.Object);
 
@@ -73,7 +73,7 @@ namespace Rztm.UnitTests
         {
             _githubRelease.TagName = _newerTag;
             _githubServiceMock.Setup(gs => gs.GetLatestVersionCodeAsync()).Returns(Task.FromResult(_githubRelease));
-            _pageDialogServiceMock.Setup(pds => pds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(), 
+            _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(), 
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
 
@@ -89,15 +89,17 @@ namespace Rztm.UnitTests
         {
             _githubRelease.TagName = _presentTag;
             _githubServiceMock.Setup(gs => gs.GetLatestVersionCodeAsync()).Returns(Task.FromResult(_githubRelease));
-            _pageDialogServiceMock.Setup(pds => pds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
+            _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
+            _dialogServiceMock.Setup(ds => ds.DisplayToast(It.IsAny<string>(), It.IsAny<ToastTime>())).Verifiable();
 
             _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
             _appUpdaterMock.Setup(au => au.UpdateApp(_githubRelease)).Verifiable();
             _tabsPageVM.CheckForUpdatesCommand.Execute(null);
 
             _appUpdaterMock.Verify(au => au.UpdateApp(_githubRelease), Times.Never);
+            _dialogServiceMock.Verify(ds => ds.DisplayToast(It.IsAny<string>(), It.IsAny<ToastTime>()), Times.Once);
         }
 
         [Test]
@@ -105,7 +107,7 @@ namespace Rztm.UnitTests
         {
             _githubRelease.TagName = _olderTag;
             _githubServiceMock.Setup(gs => gs.GetLatestVersionCodeAsync()).Returns(Task.FromResult(_githubRelease));
-            _pageDialogServiceMock.Setup(pds => pds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
+            _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true)).Verifiable();
             _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
@@ -115,7 +117,7 @@ namespace Rztm.UnitTests
 
             _tabsPageVM.CheckForUpdatesCommand.Execute(null);
 
-            _pageDialogServiceMock.Verify(pds => pds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
+            _dialogServiceMock.Verify(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             _appUpdaterMock.Verify(au => au.RemoveApkFile(), Times.Once);
         }
@@ -125,7 +127,7 @@ namespace Rztm.UnitTests
         {
             _githubRelease.TagName = _olderTag;
             _githubServiceMock.Setup(gs => gs.GetLatestVersionCodeAsync()).Returns(Task.FromResult(_githubRelease));
-            _pageDialogServiceMock.Setup(pds => pds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
+            _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true)).Verifiable();
             _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
@@ -135,7 +137,7 @@ namespace Rztm.UnitTests
 
             _tabsPageVM.CheckForUpdatesCommand.Execute(null);
 
-            _pageDialogServiceMock.Verify(pds => pds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
+            _dialogServiceMock.Verify(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             _appUpdaterMock.Verify(au => au.RemoveApkFile(), Times.Never);
         }

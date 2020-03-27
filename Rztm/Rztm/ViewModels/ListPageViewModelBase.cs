@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Navigation;
+using Rztm.Helpers;
 using Rztm.Models;
 using Rztm.Views;
 
@@ -31,7 +32,8 @@ namespace Rztm.ViewModels
         }
 
 
-        public ListPageViewModelBase(INavigationService navigationService) : base(navigationService)
+        public ListPageViewModelBase(INavigationService navigationService, IDialogService dialogService) 
+            : base(navigationService, dialogService)
         {
             BusStops = new List<BusStop>();
         }

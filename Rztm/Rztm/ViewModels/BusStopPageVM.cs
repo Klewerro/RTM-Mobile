@@ -42,8 +42,9 @@ namespace Rztm.ViewModels
 
 
         public BusStopPageVM(INavigationService navigationService,
+            IDialogService dialogService,
             IBusStopRepository busStopRepository,
-            IRtmService rtmService) : base(navigationService)
+            IRtmService rtmService) : base(navigationService, dialogService)
         {
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
@@ -76,13 +77,13 @@ namespace Rztm.ViewModels
             if (BusStop.IsFavorite)
             {
                 _busStopRepository.RemoveFromFavorites(BusStop);
-                DialogHelper.DisplayToast("Usunięto z ulubionych", ToastTime.Short,
+                DialogService.DisplayToast("Usunięto z ulubionych", ToastTime.Short,
                     "Cofnij", () => _busStopRepository.AddToFavorites(BusStop));
             }
             else
             {
                 _busStopRepository.AddToFavorites(BusStop);
-                DialogHelper.DisplayToast("Dodano do ulubionych", ToastTime.Short,
+                DialogService.DisplayToast("Dodano do ulubionych", ToastTime.Short,
                     "Cofnij", () => _busStopRepository.RemoveFromFavorites(BusStop));
             }
         });
@@ -151,7 +152,7 @@ namespace Rztm.ViewModels
 
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
-            => DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
+            => DialogService.DisplayToast("Błąd lokalizacji", ToastTime.Short);
 
         private void GeolocatorOnPositionChanged(object sender, PositionEventArgs e)
         {

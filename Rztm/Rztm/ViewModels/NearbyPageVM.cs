@@ -51,7 +51,9 @@ namespace Rztm.ViewModels
         }
 
 
-        public NearbyPageVM(INavigationService navigationService, IBusStopRepository busStopRepository) : base(navigationService)
+        public NearbyPageVM(INavigationService navigationService, 
+            IDialogService dialogService,
+            IBusStopRepository busStopRepository) : base(navigationService, dialogService)
         {
             _busStopRepository = busStopRepository;
             Position = new Position();
@@ -101,7 +103,7 @@ namespace Rztm.ViewModels
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
         {
-            DialogHelper.DisplayToast("Błąd lokalizacji", ToastTime.Short);
+            DialogService.DisplayToast("Błąd lokalizacji", ToastTime.Short);
         }
 
         private async Task<Position> GetCurrentPositionAsync()
@@ -125,7 +127,7 @@ namespace Rztm.ViewModels
             if (currentPosition != null)
                 result = currentPosition;
             else
-                DialogHelper.DisplayToast("Nie można określić lokalizacji", ToastTime.Long);
+                DialogService.DisplayToast("Nie można określić lokalizacji", ToastTime.Long);
 
             IsBusy = false;
             return result;

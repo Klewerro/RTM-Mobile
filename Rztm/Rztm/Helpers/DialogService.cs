@@ -1,13 +1,20 @@
 ﻿using Acr.UserDialogs;
+using Prism.Common;
+using Prism.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rztm.Helpers
 {
-    public static class DialogHelper
+    public class DialogService : PageDialogService, IDialogService
     {
-        public static void DisplayToast(string message, ToastTime toastTime)
+        public DialogService(IApplicationProvider applicationProvider) : base(applicationProvider)
+        {
+        }
+
+        public void DisplayToast(string message, ToastTime toastTime)
         {
             var config = new ToastConfig(message)
             {
@@ -15,10 +22,10 @@ namespace Rztm.Helpers
             };
 
             UserDialogs.Instance.Toast(config);
-            
+
         }
 
-        public static IDisposable DisplayToast(string message, ToastTime toastTime, string actionText, Action action)
+        public IDisposable DisplayToast(string message, ToastTime toastTime, string actionText, Action action)
         {
             var config = new ToastConfig(message)
             {
@@ -34,6 +41,7 @@ namespace Rztm.Helpers
             return UserDialogs.Instance.Toast(config);
         }
     }
+
 
     public enum ToastTime : int
     {

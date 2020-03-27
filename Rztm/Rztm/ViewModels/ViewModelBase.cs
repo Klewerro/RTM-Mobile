@@ -19,6 +19,7 @@ namespace Rztm.ViewModels
         private bool _isInternetAccess;
 
         protected INavigationService NavigationService { get; private set; }
+        protected IDialogService DialogService { get; private set; }
 
         public bool IsBusy
         {
@@ -41,9 +42,10 @@ namespace Rztm.ViewModels
         public IDisposable ConnectionDialog { get; private set; }
 
 
-        public ViewModelBase(INavigationService navigationService)
+        public ViewModelBase(INavigationService navigationService, IDialogService dialogService)
         {
             NavigationService = navigationService;
+            DialogService = dialogService;
 #if DEBUG
             if (DeviceInfo.Platform == DevicePlatform.Unknown)  //for unitTesting purposes
                 return;
@@ -77,7 +79,7 @@ namespace Rztm.ViewModels
             var currentConnection = Connectivity.NetworkAccess;
             if (currentConnection != NetworkAccess.Internet)
             {
-                ConnectionDialog = DialogHelper.DisplayToast("Błąd z połączeniem", ToastTime.OneHour, "Spróbuj ponownie", async () =>
+                ConnectionDialog = DialogService.DisplayToast("Błąd z połączeniem", ToastTime.OneHour, "Spróbuj ponownie",  () =>
                 {
                     ConnectionDialog.Dispose();
                     action.Invoke();
@@ -93,7 +95,7 @@ namespace Rztm.ViewModels
         {
             IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
             if (!IsInternetAccess)
-                DialogHelper.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
+                DialogService.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
         }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
@@ -120,9 +122,9 @@ namespace Rztm.ViewModels
         {
             IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
             if (IsInternetAccess)
-                DialogHelper.DisplayToast("Połączono z internetem.", ToastTime.Short);
+                DialogService.DisplayToast("Połączono z internetem.", ToastTime.Short);
             else
-                DialogHelper.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
+                DialogService.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
         }
 
     }

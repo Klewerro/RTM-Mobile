@@ -22,7 +22,6 @@ namespace Rztm.ViewModels
 {
     public class ListPageVM : ListPageViewModelBase
     {
-        private readonly IPageDialogService _pageDialogService;
         private readonly IRtmService _rtmService;
         private readonly IBusStopRepository _busStopRepository;
         private bool _areBusStopsDownloaded;
@@ -39,11 +38,10 @@ namespace Rztm.ViewModels
 
 
         public ListPageVM(INavigationService navigationService, 
-            IPageDialogService pageDialogService,
+            IDialogService dialogService,
             IBusStopRepository busStopRepository,
-            IRtmService rtmService) : base(navigationService)
+            IRtmService rtmService) : base(navigationService, dialogService)
         {
-            _pageDialogService = pageDialogService;
             _busStopRepository = busStopRepository;
             _rtmService = rtmService;
             BusStops = new List<BusStop>();
@@ -73,7 +71,7 @@ namespace Rztm.ViewModels
 
             if (!repositoryStops.Any() && IsInternetAccess)
             {
-                var dialogResponse = await _pageDialogService.DisplayAlertAsync("Missing bus stop database",
+                var dialogResponse = await DialogService.DisplayAlertAsync("Missing bus stop database",
                     "Local database containing bus stops missing. Do you want download it now?",
                     "Yes", "No");
                 if (dialogResponse)
