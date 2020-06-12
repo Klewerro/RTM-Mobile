@@ -28,7 +28,7 @@ namespace Rztm.ViewModels
 
         private BusStop _busStop;
         private string _changeNameText;
-        private string _selectedNextBusStopsName;
+        private bool _isRenameVisible;
 
         public BusStop BusStop
         {
@@ -44,6 +44,12 @@ namespace Rztm.ViewModels
         {
             get => _changeNameText;
             set => SetProperty(ref _changeNameText, value);
+        }
+
+        public bool IsRenameVisible 
+        { 
+            get => _isRenameVisible;
+            set => SetProperty(ref _isRenameVisible, value);
         }
 
 
@@ -104,6 +110,8 @@ namespace Rztm.ViewModels
             await Xamarin.Essentials.Map.OpenAsync(BusStop.Latitude, BusStop.Longitude, mapOptions);
         });
 
+        public ICommand RenameClickedCommand => new DelegateCommand(() => IsRenameVisible = true);
+
         public ICommand SaveNameCommand => new DelegateCommand(() =>
         {
             BusStop.CustomName = ChangeNameText;
@@ -122,9 +130,6 @@ namespace Rztm.ViewModels
 
         public ICommand ItemTappedCommand => new DelegateCommand<Departure>(async departure =>
         {
-            if (_isInPopupView)
-                return;
-
             departure.IsExpanded = !departure.IsExpanded;
             if (departure.NextBusStopsNames.Count == 0)
             {
@@ -137,6 +142,9 @@ namespace Rztm.ViewModels
 
         public ICommand CollectionItemPicked => new DelegateCommand<Departure>(async departure =>
         {
+            if (_isInPopupView)
+                return;
+
             //Setting null to SelectedNextBusStopsName causing second call, so retire on null
             if (departure.SelectedNextBusStopsName == null)
                 return;
