@@ -6,6 +6,8 @@ using Rztm.ViewModels;
 using Rztm.Services;
 using Rztm.Repositories;
 using Rztm.Database;
+using Prism.Plugin.Popups;
+using Rg.Plugins.Popup.Pages;
 using Rztm.Helpers;
 using Plugin.DownloadManager.Abstractions;
 using Plugin.DownloadManager;
@@ -36,11 +38,14 @@ namespace Rztm
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterPopupNavigationService();
+
             containerRegistry.RegisterForNavigation<TabsPage, TabsPageVM>();
             containerRegistry.RegisterForNavigation<BusStopPage, BusStopPageVM>();
             containerRegistry.RegisterForNavigation<ListPage, ListPageVM>();
             containerRegistry.RegisterForNavigation<FavoritesPage, FavoritesPageVM>();
             containerRegistry.RegisterForNavigation<NearbyPage, NearbyPageVM>();
+            containerRegistry.RegisterForNavigation<BusStopPopupPage, BusStopPageVM>();
 
             containerRegistry.Register<IRtmService, RtmService>();
             containerRegistry.Register<IGithubService, GithubService>();

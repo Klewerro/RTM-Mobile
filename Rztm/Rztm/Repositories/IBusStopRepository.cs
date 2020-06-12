@@ -10,6 +10,7 @@ namespace Rztm.Repositories
         event EventHandler BusStopsDeletedEvent;
 
         BusStop Get(int id);
+        BusStop Get(string name);
         List<BusStop> GetAll();
         List<BusStop> GetAllFavorites();
         void Add(BusStop busStop);

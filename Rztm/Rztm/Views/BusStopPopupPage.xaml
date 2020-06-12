@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+                 xmlns="http://xamarin.com/schemas/2014/forms"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                 xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:views="clr-namespace:Rztm.Views" 
+                 xmlns:b="http://prismlibrary.com" xmlns:converters="clr-namespace:Rztm.Converters"
+                 mc:Ignorable="d"
+                 x:Class="Rztm.Views.BusStopPopupPage"
+                 CloseWhenBackgroundIsClicked="True">
+
+    <pages:PopupPage.Resources>
+        <converters:DistanceConverter x:Key="distanceConverter"/>
+        <converters:IsTextNotEmptyConverter x:Key="isTextNotEmptyConverter"/>
+        <converters:IsTimeInMinutesConverter x:Key="isTimeInMinutesConverter"/>
+    </pages:PopupPage.Resources>
+
+    <pages:PopupPage.Behaviors>
+        <b:EventToCommandBehavior EventName="Appearing"
+                                  Command="{Binding AppearingCommand}" />
+        <b:EventToCommandBehavior EventName="Disappearing"
+                                  Command="{Binding DisappearingCommand}" />
+    </pages:PopupPage.Behaviors>
+
+    <pages:PopupPage.Content>
+        <Frame Margin="20" 
+               Padding="0"
+               BorderColor="Black"
+               HasShadow="True"
+               CornerRadius="10">
+            <StackLayout Spacing="0">
+                <Label Text="{Binding BusStop.NameToDisplay}"
+                   TextColor="White"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   BackgroundColor="{StaticResource PrimaryColor}"
+                   Padding="10"/>
+                <views:BusStopPageContentView />
+            </StackLayout>
+
+        </Frame>
+    </pages:PopupPage.Content>
+</pages:PopupPage>
