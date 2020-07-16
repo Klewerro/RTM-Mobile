@@ -1,4 +1,5 @@
-﻿using Plugin.Geolocator.Abstractions;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Plugin.Geolocator.Abstractions;
 using Rztm.Models;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,9 @@ namespace Rztm.Helpers
 
         public static bool IsZeroPosition(this Position position)
             => (position.Latitude == 0 && position.Longitude == 0 && position.Accuracy == 0) ? true : false;
+
+        public static bool IsGeolocationAvailableAndEnabled(this IGeolocator locator)
+            => locator.IsGeolocationAvailable && locator.IsGeolocationEnabled;
 
         public static void AddRouteIdsToDepartures(this List<Departure> departures, List<(int routeId, string number)> stopRouteList)
         {

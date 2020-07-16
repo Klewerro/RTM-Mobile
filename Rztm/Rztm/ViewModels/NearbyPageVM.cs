@@ -110,7 +110,7 @@ namespace Rztm.ViewModels
         {
             IsBusy = true;
 
-            if (!_locator.IsGeolocationAvailable || !_locator.IsGeolocationEnabled)
+            if (!_locator.IsGeolocationAvailableAndEnabled())
             {
                 IsGeolocationNotAvailable = true;
                 IsBusy = false;

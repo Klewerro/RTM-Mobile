@@ -213,6 +213,9 @@ namespace Rztm.ViewModels
         {
             try
             {
+                if (!_locator.IsGeolocationAvailableAndEnabled())
+                    return default;
+
                 var currentPosition = await _locator.GetPositionAsync(TimeSpan.FromSeconds(10), _ctsCurrentPosition.Token);
                 var distance = currentPosition.CalculateDistance(BusStop.ConvertBusStopToPositon(), GeolocatorUtils.DistanceUnits.Kilometers);
 
