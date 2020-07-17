@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 
 namespace Rztm.Models
 {
@@ -45,7 +44,7 @@ namespace Rztm.Models
         private double parseVersion(string versionTag)
         {
             var numberString = versionTag.Remove(0, 1);
-            var number = double.Parse(numberString);
+            var number = double.Parse(numberString, CultureInfo.InvariantCulture);
 
             return number;
         }

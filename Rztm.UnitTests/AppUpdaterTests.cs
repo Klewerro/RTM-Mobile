@@ -77,7 +77,7 @@ namespace Rztm.UnitTests
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
 
-            _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns("1.2");
+            _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
             _appUpdaterMock.Setup(au => au.UpdateApp(_githubRelease)).Verifiable();
             _tabsPageVM.CheckForUpdatesCommand.Execute(null);
 
