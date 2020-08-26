@@ -4,6 +4,7 @@ namespace Rztm.Helpers
 {
     public interface IAppUpdater
     {
+        string GetCurrentVersion();
         void UpdateApp(GithubRelease latestRelease);
         bool CheckIsAppAfterUpdate();
         void RemoveApkFile();

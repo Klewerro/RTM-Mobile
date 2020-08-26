@@ -43,9 +43,8 @@ namespace Rztm.Models
 
         private double parseVersion(string versionTag)
         {
-            var numberString = versionTag.Remove(0, 1);
-            var number = double.Parse(numberString, CultureInfo.InvariantCulture);
-
+            //var numberString = versionTag.Remove(0, 1);   //In case of 'v' prefix
+            var number = double.Parse(versionTag, CultureInfo.InvariantCulture);
             return number;
         }
     }

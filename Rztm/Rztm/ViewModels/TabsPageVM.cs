@@ -6,8 +6,6 @@ using Plugin.Geolocator;
 using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
-using Prism.Services;
-using Rztm.DependencyInterfaces;
 using Rztm.Helpers;
 using Rztm.Repositories;
 using Rztm.Services;
@@ -21,20 +19,17 @@ namespace Rztm.ViewModels
         private readonly IBusStopRepository _busStopRepository;
         private readonly IGeolocator _locator;
         private readonly IAppUpdater _appUpdater;
-        private readonly IAppPropertyService _appPropertyService;
 
         public TabsPageVM(INavigationService navigationService,
             IDialogService dialogService,
             IGithubService githubService,
             IBusStopRepository busStopRepository,
-            IAppUpdater appUpdater,
-            IAppPropertyService appPropertyService) : base(navigationService, dialogService)
+            IAppUpdater appUpdater) : base(navigationService, dialogService)
         {
             _githubService = githubService;
             _busStopRepository = busStopRepository;
             _locator = CrossGeolocator.Current;
             _appUpdater = appUpdater;
-            _appPropertyService = appPropertyService;
         }
 
         public TabsPageVM(INavigationService navigationService,
@@ -42,14 +37,12 @@ namespace Rztm.ViewModels
             IGithubService githubService,
             IBusStopRepository busStopRepository,
             IAppUpdater appUpdater,
-            IAppPropertyService appPropertyService,
             IGeolocator geolocator) : base(navigationService, dialogService)
         {
             _githubService = githubService;
             _busStopRepository = busStopRepository;
             _locator = geolocator;
             _appUpdater = appUpdater;
-            _appPropertyService = appPropertyService;
         }
 
         public ICommand DeleteBusStopsCommand => new DelegateCommand(async () =>
@@ -111,8 +104,8 @@ namespace Rztm.ViewModels
         private async Task UpdateAppAsync()
         {
             var latestRelease = await _githubService.GetLatestVersionCodeAsync();
+            var currentAppVersion = _appUpdater.GetCurrentVersion();
 
-            var currentAppVersion = _appPropertyService.GetCurrentAppVersion();
             if (latestRelease.CheckIsLatestRelease(currentAppVersion))
             {
                 if (!_appUpdater.CheckIsAppAfterUpdate())

@@ -12,7 +12,7 @@ namespace Rztm.Helpers
 {
     public class AppUpdater : IAppUpdater
     {
-        private static readonly string prefApkVersionBefore = "APP_VERSION_BEFORE_APK_INSTALL";
+        //private static readonly string prefApkVersionBefore = "APP_VERSION_BEFORE_APK_INSTALL";
         private readonly IUpdateSupport _updateSupport;
         private readonly IDownloadManager _downloadManager;
 
@@ -21,6 +21,9 @@ namespace Rztm.Helpers
             _updateSupport = updateSupport;
             _downloadManager = downloadManager;
         }
+
+
+        public string GetCurrentVersion() => VersionTracking.CurrentVersion;
 
         public void UpdateApp(GithubRelease latestRelease)
         {
@@ -32,9 +35,10 @@ namespace Rztm.Helpers
 
         public bool CheckIsAppAfterUpdate()
         {
-            var versionBeforeApkInstall = Xamarin.Essentials.Preferences.Get(prefApkVersionBefore, null);
-            if (string.IsNullOrEmpty(versionBeforeApkInstall)
-                || parseAppVersion(versionBeforeApkInstall) >= parseAppVersion(GetAppVersion()))
+            var prevVersion = VersionTracking.PreviousVersion;
+
+            if (string.IsNullOrEmpty(prevVersion)
+                || parseAppVersion(prevVersion) >= parseAppVersion(GetCurrentVersion()))
                 return false;
 
             return true;
@@ -52,13 +56,10 @@ namespace Rztm.Helpers
                 if (file.Status == DownloadFileStatus.COMPLETED)
                 {
                     _updateSupport.ApkInstall();
-                    Xamarin.Essentials.Preferences.Set(prefApkVersionBefore, GetAppVersion());
+                    //Xamarin.Essentials.Preferences.Set(prefApkVersionBefore, GetAppVersion());
                 }
             };
         }
-
-        private string GetAppVersion()
-            => (Xamarin.Forms.Application.Current as App).ApplicationVersion;
 
         private double parseAppVersion(string versionTag)
         {

@@ -16,8 +16,6 @@ namespace Rztm
 {
     public partial class App
     {
-        public string ApplicationVersion { get; set; } = "v1.0";
-
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer)
@@ -51,7 +49,6 @@ namespace Rztm
             containerRegistry.Register<IGithubService, GithubService>();
             containerRegistry.RegisterSingleton<IBusStopRepository, BusStopRepository>();
             containerRegistry.Register<ILocalDatabase, LocalDatabase>();
-            containerRegistry.Register<IAppPropertyService, AppPropertyService>();
             containerRegistry.Register<IAppUpdater, AppUpdater>();
             containerRegistry.RegisterInstance<IDownloadManager>(CrossDownloadManager.Current);
             containerRegistry.Register<IDialogService, DialogService>();

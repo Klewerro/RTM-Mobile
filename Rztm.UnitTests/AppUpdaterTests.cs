@@ -27,12 +27,11 @@ namespace Rztm.UnitTests
         private Mock<IGithubService> _githubServiceMock;
         private Mock<IAppUpdater> _appUpdaterMock;
         private Mock<IDialogService> _dialogServiceMock;
-        private Mock<IAppPropertyService> _appPropertyServiceMock;
 
         private GithubRelease _githubRelease;
-        private readonly string _newerTag = "v1.2";
-        private readonly string _olderTag = "v0.9";
-        private readonly string _presentTag = "v1.0";
+        private readonly string _newerTag = "1.2";
+        private readonly string _olderTag = "0.9";
+        private readonly string _presentTag = "1.0";
 
 
         [SetUp]
@@ -43,12 +42,10 @@ namespace Rztm.UnitTests
             var busStopRepositoryMock = new Mock<IBusStopRepository>();
             _githubServiceMock = new Mock<IGithubService>();
             _appUpdaterMock = new Mock<IAppUpdater>();
-            _appPropertyServiceMock = new Mock<IAppPropertyService>();
             var geolocatorMock = new Mock<IGeolocator>();
 
             _tabsPageVM = new TabsPageVM(navigationServiceMock.Object, _dialogServiceMock.Object,
-                _githubServiceMock.Object, busStopRepositoryMock.Object, _appUpdaterMock.Object, 
-                _appPropertyServiceMock.Object, geolocatorMock.Object);
+                _githubServiceMock.Object, busStopRepositoryMock.Object, _appUpdaterMock.Object, geolocatorMock.Object);
 
             _githubRelease = new GithubRelease
             {
@@ -76,8 +73,8 @@ namespace Rztm.UnitTests
             _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(), 
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
+            _appUpdaterMock.Setup(au => au.GetCurrentVersion()).Returns(_presentTag);
 
-            _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
             _appUpdaterMock.Setup(au => au.UpdateApp(_githubRelease)).Verifiable();
             _tabsPageVM.CheckForUpdatesCommand.Execute(null);
 
@@ -93,8 +90,8 @@ namespace Rztm.UnitTests
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true));
             _dialogServiceMock.Setup(ds => ds.DisplayToast(It.IsAny<string>(), It.IsAny<ToastTime>())).Verifiable();
+            _appUpdaterMock.Setup(au => au.GetCurrentVersion()).Returns(_presentTag);
 
-            _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
             _appUpdaterMock.Setup(au => au.UpdateApp(_githubRelease)).Verifiable();
             _tabsPageVM.CheckForUpdatesCommand.Execute(null);
 
@@ -110,7 +107,7 @@ namespace Rztm.UnitTests
             _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true)).Verifiable();
-            _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
+             _appUpdaterMock.Setup(ap => ap.GetCurrentVersion()).Returns(_presentTag);
             _appUpdaterMock.Setup(au => au.RemoveApkFile()).Verifiable();
 
             _appUpdaterMock.Setup(au => au.CheckIsAppAfterUpdate()).Returns(true);
@@ -130,7 +127,7 @@ namespace Rztm.UnitTests
             _dialogServiceMock.Setup(ds => ds.DisplayAlertAsync(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(true)).Verifiable();
-            _appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
+            //_appPropertyServiceMock.Setup(ap => ap.GetCurrentAppVersion()).Returns(_presentTag);
             _appUpdaterMock.Setup(au => au.RemoveApkFile()).Verifiable();
 
             _appUpdaterMock.Setup(au => au.CheckIsAppAfterUpdate()).Returns(false);
@@ -146,7 +143,7 @@ namespace Rztm.UnitTests
 #region APP UPDATER TESTS
         [Test]
         public void DownloadLatestVersion_WhenApkIsNotDownloaded_CallDownloadUpdateApp()
-        {
+        {   //Todo: Przetestować update-owanie appki na realnym telefonie/symulatorze
             _githubRelease.TagName = _newerTag;
             var updateSupportMock = new Mock<IUpdateSupport>();
             var downloadManagerMock = new Mock<IDownloadManager>();
