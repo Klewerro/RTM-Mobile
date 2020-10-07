@@ -33,15 +33,8 @@
             <!--#region ListViewTemplates-->
             <DataTemplate x:Key="busStopNameTemplate">
                 <ViewCell>
-                    <Grid Margin="8,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
+                    <Grid Margin="8,0" 
+                          ColumnDefinitions="5,*">
                         <BoxView Color="ForestGreen"
                                          WidthRequest="5"
                                          Margin="0,2">
@@ -62,16 +55,9 @@
 
             <DataTemplate x:Key="busStopCustomNameTemplate">
                 <ViewCell>
-                    <Grid Margin="8,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
+                    <Grid Margin="8,0"
+                          RowDefinitions="*,*"
+                          ColumnDefinitions="5,*">
                         <BoxView Color="ForestGreen"
                                          WidthRequest="5"
                                          Grid.RowSpan="2"

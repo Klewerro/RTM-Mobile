@@ -21,16 +21,8 @@
         <ResourceDictionary>
             <DataTemplate x:Key="busStopNameDistanceTemplate">
                 <ViewCell>
-                    <Grid Margin="8,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
+                    <Grid Margin="8,0"
+                          ColumnDefinitions="5,Auto,*">
                         <BoxView Color="ForestGreen"
                                          WidthRequest="5"
                                          Margin="0,2">
@@ -55,17 +47,9 @@
 
             <DataTemplate x:Key="busStopCustomNameDistanceTemplate">
                 <ViewCell>
-                    <Grid Margin="8,0">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
+                    <Grid Margin="8,0"
+                          RowDefinitions="*,*"
+                          ColumnDefinitions="5,Auto,*">
                         <BoxView Color="ForestGreen"
                                          WidthRequest="5"
                                          Grid.RowSpan="2"
@@ -107,18 +91,9 @@
         <StackLayout>
 
             <Grid HorizontalOptions="Center"
-                  BackgroundColor="{StaticResource UnderNavigationBackgroundColor}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="1.5*"/>
-                    <ColumnDefinition Width="1*"/> <!--Spacer-->
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
+                  BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
+                  RowDefinitions="Auto"
+                  ColumnDefinitions="Auto, 1.5*,1*,3*,*">
                 <Label Text="Filtry" FontAttributes="Bold"
                        Grid.Column="0"
                        FontSize="Large"

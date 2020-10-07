@@ -35,16 +35,9 @@
                 <Grid x:Name="CustomNameGrid"
                       IsVisible="{Binding IsRenameVisible}"
                       VerticalOptions="Start" HeightRequest="150"
-                      BackgroundColor="#f1f1f1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                      BackgroundColor="#f1f1f1"
+                      RowDefinitions="*,*"
+                      ColumnDefinitions="*,*,*">
                     <Entry Text="{Binding ChangeNameText}" 
                            Grid.ColumnSpan="3"/>
                     <Button Command="{Binding SaveNameCommand}" 
@@ -82,19 +75,9 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid VerticalOptions="Center">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="20"/>
-                                        <ColumnDefinition Width="6*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-
+                                <Grid VerticalOptions="Center"
+                                      RowDefinitions="*,Auto,Auto"
+                                      ColumnDefinitions="1*,20,6*,Auto">
                                     <Label Text="{Binding Number}"
                                            TextColor="{StaticResource AccentColor}"
                                            FontSize="Large"
