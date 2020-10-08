@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <shortcut
+    android:shortcutId="favorites"
+    android:enabled="true"
+    android:icon="@drawable/ic_shortcut_favorites"
+    android:shortcutShortLabel="@string/shortcut_favorites"
+    android:shortcutLongLabel="@string/shortcut_favorites"
+    android:shortcutDisabledMessage="@string/shortcut_favorites">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:targetPackage="com.cleversoft"
+      android:targetClass="com.cleversoft.MainActivity"
+      android:data="content://actions/fovorites"/>
+  </shortcut>
+
+  <shortcut
+    android:shortcutId="nearby"
+    android:enabled="true"
+    android:icon="@drawable/ic_shortcut_nearby"
+    android:shortcutShortLabel="@string/shortcut_nearby"
+    android:shortcutLongLabel="@string/shortcut_nearby"
+    android:shortcutDisabledMessage="@string/shortcut_nearby">
+    <intent
+      android:action="android.intent.action.VIEW"
+      android:targetPackage="com.cleversoft"
+      android:targetClass="com.cleversoft.MainActivity"
+      android:data="content://actions/nearby"/>
+  </shortcut>
+</shortcuts>

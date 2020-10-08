@@ -18,11 +18,17 @@ namespace Rztm
     {
         public App() : this(null) { }
 
-        public App(IPlatformInitializer initializer) : base(initializer)
+        public App(IPlatformInitializer initializer, string androidIntentData = null) : base(initializer)
         {
 #if DEBUG
             HotReloader.Current.Run(this);
 #endif
+        
+            if (!string.IsNullOrEmpty(androidIntentData))
+            {
+                MessagingCenter.Send(string.Empty, Constants.DroidAppShortcutInvoked, androidIntentData);
+            }
+
         }
 
 

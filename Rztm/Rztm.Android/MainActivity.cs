@@ -18,7 +18,10 @@ using Rztm.Droid.DependencyImplementations;
 
 namespace Rztm.Droid
 {
-    [Activity(Label = "RzTM", Icon = "@mipmap/icon", Theme = "@style/splashscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop)]
+    [Activity(Label = "RzTM", Icon = "@mipmap/icon", Theme = "@style/splashscreen", MainLauncher = true, 
+        ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, LaunchMode = LaunchMode.SingleTop, 
+        Name = "com.cleversoft.MainActivity")] //Name set for shortcuts
+    [MetaData("android.app.shortcuts", Resource = "@xml/shortcuts")]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         public static Xamarin.Forms.Platform.Android.FormsAppCompatActivity Instance { get; private set; }
@@ -46,7 +49,7 @@ namespace Rztm.Droid
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState); //for geolocator plugin
 
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new App(new AndroidInitializer()));
+            LoadApplication(new App(new AndroidInitializer(), Intent?.Data?.LastPathSegment));
             Instance = this;
         }
 
