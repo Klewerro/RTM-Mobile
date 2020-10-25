@@ -7,7 +7,6 @@ using Rztm.Services;
 using Rztm.Repositories;
 using Rztm.Database;
 using Prism.Plugin.Popups;
-using Rg.Plugins.Popup.Pages;
 using Rztm.Helpers;
 using Plugin.DownloadManager.Abstractions;
 using Plugin.DownloadManager;
@@ -23,19 +22,25 @@ namespace Rztm
 #if DEBUG
             HotReloader.Current.Run(this);
 #endif
-        
+
             if (!string.IsNullOrEmpty(androidIntentData))
             {
-                MessagingCenter.Send(string.Empty, Constants.DroidAppShortcutInvoked, androidIntentData);
+                if (androidIntentData.StartsWith("busStopShort_"))
+                {
+                    MessagingCenter.Send(string.Empty, Constants.OpenBusStopShortcut, androidIntentData);
+                }
+                else
+                {
+                    MessagingCenter.Send(string.Empty, Constants.DroidAppShortcutInvoked, androidIntentData);
+                }
+
             }
 
         }
 
-
         protected override async void OnInitialized()
         {
             InitializeComponent();
-
             await NavigationService.NavigateAsync($"NavigationPage/{nameof(TabsPage)}");
         }
 

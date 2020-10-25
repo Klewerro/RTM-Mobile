@@ -20,10 +20,10 @@ namespace Rztm.Views
             {
                 case "fovorites":
                     CurrentPage = Children[1];
-                    break;
+                    return;
                 case "nearby":
                     CurrentPage = Children[2];
-                    break;
+                    return;
             }
         }
     }

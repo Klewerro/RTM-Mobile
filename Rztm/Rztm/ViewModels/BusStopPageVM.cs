@@ -18,7 +18,6 @@ namespace Rztm.ViewModels
     public class BusStopPageVM : ViewModelBase
     {
         private static readonly string parameterKeyIsInPopupView = "isInPopupView";
-        private static readonly string parameterKeyBusStopId = "busStopId";
 
         private readonly IBusStopRepository _busStopRepository;
         private readonly IRtmService _rtmService;
@@ -46,8 +45,8 @@ namespace Rztm.ViewModels
             set => SetProperty(ref _changeNameText, value);
         }
 
-        public bool IsRenameVisible 
-        { 
+        public bool IsRenameVisible
+        {
             get => _isRenameVisible;
             set => SetProperty(ref _isRenameVisible, value);
         }
@@ -113,6 +112,11 @@ namespace Rztm.ViewModels
 
         public ICommand RenameClickedCommand => new DelegateCommand(() => IsRenameVisible = true);
 
+        public ICommand DisplayAsApplicationShortutCommand => new DelegateCommand(() =>
+        {
+            Xamarin.Forms.MessagingCenter.Send(string.Empty, Constants.CreateBusStopShortcut, (BusStop.Id, BusStop.NameToDisplay));
+        });
+
         public ICommand SaveNameCommand => new DelegateCommand(() =>
         {
             BusStop.CustomName = ChangeNameText;
@@ -153,7 +157,7 @@ namespace Rztm.ViewModels
             NavigationParameters parameters = new NavigationParameters();
             var selectedNextBusStop = _busStopRepository.Get(departure.SelectedNextBusStopsName);
 
-            parameters.Add(parameterKeyBusStopId, selectedNextBusStop.Id);
+            parameters.Add(Constants.ParameterKeyBusStopId, selectedNextBusStop.Id);
             parameters.Add(parameterKeyIsInPopupView, true);
 
             departure.SelectedNextBusStopsName = null;
@@ -176,9 +180,19 @@ namespace Rztm.ViewModels
             if (!IsInternetAccess)
                 return;
 
-            BusStop.Id = (int)parameters[parameterKeyBusStopId];
+            var areContains = parameters.ContainsKey(Constants.ParameterKeyBusStopId);
+
+            BusStop.Id = (int)parameters[Constants.ParameterKeyBusStopId];
             if (BusStop.Id == 0)
                 return;
+
+            if (parameters.ContainsKey(Constants.ParameterKeyIsBusStopShortcut))
+            {
+                IsBusy = true;
+                await Task.Delay(50);
+                IsBusy = false;
+            }
+                
 
             BusStop = _busStopRepository.Get(BusStop.Id);
 
@@ -189,7 +203,7 @@ namespace Rztm.ViewModels
             _locator.PositionChanged += GeolocatorOnPositionChanged;
             _locator.PositionError += GeolocatorOnPositionError;
             BusStop.Distance = await GetDistanceToBusStopAsync();
-        }     
+        }
 
         public override void OnNavigatedFrom(INavigationParameters parameters)
         {

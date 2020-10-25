@@ -49,6 +49,9 @@
         <ToolbarItem Text="Zmień nazwę"
                      Order="Secondary"
                      Command="{Binding RenameClickedCommand}"/>
+        <ToolbarItem Text="Wyświetl jako skrót"
+                     Order="Secondary"
+                     Command="{Binding DisplayAsApplicationShortutCommand}" />
     </ContentPage.ToolbarItems>
 
     <ContentPage.Content>

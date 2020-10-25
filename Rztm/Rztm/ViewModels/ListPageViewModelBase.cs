@@ -45,7 +45,7 @@ namespace Rztm.ViewModels
                 return;
 
             var parameters = new NavigationParameters();
-            parameters.Add("busStopId", busStop.Id);
+            parameters.Add(Constants.ParameterKeyBusStopId, busStop.Id);
             await NavigationService.NavigateAsync(nameof(BusStopPage), parameters);
         });
 

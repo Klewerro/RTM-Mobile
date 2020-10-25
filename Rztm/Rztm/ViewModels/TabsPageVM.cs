@@ -66,9 +66,23 @@ namespace Rztm.ViewModels
         public ICommand CheckForUpdatesCommand => new DelegateCommand(async () 
             => await UpdateAppAsync());
 
+
         public override async void OnNavigatedTo(INavigationParameters parameters)
         {
             base.OnNavigatedTo(parameters);
+
+            Xamarin.Forms.MessagingCenter.Subscribe<string, string>(string.Empty, Constants.OpenBusStopShortcut, 
+                async (s, androidIntentData) =>
+            {
+                var idText = androidIntentData.Substring(13, androidIntentData.Length - 13);
+                var busStopId = int.Parse(idText);
+
+                var parametersBusStop = new NavigationParameters();
+                parametersBusStop.Add(Constants.ParameterKeyBusStopId, busStopId);
+                parametersBusStop.Add(Constants.ParameterKeyIsBusStopShortcut, true);
+                await NavigationService.NavigateAsync(nameof(Views.BusStopPage), parametersBusStop);
+            });
+
             await PrepareGeolocationAsync();
         }
 
