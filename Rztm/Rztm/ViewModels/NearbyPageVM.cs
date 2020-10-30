@@ -10,6 +10,7 @@ using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Rztm.Helpers;
+using Rztm.Helpers.Resources;
 using Rztm.Models;
 using Rztm.Repositories;
 using Rztm.Views;
@@ -103,7 +104,7 @@ namespace Rztm.ViewModels
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
         {
-            DialogService.DisplayToast("Błąd lokalizacji", ToastTime.Short);
+            DialogService.DisplayToast(StringResources.LocationError, ToastTime.Short);
         }
 
         private async Task<Position> GetCurrentPositionAsync()
@@ -127,7 +128,7 @@ namespace Rztm.ViewModels
             if (currentPosition != null)
                 result = currentPosition;
             else
-                DialogService.DisplayToast("Nie można określić lokalizacji", ToastTime.Long);
+                DialogService.DisplayToast(StringResources.LocationCannotBeDetermined, ToastTime.Long);
 
             IsBusy = false;
             return result;

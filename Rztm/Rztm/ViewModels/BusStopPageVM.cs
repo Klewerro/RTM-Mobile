@@ -3,6 +3,7 @@ using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Rztm.Helpers;
+using Rztm.Helpers.Resources;
 using Rztm.Models;
 using Rztm.Repositories;
 using Rztm.Services;
@@ -88,14 +89,14 @@ namespace Rztm.ViewModels
             if (BusStop.IsFavorite)
             {
                 _busStopRepository.RemoveFromFavorites(BusStop);
-                DialogService.DisplayToast("Usunięto z ulubionych", ToastTime.Short,
-                    "Cofnij", () => _busStopRepository.AddToFavorites(BusStop));
+                DialogService.DisplayToast(StringResources.RemovedFromFavorites, ToastTime.Short,
+                    StringResources.Undo, () => _busStopRepository.AddToFavorites(BusStop));
             }
             else
             {
                 _busStopRepository.AddToFavorites(BusStop);
-                DialogService.DisplayToast("Dodano do ulubionych", ToastTime.Short,
-                    "Cofnij", () => _busStopRepository.RemoveFromFavorites(BusStop));
+                DialogService.DisplayToast(StringResources.AddedToFavorites, ToastTime.Short,
+                    StringResources.Undo, () => _busStopRepository.RemoveFromFavorites(BusStop));
             }
         });
 
@@ -215,7 +216,7 @@ namespace Rztm.ViewModels
 
 
         private void GeolocatorOnPositionError(object sender, PositionErrorEventArgs e)
-            => DialogService.DisplayToast("Błąd lokalizacji", ToastTime.Short);
+            => DialogService.DisplayToast(StringResources.LocationError, ToastTime.Short);
 
         private void GeolocatorOnPositionChanged(object sender, PositionEventArgs e)
         {

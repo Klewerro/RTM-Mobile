@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Navigation;
 using Prism.Services;
 using Rztm.Helpers;
+using Rztm.Helpers.Resources;
 using Rztm.Models;
 using Rztm.Repositories;
 using Rztm.Services;
@@ -71,9 +72,9 @@ namespace Rztm.ViewModels
 
             if (!repositoryStops.Any() && IsInternetAccess)
             {
-                var dialogResponse = await DialogService.DisplayAlertAsync("Missing bus stop database",
-                    "Local database containing bus stops missing. Do you want download it now?",
-                    "Yes", "No");
+                var dialogResponse = await DialogService.DisplayAlertAsync(StringResources.MissingBusStopDatabase,
+                    StringResources.LocalDatabaseContainingBusStopsMissing_DoYouWantDownloadItNow,
+                    StringResources.Yes, StringResources.No);
                 if (dialogResponse)
                 {
                     await DownloadBusStopsAsync();

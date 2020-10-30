@@ -6,9 +6,10 @@
              xmlns:viewmodels="clr-namespace:Rztm.ViewModels"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:converters="clr-namespace:Rztm.Converters"
+             xmlns:resource="clr-namespace:Rztm.Helpers.Resources"
              mc:Ignorable="d"
              x:Class="Rztm.Views.ListPage"
-             Title="Lista przystanków">
+             Title="{x:Static resource:StringResources.BusStopsListTitle}">
 
     <!--<ContentPage.BindingContext>
         <viewmodels:ListPageVM />
@@ -22,7 +23,7 @@
         <StackLayout>
             <SearchBar SearchCommand="{Binding SearchCommand}"
                        Text="{Binding SearchText}"
-                       Placeholder="Wprowadź nazwę przystanku..."
+                       Placeholder="{x:Static resource:StringResources.InsertBusStopName}"
                        BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
                        TextColor="{StaticResource UnderNavigationTextColor}">
                 <SearchBar.Behaviors>
@@ -30,7 +31,7 @@
                                               Command="{Binding SearchCommand}" />
                 </SearchBar.Behaviors>
             </SearchBar>
-            <Button Text="Pobierz przystanki"
+            <Button Text="{x:Static resource:StringResources.DownloadBusStops}"
                     HorizontalOptions="CenterAndExpand"
                     IsVisible="False"
                     Command="{Binding DownloadBusStopsCommand}">

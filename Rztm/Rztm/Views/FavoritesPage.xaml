@@ -6,9 +6,10 @@
              xmlns:viewmodels="clr-namespace:Rztm.ViewModels"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:converters="clr-namespace:Rztm.Converters"
+             xmlns:resource="clr-namespace:Rztm.Helpers.Resources"
              mc:Ignorable="d"
              x:Class="Rztm.Views.FavoritesPage"
-             Title="Ulubione">
+             Title="{x:Static resource:StringResources.FavoritesTitle}">
 
     <!--<ContentPage.BindingContext>
         <viewmodels:FavoritesPageVM />
@@ -23,7 +24,7 @@
         <StackLayout>
             <SearchBar SearchCommand="{Binding SearchCommand}"
                        Text="{Binding SearchText}"
-                       Placeholder="Wprowadź nazwę przystanku..."
+                       Placeholder="{x:Static resource:StringResources.InsertBusStopName}"
                        BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
                        TextColor="{StaticResource UnderNavigationTextColor}">
                 <SearchBar.Behaviors>
@@ -32,7 +33,7 @@
                 </SearchBar.Behaviors>
             </SearchBar>
 
-            <Label Text="Brak zapisanych ulubionych"
+            <Label Text="{x:Static resource:StringResources.NoSavedFovorites}"
                    IsVisible="False"
                    HorizontalOptions="Center"
                    FontSize="Medium">

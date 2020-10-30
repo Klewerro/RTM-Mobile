@@ -7,9 +7,10 @@
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:converters="clr-namespace:Rztm.Converters"
              xmlns:helpers="clr-namespace:Rztm.Helpers"
+             xmlns:resource="clr-namespace:Rztm.Helpers.Resources"
              mc:Ignorable="d"
              x:Class="Rztm.Views.NearbyPage"
-             Title="Najbliższe">
+             Title="{x:Static resource:StringResources.NearbyTitle}">
 
     <!--<ContentPage.BindingContext>
         <viewmodels:NearbyPageVM />
@@ -94,14 +95,15 @@
                   BackgroundColor="{StaticResource UnderNavigationBackgroundColor}"
                   RowDefinitions="Auto"
                   ColumnDefinitions="Auto, 1.5*,1*,3*,*">
-                <Label Text="Filtry" FontAttributes="Bold"
+                <Label Text="{x:Static resource:StringResources.Filters}" 
+                       FontAttributes="Bold"
                        Grid.Column="0"
                        FontSize="Large"
                        TextColor="{StaticResource UnderNavigationTextColor}"
                        VerticalOptions="Center"
                        Margin="8,0,0,0"/>
                 <Picker SelectedIndex="{Binding RangePickerIndex}" 
-                        Title="Wybierz zakres"
+                        Title="{x:Static resource:StringResources.SelectRange}"
                         TextColor="{StaticResource UnderNavigationTextColor}"
                         Grid.Column="1">
                     <Picker.Items>
@@ -115,7 +117,7 @@
                     </Picker.Items>
                 </Picker>
 
-                <Label Text="Szukaj w lini prostej"
+                <Label Text="{x:Static resource:StringResources.SearchInStraightLine}"
                        TextColor="{StaticResource UnderNavigationTextColor}"
                        VerticalOptions="Center" HorizontalOptions="End"
                        Grid.Column="3"/>
@@ -124,7 +126,7 @@
                         Grid.Column="4"/>
             </Grid>
 
-            <Label Text="Brak wyników"
+            <Label Text="{x:Static resource:StringResources.NoResults}"
                    IsVisible="{Binding IsGeolocationNotAvailable}"
                    HorizontalOptions="Center"
                    FontSize="Medium"/>

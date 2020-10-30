@@ -4,18 +4,19 @@
             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:views="clr-namespace:Rztm.Views"
+            xmlns:resource="clr-namespace:Rztm.Helpers.Resources"
             mc:Ignorable="d"
             x:Class="Rztm.Views.TabsPage"
-            Title="Rzeszowskie przystanki">
+            Title="{x:Static resource:StringResources.AppTitle}">
 
     <TabbedPage.ToolbarItems>
-        <ToolbarItem Text="Usuń wszystkie przystanki"
+        <ToolbarItem Text="{x:Static resource:StringResources.RemoveAllBusStops}"
                      Order="Secondary"
                      Command="{Binding DeleteBusStopsCommand}" />
-        <ToolbarItem Text="Strona domowa RTM"
+        <ToolbarItem Text="{x:Static resource:StringResources.RtmHomepage}"
                      Order="Secondary"
                      Command="{Binding OpenWebsiteCommand}" />
-        <ToolbarItem Text="Sprawdź dostępność aktualizacji"
+        <ToolbarItem Text="{x:Static resource:StringResources.CheckUpdatesAvailability}"
                      Order="Secondary"
                      Command="{Binding CheckForUpdatesCommand}" />
     </TabbedPage.ToolbarItems>

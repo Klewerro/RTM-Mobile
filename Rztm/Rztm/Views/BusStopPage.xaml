@@ -9,6 +9,7 @@
              xmlns:customcontrols="clr-namespace:Rztm.CustomControls"
              xmlns:converters="clr-namespace:Rztm.Converters"
              xmlns:b="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:resource="clr-namespace:Rztm.Helpers.Resources"
              x:Class="Rztm.Views.BusStopPage">
 
     <NavigationPage.TitleView>
@@ -36,20 +37,20 @@
                                               IsToggled="{Binding BusStop.IsFavorite}"
                                               Command="{Binding FavoritesToggleCommand}"
                                               Text="Usuń z ulubionych"
-                                              TextToggled="Dodaj do ulubionych"/>
+                                              TextToggled="{x:Static resource:StringResources.AddToFavorites}"/>
         <ToolbarItem Order="Secondary"
                      Command="{Binding OpenInMapsCommand}">
             <ToolbarItem.Text>
                 <OnPlatform x:TypeArguments="x:String">
-                    <On Platform="Android">Otwórz w aplikacji mapy</On>
-                    <On Platform="iOS">Mapa</On>
+                    <On Platform="Android" Value="{x:Static resource:StringResources.OpenInMapApplication}"/>
+                    <On Platform="iOS" Value="{x:Static resource:StringResources.Map}"/>
                 </OnPlatform>
             </ToolbarItem.Text>
         </ToolbarItem>
-        <ToolbarItem Text="Zmień nazwę"
+        <ToolbarItem Text="{x:Static resource:StringResources.ChangeName}"
                      Order="Secondary"
                      Command="{Binding RenameClickedCommand}"/>
-        <ToolbarItem Text="Wyświetl jako skrót"
+        <ToolbarItem Text="{x:Static resource:StringResources.DisplayAsShortcut}"
                      Order="Secondary"
                      Command="{Binding DisplayAsApplicationShortutCommand}" />
     </ContentPage.ToolbarItems>

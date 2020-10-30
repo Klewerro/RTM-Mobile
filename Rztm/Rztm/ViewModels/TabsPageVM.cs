@@ -7,6 +7,7 @@ using Plugin.Geolocator.Abstractions;
 using Prism.Commands;
 using Prism.Navigation;
 using Rztm.Helpers;
+using Rztm.Helpers.Resources;
 using Rztm.Repositories;
 using Rztm.Services;
 using Xamarin.Essentials;
@@ -47,14 +48,14 @@ namespace Rztm.ViewModels
 
         public ICommand DeleteBusStopsCommand => new DelegateCommand(async () =>
         {
-            var alertResult = await DialogService.DisplayAlertAsync("Ostrzeżenie", "Wszystkie zapisane przystanki zostaną usunięte. " + 
-                "Tej operacji nie będzie można cofnąć. Kontynuować?", "Tak", "Nie");
+            var alertResult = await DialogService.DisplayAlertAsync(StringResources.Warning, $"{StringResources.AllSavedBusStopsWillBeDeleted}. " + 
+                StringResources.ThisOperationCannotBeUndone_Continue, StringResources.Yes, StringResources.No);
             if (!alertResult)
                 return;
 
             _busStopRepository.DeleteAll();
             Xamarin.Essentials.Preferences.Set("busStopsDownloaded", false);
-            DialogService.DisplayToast("Usunięto wszystkie przystanki", ToastTime.Short);
+            DialogService.DisplayToast(StringResources.AllBusStopsHaveBeenRemoved, ToastTime.Short);
         });
 
         public ICommand OpenWebsiteCommand => new DelegateCommand(async () =>
@@ -109,7 +110,7 @@ namespace Rztm.ViewModels
             if (_locator.IsGeolocationAvailable && _locator.IsGeolocationEnabled)
                 return true;
 
-            DialogService.DisplayToast("Brak lokalizacji. Sprawdź GPS.", ToastTime.Long);
+            DialogService.DisplayToast(StringResources.NoLocationService_CheckGps, ToastTime.Long);
             await Task.Delay(9000);
             CheckInternetConnection();
             return false;
@@ -124,24 +125,24 @@ namespace Rztm.ViewModels
             {
                 if (!_appUpdater.CheckIsAppAfterUpdate())
                 {
-                    DialogService.DisplayToast("Aplikacja jest aktualna", ToastTime.Short);
+                    DialogService.DisplayToast(StringResources.ApplicationIsUpToDate, ToastTime.Short);
                     return;
                 }   
 
                 var dialogAnswer = await DialogService
-                    .DisplayAlertAsync("Uwaga", "Czy chcesz usunąć stary plik instalacyjny aplikacji (.apk)?",
-                    "Tak", "Nie");
+                    .DisplayAlertAsync(StringResources.Warning, StringResources.DoYouWantToRemoveOldApplicationInstallationFile,
+                    StringResources.Yes, StringResources.No);
                 if (dialogAnswer)
                     _appUpdater.RemoveApkFile();
                 return;
             }
 
-            var description = $"Wersja obecna: {currentAppVersion}\nAktualizacja: {latestRelease.TagName}\n" +
-                $"Opis:\n{latestRelease.Description}\n\n" +
-                $"Czy chcesz pobrać aktualizację teraz?";
+            var description = $"{StringResources.CurrentVersion}: {currentAppVersion}\n{StringResources.Update}: {latestRelease.TagName}\n" +
+                $"{StringResources.Description}:\n{latestRelease.Description}\n\n" +
+                StringResources.DoYouWantToDownloadUpdateNow;
 
-            var dialogResponse = await DialogService.DisplayAlertAsync("Aktualizacja",
-                description, "Tak", "Nie");
+            var dialogResponse = await DialogService.DisplayAlertAsync(StringResources.Update,
+                description, StringResources.Yes, StringResources.No);
             if (!dialogResponse)
                 return;
 

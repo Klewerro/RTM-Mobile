@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:b="http://prismlibrary.com"
              xmlns:converters="clr-namespace:Rztm.Converters"
+             xmlns:resource="clr-namespace:Rztm.Helpers.Resources"
              mc:Ignorable="d"
              x:Class="Rztm.Views.BusStopPageContentView"
              x:Name="This">
@@ -42,19 +43,19 @@
                            Grid.ColumnSpan="3"/>
                     <Button Command="{Binding SaveNameCommand}" 
                             Clicked="NameButton_Clicked"
-                            Text="Save"
+                            Text="{x:Static resource:StringResources.Save}"
                             Grid.Row="1"
                             BackgroundColor="{StaticResource AccentColor}"
                             Style="{StaticResource ChangeNameButton}"/>
                     <Button Command="{Binding DiscardCustomNameCommand}"  
-                            Text="Discard"
+                            Text="{x:Static resource:StringResources.Discard}"
                             Clicked="NameButton_Clicked"
                             BackgroundColor="DodgerBlue"
                             Style="{StaticResource ChangeNameButton}"
                             Grid.Row="1" Grid.Column="1"/>
                     <Button Command="{Binding RemoveCustomNameCommand}" 
                             Clicked="NameButton_Clicked"
-                            Text="Remove"
+                            Text="{x:Static resource:StringResources.Remove}"
                             BackgroundColor="{StaticResource PrimaryColor}"
                             Style="{StaticResource ChangeNameButton}"
                             Grid.Row="1" Grid.Column="2"/>

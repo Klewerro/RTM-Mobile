@@ -3,6 +3,7 @@ using Prism.Navigation;
 using Prism.Services;
 using Rztm.Exceptions;
 using Rztm.Helpers;
+using Rztm.Helpers.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -79,7 +80,8 @@ namespace Rztm.ViewModels
             var currentConnection = Connectivity.NetworkAccess;
             if (currentConnection != NetworkAccess.Internet)
             {
-                ConnectionDialog = DialogService.DisplayToast("Błąd z połączeniem", ToastTime.OneHour, "Spróbuj ponownie",  () =>
+                ConnectionDialog = DialogService.DisplayToast(StringResources.ConnectionError, 
+                    ToastTime.OneHour, StringResources.TryAgain,  () =>
                 {
                     ConnectionDialog.Dispose();
                     action.Invoke();
@@ -95,7 +97,7 @@ namespace Rztm.ViewModels
         {
             IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
             if (!IsInternetAccess)
-                DialogService.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
+                DialogService.DisplayToast(StringResources.MissingInternetConnection, ToastTime.OneHour);
         }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
@@ -122,9 +124,9 @@ namespace Rztm.ViewModels
         {
             IsInternetAccess = Connectivity.NetworkAccess == NetworkAccess.Internet ? true : false;
             if (IsInternetAccess)
-                DialogService.DisplayToast("Połączono z internetem.", ToastTime.Short);
+                DialogService.DisplayToast(StringResources.ConnectedToInternet, ToastTime.Short);
             else
-                DialogService.DisplayToast("Brak połączenia z internetem.", ToastTime.OneHour);
+                DialogService.DisplayToast(StringResources.MissingInternetConnection, ToastTime.OneHour);
         }
 
     }
