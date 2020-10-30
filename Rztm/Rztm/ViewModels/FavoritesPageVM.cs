@@ -29,10 +29,10 @@ namespace Rztm.ViewModels
         }
 
 
-        public ICommand AppearingCommand => new DelegateCommand(() =>
+        public ICommand AppearingCommand => new DelegateCommand(async () =>
         {
             IsBusy = true;
-            BusStops = _busStopRepository.GetAllFavorites();
+            BusStops = await _busStopRepository.GetAllFavoritesAsync();
             BusStopsAll = BusStops.AsReadOnly();
             IsBusy = false;
         });

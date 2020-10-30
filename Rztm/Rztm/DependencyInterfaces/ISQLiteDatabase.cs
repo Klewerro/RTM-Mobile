@@ -9,6 +9,6 @@ namespace Rztm.DependencyInterfaces
     {
         void CreateDatabaseIfNotExist();
         string GetDatabaseConnectionString();
-        SQLiteConnection GetConnection();
+        SQLiteAsyncConnection GetConnection();
     }
 }

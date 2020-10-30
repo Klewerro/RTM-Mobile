@@ -68,7 +68,7 @@ namespace Rztm.ViewModels
         {
             await Task.Delay(500);
 
-            var repositoryStops = _busStopRepository.GetAll();
+            var repositoryStops = await _busStopRepository.GetAllAsync();
 
             if (!repositoryStops.Any() && IsInternetAccess)
             {
@@ -95,12 +95,12 @@ namespace Rztm.ViewModels
             try
             {
                 var result = await ApiCall(_rtmService.GetAllBusStopsAsync());
-                _busStopRepository.AddRange(result);
+                await _busStopRepository.AddRangeAsync(result);
                 BusStopsAll = result.AsReadOnly();
                 BusStops = result;
                 AreBusStopsDownloaded = true;
             }
-            catch (Exceptions.ConnectionException ex)
+            catch (Exceptions.ConnectionException)
             {
                 ConnectionErrorRetry(async () => await DownloadBusStopsAsync());
                 AreBusStopsDownloaded = false;

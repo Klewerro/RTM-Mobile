@@ -84,19 +84,19 @@ namespace Rztm.ViewModels
             IsBusy = false;
         });
 
-        public ICommand FavoritesToggleCommand => new DelegateCommand(() =>
+        public ICommand FavoritesToggleCommand => new DelegateCommand(async () =>
         {
             if (BusStop.IsFavorite)
             {
-                _busStopRepository.RemoveFromFavorites(BusStop);
+                await _busStopRepository.RemoveFromFavoritesAsync(BusStop);
                 DialogService.DisplayToast(StringResources.RemovedFromFavorites, ToastTime.Short,
-                    StringResources.Undo, () => _busStopRepository.AddToFavorites(BusStop));
+                    StringResources.Undo, () => _busStopRepository.AddToFavoritesAsync(BusStop));
             }
             else
             {
-                _busStopRepository.AddToFavorites(BusStop);
+                await _busStopRepository.AddToFavoritesAsync(BusStop);
                 DialogService.DisplayToast(StringResources.AddedToFavorites, ToastTime.Short,
-                    StringResources.Undo, () => _busStopRepository.RemoveFromFavorites(BusStop));
+                    StringResources.Undo, () => _busStopRepository.RemoveFromFavoritesAsync(BusStop));
             }
         });
 
@@ -118,20 +118,20 @@ namespace Rztm.ViewModels
             Xamarin.Forms.MessagingCenter.Send(string.Empty, Constants.CreateBusStopShortcut, (BusStop.Id, BusStop.NameToDisplay));
         });
 
-        public ICommand SaveNameCommand => new DelegateCommand(() =>
+        public ICommand SaveNameCommand => new DelegateCommand(async () =>
         {
             BusStop.CustomName = ChangeNameText;
-            _busStopRepository.Rename(BusStop, ChangeNameText);
+            await _busStopRepository.RenameAsync(BusStop, ChangeNameText);
         });
 
         public ICommand DiscardCustomNameCommand => new DelegateCommand(() =>
             ChangeNameText = BusStop.CustomName);
 
-        public ICommand RemoveCustomNameCommand => new DelegateCommand(() =>
+        public ICommand RemoveCustomNameCommand => new DelegateCommand(async () =>
         {
             ChangeNameText = null;
             BusStop.CustomName = ChangeNameText;
-            _busStopRepository.Rename(BusStop, ChangeNameText);
+            await _busStopRepository.RenameAsync(BusStop, ChangeNameText);
         });
 
         public ICommand ItemTappedCommand => new DelegateCommand<Departure>(async departure =>
@@ -156,7 +156,7 @@ namespace Rztm.ViewModels
                 return;
 
             NavigationParameters parameters = new NavigationParameters();
-            var selectedNextBusStop = _busStopRepository.Get(departure.SelectedNextBusStopsName);
+            var selectedNextBusStop = await _busStopRepository.GetAsync(departure.SelectedNextBusStopsName);
 
             parameters.Add(Constants.ParameterKeyBusStopId, selectedNextBusStop.Id);
             parameters.Add(parameterKeyIsInPopupView, true);
@@ -195,7 +195,7 @@ namespace Rztm.ViewModels
             }
                 
 
-            BusStop = _busStopRepository.Get(BusStop.Id);
+            BusStop = await _busStopRepository.GetAsync(BusStop.Id);
 
             if (parameters.ContainsKey("distance"))
                 BusStop.Distance = (double)parameters["distance"];

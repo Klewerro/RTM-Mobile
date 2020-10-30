@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rztm.Repositories
 {
@@ -9,16 +10,16 @@ namespace Rztm.Repositories
     {
         event EventHandler BusStopsDeletedEvent;
 
-        BusStop Get(int id);
-        BusStop Get(string name);
-        List<BusStop> GetAll();
-        List<BusStop> GetAllFavorites();
-        void Add(BusStop busStop);
-        void AddRange(IEnumerable<BusStop> busStops);
-        void Delete(int id);
-        void DeleteAll();
-        void AddToFavorites(BusStop busStop);
-        void RemoveFromFavorites(BusStop busStop);
-        void Rename(BusStop busStop, string newName);
+        Task<BusStop> GetAsync(int id);
+        Task<BusStop> GetAsync(string name);
+        Task<List<BusStop>> GetAllAsync();
+        Task<List<BusStop>> GetAllFavoritesAsync();
+        Task AddAsync(BusStop busStop);
+        Task AddRangeAsync(IEnumerable<BusStop> busStops);
+        Task DeleteAsync(int id);
+        Task DeleteAllAsync();
+        Task AddToFavoritesAsync(BusStop busStop);
+        Task RemoveFromFavoritesAsync(BusStop busStop);
+        Task RenameAsync(BusStop busStop, string newName);
     }
 }

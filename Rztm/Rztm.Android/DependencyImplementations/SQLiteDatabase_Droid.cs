@@ -31,6 +31,6 @@ namespace Rztm.Droid.DependencyImplementations
 
         public string GetDatabaseConnectionString() => _path.Remove(_path.Length - 1);
 
-        public SQLiteConnection GetConnection() => new SQLiteConnection(_path.Remove(_path.Length - 1));
+        public SQLiteAsyncConnection GetConnection() => new SQLiteAsyncConnection(_path.Remove(_path.Length - 1));
     }
 }

@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Rztm.Database
 {
     public interface ILocalDatabase
     {
-        SQLiteConnection GetConnection();
+        SQLiteAsyncConnection GetConnection();
+        Task PrepareDatabaseTablesAsync();
     }
 }

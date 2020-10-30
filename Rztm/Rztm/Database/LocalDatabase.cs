@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Rztm.DependencyInterfaces;
 using Rztm.Models;
 using SQLite;
@@ -10,7 +12,7 @@ namespace Rztm.Database
 {
     public class LocalDatabase : ILocalDatabase
     {
-        private readonly SQLiteConnection _connection;
+        private readonly SQLiteAsyncConnection _connection;
         private readonly ISQLiteDatabase _database;
 
 
@@ -20,16 +22,15 @@ namespace Rztm.Database
 
             _database.CreateDatabaseIfNotExist();
             _connection = _database.GetConnection();
-            PrepareDatabaseTables();
         }
 
-        public SQLiteConnection GetConnection()
+        public SQLiteAsyncConnection GetConnection()
             => _connection;
 
         
-        private void PrepareDatabaseTables()
+        public async Task PrepareDatabaseTablesAsync()
         {
-            _connection.CreateTable<BusStop>();
+            await _connection.CreateTableAsync<BusStop>();
         }
     }
 }

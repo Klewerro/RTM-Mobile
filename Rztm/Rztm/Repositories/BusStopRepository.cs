@@ -6,12 +6,13 @@ using Rztm.DependencyInterfaces;
 using Rztm.Models;
 using SQLite;
 using Rztm.Database;
+using System.Threading.Tasks;
 
 namespace Rztm.Repositories
 {
     public class BusStopRepository : IBusStopRepository
     {
-        private readonly SQLiteConnection _connection;
+        private readonly SQLiteAsyncConnection _connection;
 
         public event EventHandler BusStopsDeletedEvent;
 
@@ -22,62 +23,60 @@ namespace Rztm.Repositories
 
         ~BusStopRepository()
         {
-            _connection.Close();
+            _connection.CloseAsync();
         }
 
-        public void Add(BusStop busStop)
+        public Task AddAsync(BusStop busStop)
         {
             busStop.Departures = null;
-            _connection.Insert(busStop);
+            return _connection.InsertAsync(busStop);
         }
 
-        public void AddRange(IEnumerable<BusStop> busStops)
-        {
-            _connection.InsertAll(busStops);
-        }
+        public Task AddRangeAsync(IEnumerable<BusStop> busStops)
+            => _connection.InsertAllAsync(busStops);
 
-        public BusStop Get(int id)
-            => _connection.Get<BusStop>(id);
+        public Task<BusStop> GetAsync(int id)
+            => _connection.GetAsync<BusStop>(id);
 
-        public BusStop Get(string name)
-            => _connection.Get<BusStop>(b => b.Name.Equals(name));
+        public Task<BusStop> GetAsync(string name)
+            => _connection.GetAsync<BusStop>(b => b.Name.Equals(name));
 
-        public List<BusStop> GetAll()
+        public Task<List<BusStop>> GetAllAsync()
             => _connection.Table<BusStop>()
                 .OrderBy(b => b.Name)
-                .ToList();
+                .ToListAsync();
 
-        public List<BusStop> GetAllFavorites()
+        public Task<List<BusStop>> GetAllFavoritesAsync()
             => _connection.Table<BusStop>()
                 .Where(b => b.IsFavorite)
                 .OrderBy(b => b.Name)
-                .ToList();
+                .ToListAsync();
 
-        public void Delete(int id)
-            => _connection.Table<BusStop>().Delete(b => b.Id == id);
+        public Task DeleteAsync(int id)
+            => _connection.Table<BusStop>().DeleteAsync(b => b.Id == id);
 
-        public void DeleteAll()
+        public async Task DeleteAllAsync()
         {
-            _connection.DeleteAll<BusStop>();
+            await _connection.DeleteAllAsync<BusStop>();
             BusStopsDeletedEvent?.Invoke(this, EventArgs.Empty);
         }
 
-        public void AddToFavorites(BusStop busStop)
+        public Task AddToFavoritesAsync(BusStop busStop)
         {
             busStop.IsFavorite = true;
-            _connection.Update(busStop);
+            return _connection.UpdateAsync(busStop);
         }
 
-        public void RemoveFromFavorites(BusStop busStop)
+        public Task RemoveFromFavoritesAsync(BusStop busStop)
         {
             busStop.IsFavorite = false;
-            _connection.Update(busStop);
+            return _connection.UpdateAsync(busStop);
         }
 
-        public void Rename(BusStop busStop, string newName)
+        public Task RenameAsync(BusStop busStop, string newName)
         {
             busStop.CustomName = newName;
-            _connection.Update(busStop);
+            return _connection.UpdateAsync(busStop);
         }
     }
 }

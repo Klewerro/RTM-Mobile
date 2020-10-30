@@ -77,7 +77,8 @@ namespace Rztm.ViewModels
         {
             await Task.Delay(200);
             Position = await GetCurrentPositionAsync();
-            BusStopsAll = _busStopRepository.GetAll().AsReadOnly();
+            var allBusStopsMutableList = await _busStopRepository.GetAllAsync();
+            BusStopsAll = allBusStopsMutableList.AsReadOnly();
             BusStops = GetNearbyBusStops(_ranges[RangePickerIndex]);
         });
 
